@@ -42,7 +42,7 @@ size_t lexical_analysis(tokens* token, char* buffer)
 
     while ((*end_pos) != '\0')
     {
-        if (token_index >= MAXIMUM_LEXEMS_COUNT)
+        if (token_index >= MAXIMUM_LEXEMS_COUNT - 1)
         {
             assert("You should increase MAXIMUM_LEXEMS_COUNT" == NULL);
         }

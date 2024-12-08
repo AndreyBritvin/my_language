@@ -47,7 +47,7 @@ enum op_type
     EQUAL           = 27,
     IF_STATE        = 28,
     WHILE_STATE     = 29,
-    PRINT           = 30,
+    PRINT_STATE     = 30,
     STATEMENT_END   = 31,
     CONDITION_END   = 32,
 
@@ -92,8 +92,8 @@ static operation all_ops[] = {//!!! order should be equal to enum!!!
     {SCOPE_CLOS,    "}"},
     {EQUAL,         "="},
     {IF_STATE,      "if"},
-    {WHILE_STATE,   "("},
-    {PRINT,     "print"},
+    {WHILE_STATE, "while"},
+    {PRINT_STATE, "print"},
     {STATEMENT_END, ";"},
     {CONDITION_END, ":"},
 };

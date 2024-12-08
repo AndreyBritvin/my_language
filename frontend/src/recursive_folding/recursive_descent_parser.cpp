@@ -177,7 +177,7 @@ node_t* get_assingnment(my_tree_t* tree, tokens* input, size_t* pos)
     {
         return NULL;
     }
-    printf("In assignment\n");
+
     if (CURR_TYPE != STATEMENT || (int) CURR_VAL != EQUAL) SYNTAX_ERROR(all_ops[EQUAL].text);
     INCR;
 
@@ -203,7 +203,9 @@ node_t* get_statement(my_tree_t* tree, tokens* input, size_t* pos)
     }
     node_t* to_ret = NULL;
     if      ((to_ret = get_if_state   (tree, input, pos)) != NULL)  to_ret;
+    else if ((to_ret = get_while_state(tree, input, pos)) != NULL)  to_ret;
     else if ((to_ret = get_assingnment(tree, input, pos)) != NULL)  to_ret;
+    else if ((to_ret = get_print_state(tree, input, pos)) != NULL)  to_ret;
 
     if (to_ret == NULL) return NULL;
 
@@ -241,6 +243,46 @@ node_t* get_if_state(my_tree_t* tree, tokens* input, size_t* pos)
 
     node_t* to_ret = new_node(tree, STATEMENT, IF_STATE, condition, doing);
     doing->parent = condition->parent = to_ret;
+
+    return to_ret;
+}
+
+node_t* get_while_state(my_tree_t* tree, tokens* input, size_t* pos)
+{
+    if (CURR_TYPE != STATEMENT || (int) CURR_VAL != WHILE_STATE) return NULL;
+    INCR;
+
+    node_t* condition = get_expression(tree, input, pos);
+    if (condition == NULL) CUSTOM_SYNTAX_ERROR("Expected expression in while at line %zu column %zu",
+                                                   input[*pos].line, input[*pos].column);
+
+    if ((int) CURR_VAL != CONDITION_END) SYNTAX_ERROR(all_ops[CONDITION_END].text);
+    INCR;
+
+    node_t* doing = get_statement(tree, input, pos);
+    if (doing == NULL) CUSTOM_SYNTAX_ERROR("Expected some statements after while at line %zu column %zu",
+                                                   input[*pos].line, input[*pos].column);
+
+    node_t* to_ret = new_node(tree, STATEMENT, WHILE_STATE, condition, doing);
+    doing->parent = condition->parent = to_ret;
+
+    return to_ret;
+}
+
+node_t* get_print_state(my_tree_t* tree, tokens* input, size_t* pos)
+{
+    if (CURR_TYPE != STATEMENT || (int) CURR_VAL != PRINT_STATE) return NULL;
+    INCR;
+    // if (CURR_TYPE != OP || (int) CURR_VAL != BRACKET_OPEN) SYNTAX_ERROR(all_ops[BRACKET_OPEN].text);
+    // INCR;
+    node_t* printable = get_expression(tree, input, pos);
+    // if (CURR_TYPE != OP || (int) CURR_VAL != BRACKET_CLOS) SYNTAX_ERROR(all_ops[BRACKET_CLOS].text);
+    // INCR;
+    if (CURR_VAL != STATEMENT_END) SYNTAX_ERROR(all_ops[STATEMENT_END].text);
+    INCR;
+
+    node_t* to_ret = new_node(tree, STATEMENT, PRINT_STATE, printable, NULL);
+    printable->parent = to_ret;
 
     return to_ret;
 }
