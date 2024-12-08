@@ -188,40 +188,60 @@ node_t* get_assingnment(my_tree_t* tree, tokens* input, size_t* pos)
     if (CURR_VAL != STATEMENT_END) SYNTAX_ERROR(all_ops[STATEMENT_END].text);
     INCR;
 
-    node_t* another_node = get_assingnment(tree, input, pos);
-
-    node_t* to_ret = new_node(tree, STATEMENT, STATEMENT_END, equal_node, another_node);
-    equal_node->parent = to_ret;
-    if (another_node != NULL) another_node->parent = to_ret;
-
-    return to_ret;
+    return equal_node;
 }
 
 node_t* get_statement(my_tree_t* tree, tokens* input, size_t* pos)
 {
-//     if (CURR_TYPE == STATEMENT && (int) CURR_VAL == SCOPE_OPEN)
-//     {
-//         INCR;
-//         node_t* inside = get_statement(tree, input, pos);
-//         if (CURR_TYPE != STATEMENT && (int) CURR_VAL != SCOPE_CLOS) SYNTAX_ERROR(all_ops[SCOPE_CLOS].text);
-//         INCR;
-//         return inside;
-//     }
-//     node_t* to_ret = NULL;
-//     if      ((to_ret = get_if_state   (tree, input, pos)) != NULL)  to_ret;
-//     else if ((to_ret = get_assingnment(tree, input, pos)) != NULL)  to_ret;
-//
+    if (CURR_TYPE == STATEMENT && (int) CURR_VAL == SCOPE_OPEN)
+    {
+        INCR;
+        node_t* inside = get_statement(tree, input, pos);
+        if (CURR_TYPE != STATEMENT && (int) CURR_VAL != SCOPE_CLOS) SYNTAX_ERROR(all_ops[SCOPE_CLOS].text);
+        INCR;
+        return inside;
+    }
+    node_t* to_ret = NULL;
+    if      ((to_ret = get_if_state   (tree, input, pos)) != NULL)  to_ret;
+    else if ((to_ret = get_assingnment(tree, input, pos)) != NULL)  to_ret;
+
+    if (to_ret == NULL) return NULL;
+
+    node_t* another_node = get_statement(tree, input, pos);
+
+    node_t* to_ret_2 = new_node(tree, STATEMENT, STATEMENT_END, to_ret, another_node);
+    to_ret->parent = to_ret_2;
+    if (another_node != NULL) another_node->parent = to_ret_2;
+
+    return to_ret_2;
 //     node_t* right = NULL;
     // if ((right = get_statement(tree, input, pos)) != NULL) ;
 
     // node_t* really_to_ret = new_node(tree, STATEMENT, STATEMENT_END, to_ret, right);
     // to_ret->parent = really_to_ret;
 
-    return get_assingnment(tree, input, pos);
+    // return NULL;
 }
 
 node_t* get_if_state(my_tree_t* tree, tokens* input, size_t* pos)
 {
-    return NULL;
+    if (CURR_TYPE != STATEMENT || (int) CURR_VAL != IF_STATE) return NULL;
+    INCR;
+
+    node_t* condition = get_expression(tree, input, pos);
+    if (condition == NULL) CUSTOM_SYNTAX_ERROR("Expected expression in if at line %zu column %zu",
+                                                   input[*pos].line, input[*pos].column);
+
+    if ((int) CURR_VAL != CONDITION_END) SYNTAX_ERROR(all_ops[CONDITION_END].text);
+    INCR;
+
+    node_t* doing = get_statement(tree, input, pos);
+    if (doing == NULL) CUSTOM_SYNTAX_ERROR("Expected some statements after if at line %zu column %zu",
+                                                   input[*pos].line, input[*pos].column);
+
+    node_t* to_ret = new_node(tree, STATEMENT, IF_STATE, condition, doing);
+    doing->parent = condition->parent = to_ret;
+
+    return to_ret;
 }
 

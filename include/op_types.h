@@ -49,6 +49,7 @@ enum op_type
     WHILE_STATE     = 29,
     PRINT           = 30,
     STATEMENT_END   = 31,
+    CONDITION_END   = 32,
 
     UNKNOWN
 };
@@ -94,6 +95,7 @@ static operation all_ops[] = {//!!! order should be equal to enum!!!
     {WHILE_STATE,   "("},
     {PRINT,     "print"},
     {STATEMENT_END, ";"},
+    {CONDITION_END, ":"},
 };
 
 #endif // OP_TYPES_H_

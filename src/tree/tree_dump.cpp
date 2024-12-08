@@ -199,11 +199,12 @@ const char* type_to_str(node_t* node)
 {
     switch (node->type)
     {
-        case NUM: return "NUM";
-        case VAR: return "VAR";
-        case OP : return "OP";
-        case SUBTREE: return "SUBTREE";
-        default : return "UNKNOWN";
+        case NUM:       return "NUM";
+        case VAR:       return "VAR";
+        case OP :       return "OP";
+        case SUBTREE:   return "SUBTREE";
+        case STATEMENT: return "STATEMENT";
+        default :       return "UNKNOWN";
     }
 }
 
