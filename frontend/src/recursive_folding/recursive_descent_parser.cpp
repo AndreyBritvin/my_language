@@ -38,7 +38,7 @@ my_tree_t get_grammatic(tokens* input)
     INIT_TREE(tree_to_ret);
     free(tree_to_ret.root);
     size_t pos = 0;
-    tree_to_ret.root = get_expression(&tree_to_ret, input, &pos);
+    tree_to_ret.root = get_assingnment(&tree_to_ret, input, &pos);
     if ((int) input[pos].type != END) CUSTOM_SYNTAX_ERROR("At line %zu column %zu expected $ but %c instead\n",
                                                      input[pos].line, input[pos].column, (char) input[pos].value);
 
@@ -169,3 +169,24 @@ node_t* get_variable(my_tree_t* tree, tokens* input, size_t* pos)
 
     return NULL;
 }
+
+node_t* get_assingnment(my_tree_t* tree, tokens* input, size_t* pos)
+{
+    node_t* identificator = get_variable(tree, input, pos);
+
+    if (CURR_TYPE != STATEMENT || (int) CURR_VAL != EQUAL) SYNTAX_ERROR(all_ops[EQUAL].text);
+    INCR;
+
+    node_t* right_expr = get_expression(tree, input, pos);
+
+    node_t* to_ret = new_node(tree, STATEMENT, EQUAL, identificator, right_expr);
+    identificator->parent = right_expr->parent = to_ret;
+
+    return to_ret;
+}
+
+node_t* get_statement(my_tree_t* tree, tokens* input, size_t* pos)
+{
+
+}
+

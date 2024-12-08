@@ -90,7 +90,7 @@ size_t lexical_analysis(tokens* token, char* buffer)
             else
             {
                 token[token_index].value = key_word;
-                token[token_index].type  = OP;
+                token[token_index].type  = key_word > STATEMENT_BEGIN ? STATEMENT: OP;
                 token_index++;
             }
             end_pos--;
@@ -106,7 +106,7 @@ size_t lexical_analysis(tokens* token, char* buffer)
                 abort();
             }
             token[token_index].value = key_word;
-            token[token_index].type  = OP;
+            token[token_index].type  = key_word > STATEMENT_BEGIN ? STATEMENT: OP;
             token_index++;
         }
 
@@ -193,6 +193,11 @@ err_code_t printf_tokens(tokens* programm_tokens, size_t tokens_num)
         {
             printf("index = %02zu, type = VAR, name = %s\n", i,
                         *(char**) &programm_tokens[i].value);
+        }
+        if (programm_tokens[i].type == STATEMENT)
+        {
+            printf("index = %02zu, type = STA, name = %s\n", i,
+                                                     all_ops[(int) programm_tokens[i].value].text);
         }
         else if (programm_tokens[i].type == END)
         {

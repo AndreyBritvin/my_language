@@ -21,5 +21,8 @@
 #define OP_COLOR  "#e0c292"
 #define VAR_COLOR "coral1"
 #define NUM_COLOR "green3"
+#define STATEMENT_COLOR "orange"
+#define SUBTREE_COLOR "gray91"
+
 
 #endif // DUMP_COLORS_H_

@@ -147,6 +147,8 @@ err_code_t make_node(FILE* dot_file, node_t* curr_node, node_t* node_to_select, 
     if      (curr_node->type == NUM) fill_color = NUM_COLOR;
     else if (curr_node->type == VAR) fill_color = VAR_COLOR;
     else if (curr_node->type == OP ) fill_color =  OP_COLOR;
+    else if (curr_node->type == STATEMENT) fill_color =  STATEMENT_COLOR;
+    else if (curr_node->type == SUBTREE)   fill_color =  SUBTREE_COLOR;
 
     if (curr_node->left == NULL && curr_node->right == NULL)
     {
@@ -211,6 +213,7 @@ char* get_data_field(node_t* node)
     if (node->type == NUM) return give_num_type(node);
     if (node->type == VAR) return give_var_type(node);
     if (node->type == SUBTREE) return give_subtree_name(node);
+    if (node->type == STATEMENT) return give_op_type(node);
 }
 
 char* give_subtree_name(node_t* node)

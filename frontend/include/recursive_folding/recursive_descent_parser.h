@@ -13,5 +13,7 @@ node_t* get_exp        (my_tree_t* tree, tokens* input, size_t* pos);
 node_t* get_primary    (my_tree_t* tree, tokens* input, size_t* pos);
 node_t* get_variable   (my_tree_t* tree, tokens* input, size_t* pos);
 node_t* get_func       (my_tree_t* tree, tokens* input, size_t* pos);
+node_t* get_assingnment(my_tree_t* tree, tokens* input, size_t* pos);
+
 
 #endif // RECURSIVE_DESCNET_PARSER_H_
