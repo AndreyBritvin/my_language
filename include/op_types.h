@@ -13,6 +13,8 @@ enum node_type
 
 enum op_type
 {
+    FUNCTIONS = -1,
+
     ADD     =  0,
     SUB     =  1,
     MUL     =  2,
@@ -35,8 +37,17 @@ enum op_type
     ARCCHS  = 19,
     ARCTGH  = 20,
     ARCCTH  = 21,
-    BRACKET_OPEN  = 22,
-    BRACKET_CLOS  = 23,
+    BRACKET_OPEN    = 22,
+    BRACKET_CLOS    = 23,
+
+    STATEMENT_BEGIN = 24,
+
+    SCOPE_OPEN      = 25,
+    SCOPE_CLOS      = 26,
+    EQUAL           = 27,
+    IF_STATE        = 28,
+    WHILE_STATE     = 29,
+
     UNKNOWN
 };
 
@@ -71,6 +82,14 @@ static operation all_ops[] = {//!!! order should be equal to enum!!!
     {ARCCTH, "arccoth"},
     {BRACKET_OPEN, "("},
     {BRACKET_CLOS, ")"},
+
+    {STATEMENT_BEGIN, ""},
+
+    {SCOPE_OPEN,   "{"},
+    {SCOPE_CLOS,   "}"},
+    {EQUAL,        "="},
+    {IF_STATE,     "if"},
+    {WHILE_STATE,  "("},
 };
 
 #endif // OP_TYPES_H_

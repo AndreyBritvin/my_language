@@ -1,1 +1,4 @@
-sin(cos(x)))
+sin(cos(x)   )
+
++
+2 * 4

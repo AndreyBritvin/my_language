@@ -40,10 +40,8 @@ size_t lexical_analysis(tokens* token, char* buffer)
     size_t lines  = 1;
     size_t column = 1;
 
-    while ((*end_pos) != '\0' && (*end_pos) != '\n')
+    while ((*end_pos) != '\0')
     {
-        skip_spaces(buffer, &pos, &lines, &column);
-
         if (token_index >= MAXIMUM_LEXEMS_COUNT)
         {
             assert("You should increase MAXIMUM_LEXEMS_COUNT" == NULL);
@@ -101,7 +99,12 @@ size_t lexical_analysis(tokens* token, char* buffer)
         {
             column += 1;
             size_t key_word = is_key_word(end_pos, end_pos + 1);
-            printf("Something unknown opreation = %c\n", *end_pos);
+
+            if (key_word == UNKNOWN)
+            {
+                printf("Something unknown opreation = %c\n", *end_pos);
+                abort();
+            }
             token[token_index].value = key_word;
             token[token_index].type  = OP;
             token_index++;
@@ -111,6 +114,8 @@ size_t lexical_analysis(tokens* token, char* buffer)
         token[token_index].column = column;
 
         end_pos += 1;
+
+        skip_spaces(&end_pos, &column, &lines);
     }
 
     token[token_index].type  = END;
@@ -121,16 +126,21 @@ size_t lexical_analysis(tokens* token, char* buffer)
     return token_index;
 }
 
-err_code_t skip_spaces(char* input, size_t* pos, size_t* column, size_t* lines)
+err_code_t skip_spaces(char** input, size_t* column, size_t* lines)
 {
-    while (isspace(input[*pos]))
+    printf("symbol to skip: %d\n", (int) **input);
+    while (isblank(**input) || **input == '\n')
     {
+        printf("symbol to skip: %d\n", (int) **input);
+
         (*column)++;
-        if (input[*pos] == '\n')
+        if (**input == '\n')
         {
+            printf("Increasing lines\n");
+            (*column) = 1;
             (*lines)++;
         }
-        (*pos)++;
+        (*input)++;
     }
 
     return OK;

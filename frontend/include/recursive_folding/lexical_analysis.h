@@ -18,7 +18,7 @@ struct tokens
 size_t get_file_len(const char *filename);
 err_code_t fill_buffer(char **buffer_to_fill, const char* filename);
 my_tree_t make_tree(char *buffer);
-err_code_t skip_spaces(char* input, size_t* pos, size_t* column, size_t* lines);
+err_code_t skip_spaces(char** input, size_t* column, size_t* lines);
 node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* parent);
 size_t lexical_analysis(tokens* token, char* buffer);
 size_t is_key_word(char* begin, char* end);

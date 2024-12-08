@@ -39,7 +39,7 @@ my_tree_t get_grammatic(tokens* input)
     free(tree_to_ret.root);
     size_t pos = 0;
     tree_to_ret.root = get_expression(&tree_to_ret, input, &pos);
-    if (input[pos].value != END) CUSTOM_SYNTAX_ERROR("At line %zu column %zu expected $ but %c instead\n",
+    if ((int) input[pos].type != END) CUSTOM_SYNTAX_ERROR("At line %zu column %zu expected $ but %c instead\n",
                                                      input[pos].line, input[pos].column, (char) input[pos].value);
 
     return tree_to_ret;
@@ -51,9 +51,12 @@ node_t* get_func(my_tree_t* tree, tokens* input, size_t* pos)
     (*pos)++;
     if ((int) CURR_VAL != BRACKET_OPEN) SYNTAX_ERROR(all_ops[BRACKET_OPEN].text);
     INCR;
+
     node_t* left_subtree = get_expression(tree, input, pos);
+
     if ((int) CURR_VAL != BRACKET_CLOS) SYNTAX_ERROR(all_ops[BRACKET_CLOS].text);
     INCR;
+
     node_t* to_ret = new_node(tree, OP, func, left_subtree, NULL);
     left_subtree->parent = to_ret;
 
