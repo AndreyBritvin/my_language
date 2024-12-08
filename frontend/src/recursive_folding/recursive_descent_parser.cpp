@@ -38,7 +38,7 @@ my_tree_t get_grammatic(tokens* input)
     INIT_TREE(tree_to_ret);
     free(tree_to_ret.root);
     size_t pos = 0;
-    tree_to_ret.root = get_assingnment(&tree_to_ret, input, &pos);
+    tree_to_ret.root = get_statement(&tree_to_ret, input, &pos);
     if ((int) input[pos].type != END) CUSTOM_SYNTAX_ERROR("At line %zu column %zu expected $ but %c instead\n",
                                                      input[pos].line, input[pos].column, (char) input[pos].value);
 
@@ -173,20 +173,55 @@ node_t* get_variable(my_tree_t* tree, tokens* input, size_t* pos)
 node_t* get_assingnment(my_tree_t* tree, tokens* input, size_t* pos)
 {
     node_t* identificator = get_variable(tree, input, pos);
-
+    if (identificator == NULL)
+    {
+        return NULL;
+    }
+    printf("In assignment\n");
     if (CURR_TYPE != STATEMENT || (int) CURR_VAL != EQUAL) SYNTAX_ERROR(all_ops[EQUAL].text);
     INCR;
 
     node_t* right_expr = get_expression(tree, input, pos);
+    node_t* equal_node = new_node(tree, STATEMENT, EQUAL, identificator, right_expr);
+    identificator->parent = right_expr->parent = equal_node;
 
-    node_t* to_ret = new_node(tree, STATEMENT, EQUAL, identificator, right_expr);
-    identificator->parent = right_expr->parent = to_ret;
+    if (CURR_VAL != STATEMENT_END) SYNTAX_ERROR(all_ops[STATEMENT_END].text);
+    INCR;
+
+    node_t* another_node = get_assingnment(tree, input, pos);
+
+    node_t* to_ret = new_node(tree, STATEMENT, STATEMENT_END, equal_node, another_node);
+    equal_node->parent = to_ret;
+    if (another_node != NULL) another_node->parent = to_ret;
 
     return to_ret;
 }
 
 node_t* get_statement(my_tree_t* tree, tokens* input, size_t* pos)
 {
+//     if (CURR_TYPE == STATEMENT && (int) CURR_VAL == SCOPE_OPEN)
+//     {
+//         INCR;
+//         node_t* inside = get_statement(tree, input, pos);
+//         if (CURR_TYPE != STATEMENT && (int) CURR_VAL != SCOPE_CLOS) SYNTAX_ERROR(all_ops[SCOPE_CLOS].text);
+//         INCR;
+//         return inside;
+//     }
+//     node_t* to_ret = NULL;
+//     if      ((to_ret = get_if_state   (tree, input, pos)) != NULL)  to_ret;
+//     else if ((to_ret = get_assingnment(tree, input, pos)) != NULL)  to_ret;
+//
+//     node_t* right = NULL;
+    // if ((right = get_statement(tree, input, pos)) != NULL) ;
 
+    // node_t* really_to_ret = new_node(tree, STATEMENT, STATEMENT_END, to_ret, right);
+    // to_ret->parent = really_to_ret;
+
+    return get_assingnment(tree, input, pos);
+}
+
+node_t* get_if_state(my_tree_t* tree, tokens* input, size_t* pos)
+{
+    return NULL;
 }
 

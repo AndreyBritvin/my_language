@@ -168,6 +168,7 @@ size_t is_key_word(char* begin, char* end)
     {
         if (!strncmp(all_ops[i].text, begin, end - begin))
         {
+            printf("Finded statement is %s. Index = %zu\n", all_ops[i].text, i);
             return i;
         }
     }
@@ -181,29 +182,31 @@ err_code_t printf_tokens(tokens* programm_tokens, size_t tokens_num)
     {
         if (programm_tokens[i].type == OP)
         {
-            printf("index = %02zu, type = OP , name = %s\n", i,
+            printf("index = %02zu, type = OP , name = %s", i,
                                                      all_ops[(int) programm_tokens[i].value].text);
         }
         else if (programm_tokens[i].type == NUM)
         {
-            printf("index = %02zu, type = NUM, name = %lg\n", i,
+            printf("index = %02zu, type = NUM, name = %lg", i,
                         programm_tokens[i].value);
         }
         else if (programm_tokens[i].type == VAR)
         {
-            printf("index = %02zu, type = VAR, name = %s\n", i,
+            printf("index = %02zu, type = VAR, name = %s", i,
                         *(char**) &programm_tokens[i].value);
         }
         if (programm_tokens[i].type == STATEMENT)
         {
-            printf("index = %02zu, type = STA, name = %s\n", i,
+            printf("index = %02zu, type = STA, name = %s", i,
                                                      all_ops[(int) programm_tokens[i].value].text);
         }
         else if (programm_tokens[i].type == END)
         {
-            printf("index = %02zu, type = END, name = %c\n", i,
+            printf("index = %02zu, type = END, name = %c", i,
                         (char) programm_tokens[i].value);
         }
+
+        printf(" line = %zu, column = %zu\n", programm_tokens[i].line, programm_tokens[i].column);
     }
 
     return OK;
