@@ -52,8 +52,8 @@ size_t generate_dot_file(my_tree_t* tree, node_t* curr_node, const char * curr_a
 
     static size_t graphs_counter = 0;
 
-    const char *txt_filename = "tree_dump/dot/%lu.dot";
-    const char *base_command = "dot tree_dump/dot/%lu.dot -o tree_dump/img/%lu.png -Tpng";
+    const char *txt_filename = "log/dot/%lu.dot";
+    const char *base_command = "dot log/dot/%lu.dot -o log/img/%lu.png -Tpng";
     char *implementation     = (char *) calloc(strlen(base_command) + 20, sizeof(char));
     char *txt_full_filename  = (char *) calloc(strlen(txt_filename) + 20, sizeof(char));
 
@@ -248,8 +248,8 @@ char* give_op_type(node_t *node)
 err_code_t paste_instruction()
 {
 
-    const char *txt_filename = "tree_dump/dot/instruction.dot";
-    const char *base_command = "dot tree_dump/dot/instruction.dot -o tree_dump/img/instruction.png -Tpng";
+    const char *txt_filename = "log/dot/instruction.dot";
+    const char *base_command = "dot log/dot/instruction.dot -o log/img/instruction.png -Tpng";
 
     FILE * SAFE_OPEN_FILE(dot_file, txt_filename, "w");
     // printf("File to create:  %s\n", txt_full_filename);

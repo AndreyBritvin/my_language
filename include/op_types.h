@@ -6,6 +6,7 @@ enum node_type
     NUM,
     VAR,
     OP,
+    STATEMENT,
     SUBTREE,
     END
 };

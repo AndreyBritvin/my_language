@@ -14,7 +14,7 @@ size_t get_file_len(const char *filename)
     return (size_t) st.st_size;
 }
 
-char* fill_buffer(char **buffer_to_fill, const char* filename)
+err_code_t fill_buffer(char **buffer_to_fill, const char* filename)
 {
     size_t filesize = get_file_len(filename);
     char *temp_buf = (char *) calloc(filesize + 1, sizeof(char));
@@ -29,7 +29,7 @@ char* fill_buffer(char **buffer_to_fill, const char* filename)
     fread(temp_buf, 1, filesize, input_file);
     fclose(input_file);
 
-    return temp_buf;
+    return OK;
 }
 
 size_t lexical_analysis(tokens* token, char* buffer)
@@ -37,9 +37,13 @@ size_t lexical_analysis(tokens* token, char* buffer)
     size_t pos = 0;
     char* end_pos = buffer;
     size_t token_index = 0;
+    size_t lines  = 1;
+    size_t column = 1;
 
     while ((*end_pos) != '\0' && (*end_pos) != '\n')
     {
+        skip_spaces(buffer, &pos, &lines, &column);
+
         if (token_index >= MAXIMUM_LEXEMS_COUNT)
         {
             assert("You should increase MAXIMUM_LEXEMS_COUNT" == NULL);
@@ -47,11 +51,13 @@ size_t lexical_analysis(tokens* token, char* buffer)
         printf("current char is %c, addr = %p\n", *end_pos, end_pos);
         if (isdigit(*end_pos))
         {
+            char* begin = end_pos;
             tree_val_t value = strtod(end_pos, &end_pos);
             token[token_index].value = value;
             token[token_index].type  = NUM;
             printf("scanned value is %lg\n", value);
             end_pos--;
+            column += end_pos - begin;
             // printf("buffer = %p, end_pos = %p, diff = %zu\n", buffer, end_pos, end_pos - buffer);
             token_index++;
         }
@@ -62,6 +68,7 @@ size_t lexical_analysis(tokens* token, char* buffer)
             {
                 end_pos++;
             }
+            column += end_pos - begin;
 
             size_t key_word = is_key_word(begin, end_pos);
             printf("key word is %zu\n", key_word);
@@ -71,6 +78,10 @@ size_t lexical_analysis(tokens* token, char* buffer)
                 // TODO: increase more than 8 bytes
                 // memcpy(&tokens[token_index].value, begin, end_pos - begin);
                 // printf("Var_name = %8s\n", tokens[token_index].value);
+                if (end_pos - begin >= 8)
+                {
+                    assert("Var name should be shorter 8 symbols" == NULL);
+                }
                 printf("Var_name: End_pos = %p, begin = %p, diff = %zu\n", end_pos, begin, end_pos - begin);
                 char* var_name = (char*) calloc(end_pos - begin + 1, sizeof(char));
                 strncpy(var_name, begin, end_pos - begin);
@@ -88,12 +99,16 @@ size_t lexical_analysis(tokens* token, char* buffer)
         }
         else
         {
+            column += 1;
             size_t key_word = is_key_word(end_pos, end_pos + 1);
             printf("Something unknown opreation = %c\n", *end_pos);
             token[token_index].value = key_word;
             token[token_index].type  = OP;
             token_index++;
         }
+
+        token[token_index].line   = lines;
+        token[token_index].column = column;
 
         end_pos += 1;
     }
@@ -105,80 +120,21 @@ size_t lexical_analysis(tokens* token, char* buffer)
 
     return token_index;
 }
-/*
-node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* parent)
+
+err_code_t skip_spaces(char* input, size_t* pos, size_t* column, size_t* lines)
 {
-    assert(buffer);
-    assert(position);
-    assert(tree);
-
-    (*position)++;
-
-    size_t len_of_expr = 0;
-    tree_val_t expression = 0;
-    char funcname[MAX_STRING_SIZE] = {};
-
-    // printf("Type = %d ", sscanf(buffer + *position, "%[^()]%ln", &funcname, &len_of_expr));
-    // printf("Get_funcname = %d\n", get_func_num(funcname));
-
-    op_type_t var_type = NUM;
-    if (sscanf(buffer + *position, "%lf%ln", &expression, &len_of_expr) > 0)
+    while (isspace(input[*pos]))
     {
-        var_type = NUM;
-    }
-    else if (sscanf(buffer + *position, "%[^()]%ln", &funcname, &len_of_expr) >= 1
-             && get_func_num(funcname) != UNKNOWN)
-    {
-        var_type = OP;
-        expression = (tree_val_t) get_func_num(funcname);
-    }
-    else if (sscanf(buffer + *position, "%c%ln", &funcname, &len_of_expr))
-    {
-        var_type = VAR;
-        expression = (tree_val_t) funcname[0];
-    }
-    else
-    {
-        fprintf(stderr, "No sscanf dont work\n");
-    }
-
-    *position += len_of_expr;
-
-    tree->size++;
-    node_t* node_to_return = new_node(tree, var_type, expression, NULL, NULL);
-    node_to_return->parent = parent;
-    if (*position == 1)
-    {
-        tree->root = node_to_return;
-    }
-
-    bool is_left = true;
-
-    while (buffer[*position] != ')')
-    {
-        // TREE_DUMP(tree, node_to_return, "Working with this\n Input text = %s", expression);
-        // printf("Current char is %c position %zu\n", buffer[*position], *position);
-        if (buffer[*position] == '(' && is_left)
+        (*column)++;
+        if (input[*pos] == '\n')
         {
-            is_left = false;
-            node_to_return->left = fill_node(buffer, position, tree, node_to_return);
+            (*lines)++;
         }
-
-        else if (buffer[*position] == '(' && !is_left)
-        {
-            node_to_return->right = fill_node(buffer, position, tree, node_to_return);
-        }
-
-        else
-        {
-            fprintf(stderr, "Some error happened in brackets\n");
-        }
-
-        (*position)++;
+        (*pos)++;
     }
 
-    return node_to_return;
-}*/
+    return OK;
+}
 
 int get_func_num(char* input)
 {

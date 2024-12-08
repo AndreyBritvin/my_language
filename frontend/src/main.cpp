@@ -12,9 +12,17 @@ int main(int argc, char** argv)
         fprintf(stderr, "Sorry, but programm should be %s <input> <output>\n", argv[0]);
     }
 
-    char *buffer = fill_buffer(&buffer, "expressions/expr_1.txt");
+    char *buffer = NULL;
+    if (fill_buffer(&buffer, argv[1]) == ERROR_CALLOC_IS_NULL)
+    {
+        return ERROR_CALLOC_IS_NULL;
+    }
     printf("%s\n", buffer);
 
+    my_tree_t programm_tree = make_tree(buffer);
+    TREE_DUMP(&programm_tree, programm_tree.root, "This is out programm");
+
+    tree_dtor(&programm_tree);
     disable_logging();
     free(buffer);
 

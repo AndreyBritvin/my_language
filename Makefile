@@ -4,7 +4,7 @@ all:
 
 front:
 	make -C frontend
-	./frontend/frontend.out ../programs/proga.txt ../trees_binary/test_output.txt
+	./frontend/frontend.out programs/proga.txt trees_binary/test_output.txt
 
 back:
 	make -C backend
