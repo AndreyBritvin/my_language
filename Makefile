@@ -1,5 +1,5 @@
 all:
-# make front
+#	make front
 	make back
 
 front:

@@ -59,15 +59,16 @@ struct operation
     op_type      type;
     const char*  text;
     const char*  standart_text;
+    const char*  assembler_text;
 };
 
-static operation all_ops[] = {//!!! order should be equal to enum!!!
-    {ADD, "+", "+"},
-    {SUB, "-", "-"},
-    {MUL, "*", "*"},
-    {DIV, "/", "/"},
-    {SIN, "sin", "sin"},
-    {COS, "cos", "cos"},
+static operation all_ops[] = {//!!! order should be equal to enum!!! // TODO: codegen as in proc
+    {ADD, "+", "+", "add"},
+    {SUB, "-", "-", "sub"},
+    {MUL, "*", "*", "mul"},
+    {DIV, "/", "/", "div"},
+    {SIN, "sin", "sin", "div"},
+    {COS, "cos", "cos", "cos"},
     {EXP, "^", "^"},
     {TAN, "tan", "tan"},
     {SHN, "sinh", "sinh"},
