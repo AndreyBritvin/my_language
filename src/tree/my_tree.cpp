@@ -241,7 +241,7 @@ err_code_t write_node(my_tree_t* tree, node_t* node, size_t recurs_level, FILE* 
     }
     else if (node->type == OP || node->type == STATEMENT)
     {
-        fprintf(overwrite_file, "{\"%s\"", all_ops[(int) node->data].text);
+        fprintf(overwrite_file, "{\"%s\"", all_ops[(int) node->data].standart_text);
     }
     else if (node->type == VAR)
     {

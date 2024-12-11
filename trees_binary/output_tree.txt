@@ -36,14 +36,14 @@
                             {"5"}
                         }
                         {";"
-                            {"cheekcheeryk"
+                            {"print"
                                 {"-"
                                     {"x"}
                                     {"1"}
                                 }
                             }
                             {";"
-                                {"cheekcheeryk"
+                                {"print"
                                     {"x"}
                                 }
                             }

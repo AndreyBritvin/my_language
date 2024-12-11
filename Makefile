@@ -9,3 +9,7 @@ front:
 back:
 	make -C backend
 	./backend/backend.out
+
+clean:
+	rm frontend/frontend.out
+	rm backend/backend.out
