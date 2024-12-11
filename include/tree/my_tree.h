@@ -81,4 +81,8 @@ err_code_t verificator(my_tree_t* tree, node_t* node, size_t recurs_level);
 err_code_t generate_subtrees(my_tree_t* tree, node_t* curr_node, size_t recurs_level);
 err_code_t remove_subtrees(my_tree_t* tree, node_t* curr_node);
 
+err_code_t overwrite_file(my_tree_t* tree, const char* filename);
+err_code_t write_node(my_tree_t* tree, node_t* node, size_t recurs_level, FILE* overwrite_file);
+err_code_t print_n_spaces(size_t num, FILE* where);
+
 #endif // MY_TREE_H_

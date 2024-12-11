@@ -40,6 +40,7 @@ err_code_t tree_dtor(my_tree_t* tree)
 err_code_t node_dtor(node_t* node)
 {
     assert(node);
+    if (node->type == VAR) free(*(char**)&node->data);
 
     if (node->left  != NULL) node_dtor(node->left);
     if (node->right != NULL) node_dtor(node->right);
@@ -208,6 +209,74 @@ err_code_t remove_subtrees(my_tree_t* tree, node_t* curr_node)
         }
 
         free(curr_node);
+    }
+
+    return OK;
+}
+
+err_code_t overwrite_file(my_tree_t* tree, const char* filename)
+{
+    assert(tree);
+    assert(filename);
+
+    FILE * SAFE_OPEN_FILE(overwrite_file, filename, "w");
+
+    write_node(tree, tree->root, 0, overwrite_file);
+
+    fclose(overwrite_file);
+
+    return OK;
+}
+
+err_code_t write_node(my_tree_t* tree, node_t* node, size_t recurs_level, FILE* overwrite_file)
+{
+    assert(tree);
+    assert(node);
+    assert(overwrite_file);
+
+    print_n_spaces(recurs_level * 4, overwrite_file);
+    if (node->type == NUM)
+    {
+        fprintf(overwrite_file, "{\"%lg\"", node->data);
+    }
+    else if (node->type == OP || node->type == STATEMENT)
+    {
+        fprintf(overwrite_file, "{\"%s\"", all_ops[(int) node->data].text);
+    }
+    else if (node->type == VAR)
+    {
+        fprintf(overwrite_file, "{\"%s\"", *(char**)&node->data);
+    }
+
+    if (node->left != NULL)
+    {
+        fprintf(overwrite_file, "\n");
+        write_node(tree, node->left, recurs_level + 1, overwrite_file);
+    }
+    if (node->right != NULL)
+    {
+        write_node(tree, node->right, recurs_level + 1, overwrite_file);
+    }
+    if (node->right == NULL && node->left == NULL)
+    {
+        fprintf(overwrite_file, "}\n");
+    }
+    else
+    {
+        print_n_spaces(recurs_level * 4, overwrite_file);
+        fprintf(overwrite_file, "}\n");
+    }
+
+    return OK;
+}
+
+err_code_t print_n_spaces(size_t num, FILE* where)
+{
+    assert(where);
+
+    for (size_t i = 0; i < num; i++)
+    {
+        fprintf(where, " ");
     }
 
     return OK;

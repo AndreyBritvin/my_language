@@ -219,7 +219,7 @@ char* get_data_field(node_t* node)
 
 char* give_subtree_name(node_t* node)
 {
-    char* to_ret = (char *) calloc(13, sizeof(char));
+    char* to_ret = (char *) calloc(32, sizeof(char));
     // printf("!!!!!!Subtree_name is %s\n", (char);
     strcpy(to_ret, (char*) &node->data);
 
@@ -227,15 +227,15 @@ char* give_subtree_name(node_t* node)
 
 char* give_var_type(node_t *node)
 {
-    char* to_ret = (char *) calloc(13, sizeof(char));
-    sprintf(to_ret, "%c", (char) node->data);
+    char* to_ret = (char *) calloc(32, sizeof(char));
+    strcpy(to_ret, *(char**)&node->data);
 
     return to_ret;
 }
 
 char* give_num_type(node_t *node)
 {
-    char* to_ret = (char *) calloc(13, sizeof(char));
+    char* to_ret = (char *) calloc(32, sizeof(char));
     sprintf(to_ret, "%lg", node->data);
 
     return to_ret;
@@ -243,7 +243,7 @@ char* give_num_type(node_t *node)
 
 char* give_op_type(node_t *node)
 {
-    char* to_ret = (char *) calloc(10, sizeof(char));
+    char* to_ret = (char *) calloc(32, sizeof(char));
     strcpy(to_ret, all_ops[(long) node->data].text);
 
     return to_ret;

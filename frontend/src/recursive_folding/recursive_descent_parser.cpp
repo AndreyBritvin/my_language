@@ -157,17 +157,21 @@ node_t* get_variable(my_tree_t* tree, tokens* input, size_t* pos)
 
     printf("Well, we are in get_variable. Type = %d, addr in value is %p and str is \n",
              input[*pos].type, *(char**)&CURR_VAL);
-    if (strcmp(*(char**)&CURR_VAL, "x") == 0)
-    {
-        (*pos)++;
-        return new_node(tree, VAR, 'x', NULL, NULL);
-    }
-    else
-    {
-        printf("This var is not available\n");
-    }
 
-    return NULL;
+    node_t* to_ret = new_node(tree, VAR, '\0', NULL, NULL);
+    memcpy(&to_ret->data, &CURR_VAL, sizeof(tree_val_t));
+    INCR;
+    // if (strcmp(*(char**)&CURR_VAL, "x") == 0)
+    // {
+    //     (*pos)++;
+    //     return new_node(tree, VAR, 'x', NULL, NULL);
+    // }
+    // else
+    // {
+    //     printf("This var is not available\n");
+    // }
+
+    return to_ret;
 }
 
 node_t* get_assingnment(my_tree_t* tree, tokens* input, size_t* pos)

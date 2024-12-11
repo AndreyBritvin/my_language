@@ -93,7 +93,7 @@ static operation all_ops[] = {//!!! order should be equal to enum!!!
     {EQUAL,         "="},
     {IF_STATE,      "if"},
     {WHILE_STATE, "while"},
-    {PRINT_STATE, "print"},
+    {PRINT_STATE, "cheekcheeryk"},
     {STATEMENT_END, ";"},
     {CONDITION_END, ":"},
 };

@@ -22,6 +22,8 @@ int main(int argc, char** argv)
     my_tree_t programm_tree = make_tree(buffer);
     TREE_DUMP(&programm_tree, programm_tree.root, "This is out programm");
 
+    overwrite_file(&programm_tree, "trees_binary/output_tree.txt");
+
     tree_dtor(&programm_tree);
     disable_logging();
     free(buffer);

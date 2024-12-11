@@ -26,7 +26,14 @@ err_code_t fill_buffer(char **buffer_to_fill, const char* filename)
 
     FILE* SAFE_OPEN_FILE(input_file, filename, "r");
 
-    fread(temp_buf, 1, filesize, input_file);
+    // fread(temp_buf, 1, filesize, input_file);
+    for (size_t i = 0; i < filesize; i++)
+    {
+        if (fscanf(input_file, "%c", temp_buf++) == EOF)
+        {
+            break;
+        }
+    }
     fclose(input_file);
 
     return OK;
@@ -81,9 +88,11 @@ size_t lexical_analysis(tokens* token, char* buffer)
                     assert("Var name should be shorter 8 symbols" == NULL);
                 }
                 printf("Var_name: End_pos = %p, begin = %p, diff = %zu\n", end_pos, begin, end_pos - begin);
-                char* var_name = (char*) calloc(end_pos - begin + 1, sizeof(char));
+                char* var_name = (char*) calloc(sizeof(tree_val_t), sizeof(char));
                 strncpy(var_name, begin, end_pos - begin);
+
                 memcpy(&token[token_index].value, &var_name, sizeof(tree_val_t));
+                // printf();
                 token[token_index].type  = VAR;
                 token_index++;
             }
@@ -193,7 +202,7 @@ err_code_t printf_tokens(tokens* programm_tokens, size_t tokens_num)
         else if (programm_tokens[i].type == VAR)
         {
             printf("index = %02zu, type = VAR, name = %s", i,
-                        *(char**) &programm_tokens[i].value);
+                                    *(char**) &programm_tokens[i].value);
         }
         if (programm_tokens[i].type == STATEMENT)
         {
@@ -218,7 +227,7 @@ err_code_t free_tokens(tokens* programm_tokens, size_t tokens_num)
     {
         if (programm_tokens[i].type == VAR)
         {
-            free(*(char**) &programm_tokens[i].value);
+            // free(*(char**) &programm_tokens[i].value);
         }
     }
     free(programm_tokens);
