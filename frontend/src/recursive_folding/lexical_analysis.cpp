@@ -69,7 +69,7 @@ size_t lexical_analysis(tokens* token, char* buffer)
         else if (isalpha(*end_pos))
         {
             char* begin = end_pos;
-            while (isalnum(*end_pos))
+            while (isalnum(*end_pos) || *end_pos == '_')
             {
                 end_pos++;
             }

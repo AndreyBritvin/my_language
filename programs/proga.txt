@@ -1,1 +1,11 @@
-x = 4 + 6 /2 ;
+stocks_in x new_amount 1 eat 2 overeat 1;
+cheekcheeryk x;
+count_seeds_in x:
+{
+    stocks_in y new_amount Y;
+    fly_until_amount_in x:
+    {
+        cheekcheeryk y;
+        stocks_in x new_amount x eat 1;
+    }
+}

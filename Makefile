@@ -1,6 +1,6 @@
 all:
-#	make front
-	make back
+	make front
+#	make back
 
 front:
 	make -C frontend

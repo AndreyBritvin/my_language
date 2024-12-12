@@ -44,12 +44,13 @@ enum op_type
 
     SCOPE_OPEN      = 25,
     SCOPE_CLOS      = 26,
-    EQUAL           = 27,
-    IF_STATE        = 28,
-    WHILE_STATE     = 29,
-    PRINT_STATE     = 30,
-    STATEMENT_END   = 31,
-    CONDITION_END   = 32,
+    EQUAL_BEGIN     = 27,
+    EQUAL_MIDDLE    = 28,
+    IF_STATE        = 29,
+    WHILE_STATE     = 30,
+    PRINT_STATE     = 31,
+    STATEMENT_END   = 32,
+    CONDITION_END   = 33,
 
     UNKNOWN
 };
@@ -63,13 +64,13 @@ struct operation
 };
 
 static operation all_ops[] = {//!!! order should be equal to enum!!! // TODO: codegen as in proc
-    {ADD, "+", "+", "add"},
-    {SUB, "-", "-", "sub"},
-    {MUL, "*", "*", "mul"},
-    {DIV, "/", "/", "div"},
+    {ADD, "regurgitation", "+", "add"},
+    {SUB, "eat", "-", "sub"},
+    {MUL, "growth", "*", "mul"},
+    {DIV, "overeat", "/", "div"},
     {SIN, "sin", "sin", "div"},
     {COS, "cos", "cos", "cos"},
-    {EXP, "^", "^"},
+    {EXP, "uncontrolable_growth", "^"},
     {TAN, "tan", "tan"},
     {SHN, "sinh", "sinh"},
     {CHS, "cosh", "cosh"},
@@ -92,9 +93,10 @@ static operation all_ops[] = {//!!! order should be equal to enum!!! // TODO: co
 
     {SCOPE_OPEN,    "{", "{"},
     {SCOPE_CLOS,    "}", "}"},
-    {EQUAL,         "=", "="},
-    {IF_STATE,      "if", "if"},
-    {WHILE_STATE, "while", "while"},
+    {EQUAL_BEGIN,   "stocks_in",  "="},
+    {EQUAL_MIDDLE,  "new_amount", "="},
+    {IF_STATE,      "count_seeds_in", "if"},
+    {WHILE_STATE, "fly_until_amount_in", "while"},
     {PRINT_STATE, "cheekcheeryk", "print"},
     {STATEMENT_END, ";", ";"},
     {CONDITION_END, ":", ":"},
