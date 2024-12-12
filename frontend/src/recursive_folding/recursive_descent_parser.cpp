@@ -14,12 +14,35 @@
 #define INCR      (*pos)++
 
 #define CUSTOM_SYNTAX_ERROR(...) {fprintf(stderr, __VA_ARGS__); abort();}
-#define SYNTAX_ERROR(expected) {fprintf(stderr, "At line %zu column %zu expected %s, but %c instead\n",\
-                                            input[*pos].line, input[*pos].column, expected, CURR_VAL); abort();}
+#define SYNTAX_ERROR(expected) {fprintf(stderr, "At line %zu column %zu expected %s, but %c (%d) instead\n",\
+                                            input[*pos].line, input[*pos].column, expected, CURR_VAL, CURR_VAL);\
+                                             abort();}
+
 #define REQUIRE(symbol) if (CURR_TYPE != STATEMENT || (int) CURR_VAL != symbol)     \
                         SYNTAX_ERROR(all_ops[symbol].text);                         \
                         INCR;
 
+#define CHECK_VALUE(symbol)                                                                       \
+                        if (CURR_TYPE != STATEMENT || (int) CURR_VAL != symbol) return NULL; \
+                        INCR;
+
+#define REQUIRE_EXPR(name)                                                                          \
+                        node_t* name = get_expression(tree, input, pos);                            \
+                        if (name == NULL)                                                           \
+                        CUSTOM_SYNTAX_ERROR("Expected expression at line %zu column %zu",           \
+                                                   input[*pos].line, input[*pos].column);
+
+#define REQUIRE_VAR(name)                                                                           \
+                        node_t* name = get_variable(tree, input, pos);                              \
+                        if (name == NULL)                                                           \
+                        CUSTOM_SYNTAX_ERROR("Expected variable at line %zu column %zu",             \
+                                                   input[*pos].line, input[*pos].column);
+
+#define REQUIRE_COMP(name)                                                                          \
+                        node_t* name = get_comparison(tree, input, pos);                            \
+                        if (name == NULL)                                                           \
+                        CUSTOM_SYNTAX_ERROR("Expected comparison at line %zu column %zu",           \
+                                                   input[*pos].line, input[*pos].column);
 
 my_tree_t make_tree(char *buffer)
 {
@@ -149,17 +172,17 @@ node_t* get_number(my_tree_t* tree, tokens* input, size_t* pos)
 {
     tree_val_t val = CURR_VAL;
 
-    (*pos)++;
+    INCR;
 
     return new_node(tree, NUM, val, NULL, NULL);
 }
 
 node_t* get_variable(my_tree_t* tree, tokens* input, size_t* pos)
 {
-    if (input[*pos].type != VAR) return NULL;
+    if (CURR_TYPE != VAR) return NULL;
 
     printf("Well, we are in get_variable. Type = %d, addr in value is %p and str is \n",
-             input[*pos].type, *(char**)&CURR_VAL);
+             CURR_TYPE, *(char**)&CURR_VAL);
 
     node_t* to_ret = new_node(tree, VAR, '\0', NULL, NULL);
     memcpy(&to_ret->data, &CURR_VAL, sizeof(tree_val_t));
@@ -179,18 +202,14 @@ node_t* get_variable(my_tree_t* tree, tokens* input, size_t* pos)
 
 node_t* get_assingnment(my_tree_t* tree, tokens* input, size_t* pos)
 {
-    if (CURR_TYPE != STATEMENT || (int) CURR_VAL != EQUAL_BEGIN) return NULL;
-    INCR;
+    CHECK_VALUE(EQUAL_BEGIN);
 
-    node_t* identificator = get_variable(tree, input, pos);
-    if (identificator == NULL)
-    {
-        return NULL;
-    }
+    REQUIRE_VAR(identificator);
 
     REQUIRE(EQUAL_MIDDLE);
 
-    node_t* right_expr = get_expression(tree, input, pos);
+    REQUIRE_EXPR(right_expr);
+
     node_t* equal_node = new_node(tree, STATEMENT, EQUAL_BEGIN, identificator, right_expr);
     identificator->parent = right_expr->parent = equal_node;
 
@@ -228,12 +247,15 @@ node_t* get_statement(my_tree_t* tree, tokens* input, size_t* pos)
 
 node_t* get_if_state(my_tree_t* tree, tokens* input, size_t* pos)
 {
-    if (CURR_TYPE != STATEMENT || (int) CURR_VAL != IF_STATE) return NULL;
-    INCR;
+    CHECK_VALUE(IF_STATE);
 
-    node_t* condition = get_expression(tree, input, pos);
-    if (condition == NULL) CUSTOM_SYNTAX_ERROR("Expected expression in if at line %zu column %zu",
-                                                   input[*pos].line, input[*pos].column);
+    REQUIRE_VAR(cond_var)
+    REQUIRE_COMP(condition);
+    REQUIRE_EXPR(cond_expr);
+
+    condition->left  = cond_var;
+    condition->right = cond_expr;
+    cond_var->parent = cond_expr->parent = condition;
 
     if ((int) CURR_VAL != CONDITION_END) SYNTAX_ERROR(all_ops[CONDITION_END].text);
     INCR;
@@ -250,12 +272,15 @@ node_t* get_if_state(my_tree_t* tree, tokens* input, size_t* pos)
 
 node_t* get_while_state(my_tree_t* tree, tokens* input, size_t* pos)
 {
-    if (CURR_TYPE != STATEMENT || (int) CURR_VAL != WHILE_STATE) return NULL;
-    INCR;
+    CHECK_VALUE(WHILE_STATE);
 
-    node_t* condition = get_expression(tree, input, pos);
-    if (condition == NULL) CUSTOM_SYNTAX_ERROR("Expected expression in while at line %zu column %zu",
-                                                   input[*pos].line, input[*pos].column);
+    REQUIRE_VAR(cond_var)
+    REQUIRE_COMP(condition);
+    REQUIRE_EXPR(cond_expr);
+
+    condition->left  = cond_var;
+    condition->right = cond_expr;
+    cond_var->parent = cond_expr->parent = condition;
 
     REQUIRE(CONDITION_END);
 
@@ -271,10 +296,9 @@ node_t* get_while_state(my_tree_t* tree, tokens* input, size_t* pos)
 
 node_t* get_print_state(my_tree_t* tree, tokens* input, size_t* pos)
 {
-    if (CURR_TYPE != STATEMENT || (int) CURR_VAL != PRINT_STATE) return NULL;
-    INCR;
+    CHECK_VALUE(PRINT_STATE);
 
-    node_t* printable = get_expression(tree, input, pos);
+    REQUIRE_EXPR(printable);
 
     REQUIRE(STATEMENT_END);
 
@@ -282,4 +306,15 @@ node_t* get_print_state(my_tree_t* tree, tokens* input, size_t* pos)
     printable->parent = to_ret;
 
     return to_ret;
+}
+
+node_t* get_comparison(my_tree_t* tree, tokens* input, size_t* pos)
+{
+    node_t* comparison_node = new_node(tree, OP, (int) CURR_VAL, NULL, NULL);
+
+    if (CURR_TYPE != OP || (int) CURR_VAL > FULL_EQUAL || (int) CURR_VAL < MORE)
+    SYNTAX_ERROR(all_ops[NOOO_EQUAL].text);
+    INCR;
+
+    return comparison_node;
 }

@@ -1,0 +1,48 @@
+OPERATION(ADD, "regurgitation", "+", "add")
+OPERATION(SUB, "eat", "-", "sub")
+OPERATION(MUL, "growth", "*", "mul")
+OPERATION(DIV, "overeat", "/", "div")
+
+OPERATION(EXP, "uncontrolable_growth", "^")
+OPERATION(LOG, "ln", "ln")
+
+OPERATION(SIN, "sin", "sin", "div")
+OPERATION(COS, "cos", "cos", "cos")
+OPERATION(TAN, "tan", "tan")
+OPERATION(CTG, "cot", "cot")
+
+OPERATION(SHN, "sinh", "sinh")
+OPERATION(CHS, "cosh", "cosh")
+OPERATION(TGH, "tanh", "tanh")
+OPERATION(CTH, "coth", "coth")
+
+OPERATION(MORE, "more", ">")
+OPERATION(LESS, "less", "<")
+OPERATION(MORE_EQUAL, "more_eq",    ">=")
+OPERATION(LESS_EQUAL, "less_eq",    "<=")
+OPERATION(NOOO_EQUAL, "not_equal",  "!=")
+OPERATION(FULL_EQUAL, "full_equal", "==")
+
+OPERATION(ARCSIN, "arcsin", "arcsin")
+OPERATION(ARCCOS, "arccos", "arccos")
+OPERATION(ARCTAN, "arctan", "arctan")
+OPERATION(ARCCTG, "arcctg", "arcctg")
+OPERATION(ARCSHN, "arcsinh", "arcsinh")
+OPERATION(ARCCHS, "arccosh", "arccosh")
+OPERATION(ARCTGH, "arctanh", "arctanh")
+OPERATION(ARCCTH, "arccoth", "arccoth")
+
+OPERATION(BRACKET_OPEN, "(", "(")
+OPERATION(BRACKET_CLOS, ")", ")")
+
+OPERATION(STATEMENT_BEGIN, "", "")
+
+OPERATION(SCOPE_OPEN,    "{", "{")
+OPERATION(SCOPE_CLOS,    "}", "}")
+OPERATION(EQUAL_BEGIN,   "stocks_in",  "=")
+OPERATION(EQUAL_MIDDLE,  "new_amount", "=")
+OPERATION(IF_STATE,      "count_seeds_in", "if")
+OPERATION(WHILE_STATE,   "fly_until_amount_in", "while")
+OPERATION(PRINT_STATE,   "cheekcheeryk", "print")
+OPERATION(STATEMENT_END, ";", ";")
+OPERATION(CONDITION_END, ":", ":")

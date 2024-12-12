@@ -21,5 +21,6 @@ syntax_analysis_func_t get_statement  ;
 syntax_analysis_func_t get_if_state   ;
 syntax_analysis_func_t get_while_state;
 syntax_analysis_func_t get_print_state;
+syntax_analysis_func_t get_comparison ;
 
 #endif // RECURSIVE_DESCNET_PARSER_H_
