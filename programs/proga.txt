@@ -3,9 +3,14 @@ cheekcheeryk x;
 count_seeds_in x more 1:
 {
     stocks_in y new_amount Y;
-    fly_until_amount_in x:
+    fly_until_amount_in x less 2:
     {
         cheekcheeryk y;
         stocks_in x new_amount x eat 1;
     }
+}
+forget_mimic_and_feed blabla;
+mimic sada
+{
+    cheekcheeryk x;
 }

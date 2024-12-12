@@ -46,3 +46,7 @@ OPERATION(WHILE_STATE,   "fly_until_amount_in", "while")
 OPERATION(PRINT_STATE,   "cheekcheeryk", "print")
 OPERATION(STATEMENT_END, ";", ";")
 OPERATION(CONDITION_END, ":", ":")
+
+OPERATION(RETURN,        "forget_mimic_and_feed", "return")
+OPERATION(FUNC_DECL,     "mimic", "def")
+OPERATION(FUNC_SPEC,     "",      "spec")

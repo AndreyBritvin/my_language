@@ -38,8 +38,14 @@
                         CUSTOM_SYNTAX_ERROR("Expected variable at line %zu column %zu",             \
                                                    input[*pos].line, input[*pos].column);
 
-#define REQUIRE_COMP(name)                                                                          \
-                        node_t* name = get_comparison(tree, input, pos);                            \
+#define REQUIRE_STATEMENT(name)                                                                     \
+                        node_t* name = get_statement(tree, input, pos);                             \
+                        if (name == NULL)                                                           \
+                        CUSTOM_SYNTAX_ERROR("Expected statement at line %zu column %zu",            \
+                                                   input[*pos].line, input[*pos].column);
+
+#define REQUIRE_CUSTOM(name, func)                                                                  \
+                        node_t* name = func(tree, input, pos);                                      \
                         if (name == NULL)                                                           \
                         CUSTOM_SYNTAX_ERROR("Expected comparison at line %zu column %zu",           \
                                                    input[*pos].line, input[*pos].column);
@@ -233,6 +239,8 @@ node_t* get_statement(my_tree_t* tree, tokens* input, size_t* pos)
     else if ((state = get_while_state(tree, input, pos)) != NULL)  state;
     else if ((state = get_assingnment(tree, input, pos)) != NULL)  state;
     else if ((state = get_print_state(tree, input, pos)) != NULL)  state;
+    else if ((state = get_return     (tree, input, pos)) != NULL)  state;
+    else if ((state = get_func_decl  (tree, input, pos)) != NULL)  state;
 
     if (state == NULL) return NULL;
 
@@ -250,19 +258,16 @@ node_t* get_if_state(my_tree_t* tree, tokens* input, size_t* pos)
     CHECK_VALUE(IF_STATE);
 
     REQUIRE_VAR(cond_var)
-    REQUIRE_COMP(condition);
+    REQUIRE_CUSTOM(condition, get_comparison);
     REQUIRE_EXPR(cond_expr);
 
     condition->left  = cond_var;
     condition->right = cond_expr;
     cond_var->parent = cond_expr->parent = condition;
 
-    if ((int) CURR_VAL != CONDITION_END) SYNTAX_ERROR(all_ops[CONDITION_END].text);
-    INCR;
+    REQUIRE(CONDITION_END);
 
-    node_t* doing = get_statement(tree, input, pos);
-    if (doing == NULL) CUSTOM_SYNTAX_ERROR("Expected some statements after if at line %zu column %zu",
-                                                   input[*pos].line, input[*pos].column);
+    REQUIRE_STATEMENT(doing);
 
     node_t* to_ret = new_node(tree, STATEMENT, IF_STATE, condition, doing);
     doing->parent = condition->parent = to_ret;
@@ -275,7 +280,7 @@ node_t* get_while_state(my_tree_t* tree, tokens* input, size_t* pos)
     CHECK_VALUE(WHILE_STATE);
 
     REQUIRE_VAR(cond_var)
-    REQUIRE_COMP(condition);
+    REQUIRE_CUSTOM(condition, get_comparison);
     REQUIRE_EXPR(cond_expr);
 
     condition->left  = cond_var;
@@ -284,9 +289,7 @@ node_t* get_while_state(my_tree_t* tree, tokens* input, size_t* pos)
 
     REQUIRE(CONDITION_END);
 
-    node_t* doing = get_statement(tree, input, pos);
-    if (doing == NULL) CUSTOM_SYNTAX_ERROR("Expected some statements after while at line %zu column %zu",
-                                                   input[*pos].line, input[*pos].column);
+    REQUIRE_STATEMENT(doing);
 
     node_t* to_ret = new_node(tree, STATEMENT, WHILE_STATE, condition, doing);
     doing->parent = condition->parent = to_ret;
@@ -317,4 +320,38 @@ node_t* get_comparison(my_tree_t* tree, tokens* input, size_t* pos)
     INCR;
 
     return comparison_node;
+}
+
+node_t* get_return(my_tree_t* tree, tokens* input, size_t* pos)
+{
+    CHECK_VALUE(RETURN);
+
+    REQUIRE_EXPR(return_expr);
+
+    REQUIRE(STATEMENT_END);
+
+    node_t* to_ret = new_node(tree, STATEMENT, RETURN, return_expr, NULL);
+    return_expr->parent = to_ret;
+
+    return to_ret;
+}
+
+node_t* get_func_decl(my_tree_t* tree, tokens* input, size_t* pos)
+{
+    CHECK_VALUE(FUNC_DECL);
+
+    node_t* func_def = new_node(tree, STATEMENT, FUNC_DECL, NULL, NULL);
+    REQUIRE_VAR(func_name); // TODO: make id
+    node_t* func_spec = new_node(tree, STATEMENT, FUNC_SPEC, func_name, NULL);
+    func_spec->parent = func_def;
+    func_def->left = func_spec;
+
+    REQUIRE(SCOPE_OPEN);
+    REQUIRE_STATEMENT(func_body);
+    func_def->right   = func_body;
+    func_body->parent = func_def;
+
+    REQUIRE(SCOPE_CLOS);
+
+    return func_def;
 }
