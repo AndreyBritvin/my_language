@@ -10,18 +10,18 @@ BUILD_FILES   = $(wildcard build/*.o)
 
 MY_LIBS = ../My_logging_system/log_lib.a
 
-all: backend.out
+all: rfrontend.out
 
-backend.out:$(SRC_FILES) $(BUILD_FILES)
-	@$(CC) $(CFLAGS) $(INCLUDE) $(SRC_FILES) $(MY_LIBS) -o backend.out
+rfrontend.out:$(SRC_FILES) $(BUILD_FILES)
+	@$(CC) $(CFLAGS) $(INCLUDE) $(SRC_FILES) $(MY_LIBS) -o rfrontend.out
 
 library:
 	@$(CC) $(CFLAGS) -c $(INCLUDE) $(SRC_FILES) My_logging_system/log_lib.a -o $(BUILD_FILES)
 
 run:
-	./backend.out
+	./rfrontend.out
 
 clean:
 	rm -rf build
 	mkdir build
-	rm backend.out
+	rm rfrontend.out

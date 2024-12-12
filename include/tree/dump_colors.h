@@ -22,6 +22,8 @@
 #define VAR_COLOR "coral1"
 #define NUM_COLOR "green3"
 #define STATEMENT_COLOR "orange"
+#define STATEMENT_SEP_COLOR "#a28db5"
+#define STATEMENT_END_COLOR "#8ae6d9"
 #define SUBTREE_COLOR "gray91"
 
 

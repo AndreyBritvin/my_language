@@ -45,10 +45,18 @@ my_tree_t make_prog_tree(char *buffer)
     free(tree_to_fill.root);
 
     size_t position = 0;
-    tree_to_fill.root = fill_node(buffer, &position, &tree_to_fill, NULL);
+
+    tree_to_fill.root = fill_node(buffer + check_signature(buffer), &position, &tree_to_fill, NULL);
     TREE_DUMP(&tree_to_fill, tree_to_fill.root, "I am gROOT (generated this tree after reading file)");
 
     return tree_to_fill;
+}
+
+size_t check_signature(char* input)
+{
+    char buffer[20] = {};
+
+    return 16; // TODO: check signature and give true offset
 }
 
 node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* parent)
@@ -112,7 +120,7 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
         free(expression);
     }
 
-    node_to_return->parent = parent;
+    if (node_to_return != NULL) node_to_return->parent = parent;
     if (*position == 1)
     {
         tree->root = node_to_return;

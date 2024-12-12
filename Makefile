@@ -1,10 +1,14 @@
 all:
-	make front
+#	make front
 #	make back
-
+	make rfront
 front:
 	make -C frontend
 	./frontend/frontend.out programs/proga.txt trees_binary/test_output.txt
+
+rfront:
+	make -C reverse_frontend
+	./reverse_frontend/rfrontend.out programs/proga.txt rebuild_codes/test_output.txt
 
 back:
 	make -C backend

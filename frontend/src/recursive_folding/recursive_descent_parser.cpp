@@ -13,14 +13,14 @@
 #define POS       (*pos)
 #define INCR      (*pos)++
 
-#define CUSTOM_SYNTAX_ERROR(...) {fprintf(stderr, __VA_ARGS__); abort();}
+#define CUSTOM_SYNTAX_ERROR(...) {fprintf(stderr, __VA_ARGS__); }//abort();}
 #define SYNTAX_ERROR(expected) {fprintf(stderr, "At line %zu column %zu expected %s, but %c (%d) instead\n",\
                                             input[*pos].line, input[*pos].column, expected, CURR_VAL, CURR_VAL);\
                                              abort();}
 
-#define REQUIRE(symbol) if (CURR_TYPE != OP && CURR_TYPE != STATEMENT || (int) CURR_VAL != symbol)  \
+#define REQUIRE(symbol) {if (CURR_TYPE != OP && CURR_TYPE != STATEMENT || (int) CURR_VAL != symbol)  \
                         SYNTAX_ERROR(all_ops[symbol].text);                                         \
-                        INCR;
+                        INCR;}
 
 #define CHECK_VALUE(symbol)                                                                       \
                         if (CURR_TYPE != STATEMENT || (int) CURR_VAL != symbol) return NULL; \
@@ -143,6 +143,8 @@ node_t* get_primary(my_tree_t* tree, tokens* input, size_t* pos)
         INCR;
         return val;
     }
+    node_t* to_ret = NULL;
+    if ((to_ret = get_func_call(tree, input, pos)) != NULL) return to_ret;
     if ((int) input[*pos].type == VAR) return get_variable(tree, input, pos);
     if ((int) input[*pos].type == NUM) return get_number  (tree, input, pos);
     if ((int) input[*pos].type == OP ) return get_func    (tree, input, pos);
@@ -187,21 +189,14 @@ node_t* get_variable(my_tree_t* tree, tokens* input, size_t* pos)
 {
     if (CURR_TYPE != VAR) return NULL;
 
+    node_t* to_ret = NULL;
+
     printf("Well, we are in get_variable. Type = %d, addr in value is %p and str is \n",
              CURR_TYPE, *(char**)&CURR_VAL);
 
-    node_t* to_ret = new_node(tree, VAR, '\0', NULL, NULL);
+    to_ret = new_node(tree, VAR, '\0', NULL, NULL);
     memcpy(&to_ret->data, &CURR_VAL, sizeof(tree_val_t));
     INCR;
-    // if (strcmp(*(char**)&CURR_VAL, "x") == 0)
-    // {
-    //     (*pos)++;
-    //     return new_node(tree, VAR, 'x', NULL, NULL);
-    // }
-    // else
-    // {
-    //     printf("This var is not available\n");
-    // }
 
     return to_ret;
 }
@@ -235,7 +230,8 @@ node_t* get_statement(my_tree_t* tree, tokens* input, size_t* pos)
         return inside;
     }
     node_t* state = NULL;
-    if      ((state = get_if_state   (tree, input, pos)) != NULL)  state;
+    if      ((state = get_func_call  (tree, input, pos)) != NULL)  REQUIRE(STATEMENT_END)
+    else if ((state = get_if_state   (tree, input, pos)) != NULL)  state;
     else if ((state = get_while_state(tree, input, pos)) != NULL)  state;
     else if ((state = get_assingnment(tree, input, pos)) != NULL)  state;
     else if ((state = get_print_state(tree, input, pos)) != NULL)  state;
@@ -336,6 +332,20 @@ node_t* get_return(my_tree_t* tree, tokens* input, size_t* pos)
     return to_ret;
 }
 
+#define REQUIRE_ID_SEQUENCE(type)                                                       \
+    while (CURR_TYPE == VAR)                                                        \
+    {                                                                               \
+        REQUIRE##type(var_n);                                                         \
+        separator_node->left = var_n;                                               \
+        var_n->parent = separator_node;                                             \
+                                                                                    \
+        if (CURR_TYPE == OP && (int) CURR_VAL == BRACKET_CLOS) break;               \
+        REQUIRE(SEPARATOR);                                                         \
+        separator_node->right = new_node(tree, STATEMENT, SEPARATOR, NULL, NULL);   \
+        separator_node->right->parent = separator_node;                             \
+        separator_node = separator_node->right;                                     \
+    }
+
 node_t* get_func_decl(my_tree_t* tree, tokens* input, size_t* pos)
 {
     CHECK_VALUE(FUNC_DECL);
@@ -354,18 +364,7 @@ node_t* get_func_decl(my_tree_t* tree, tokens* input, size_t* pos)
     func_spec->parent = func_def;
     func_def->left = func_spec;
 
-    while (CURR_TYPE == VAR)
-    {
-        REQUIRE_VAR(var_n);
-        separator_node->left = var_n;
-        var_n->parent = separator_node;
-
-        if (CURR_TYPE == OP && (int) CURR_VAL == BRACKET_CLOS) break;
-        REQUIRE(SEPARATOR);
-        separator_node->right = new_node(tree, STATEMENT, SEPARATOR, NULL, NULL);
-        separator_node->right->parent = separator_node;
-        separator_node = separator_node->right;
-    }
+    REQUIRE_ID_SEQUENCE(_VAR);
 
     REQUIRE(BRACKET_CLOS);
 
@@ -378,4 +377,42 @@ node_t* get_func_decl(my_tree_t* tree, tokens* input, size_t* pos)
     REQUIRE(SCOPE_CLOS);
 
     return func_def;
+}
+
+node_t* get_func_call(my_tree_t* tree, tokens* input, size_t* pos)
+{
+    if (CURR_TYPE == VAR && input[*pos + 1].type == OP && (int) input[*pos + 1].value == BRACKET_OPEN)
+    {
+        REQUIRE_VAR(func_name);
+
+        node_t* func_call = new_node(tree, STATEMENT, FUNC_CALL, NULL, NULL);
+
+        REQUIRE(BRACKET_OPEN);
+
+        node_t* separator_node = new_node(tree, STATEMENT, SEPARATOR, NULL, NULL);
+        node_t* func_spec = new_node(tree, STATEMENT, FUNC_SPEC, func_name, separator_node);
+        separator_node->parent = func_spec;
+        func_name->parent      = func_spec;
+        func_spec->parent      = func_call;
+        func_call->left        = func_spec;
+
+        while (CURR_TYPE != OP || (int) CURR_VAL != BRACKET_OPEN)                       \
+        {                                                                               \
+            REQUIRE_EXPR(var_n);                                                         \
+            separator_node->left = var_n;                                               \
+            var_n->parent = separator_node;                                             \
+                                                                                        \
+            if (CURR_TYPE == OP && (int) CURR_VAL == BRACKET_CLOS) break;               \
+            REQUIRE(SEPARATOR);                                                         \
+            separator_node->right = new_node(tree, STATEMENT, SEPARATOR, NULL, NULL);   \
+            separator_node->right->parent = separator_node;                             \
+            separator_node = separator_node->right;                                     \
+        }
+
+        REQUIRE(BRACKET_CLOS);
+
+        return func_call;
+    }
+
+    return NULL;
 }

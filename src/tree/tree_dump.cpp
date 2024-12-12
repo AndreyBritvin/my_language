@@ -147,6 +147,10 @@ err_code_t make_node(FILE* dot_file, node_t* curr_node, node_t* node_to_select, 
     if      (curr_node->type == NUM) fill_color = NUM_COLOR;
     else if (curr_node->type == VAR) fill_color = VAR_COLOR;
     else if (curr_node->type == OP ) fill_color =  OP_COLOR;
+    else if (curr_node->type == STATEMENT && (int) curr_node->data == STATEMENT_END)
+                                           fill_color =  STATEMENT_END_COLOR;
+    else if (curr_node->type == STATEMENT && (int) curr_node->data == SEPARATOR)
+                                           fill_color =  STATEMENT_SEP_COLOR;
     else if (curr_node->type == STATEMENT) fill_color =  STATEMENT_COLOR;
     else if (curr_node->type == SUBTREE)   fill_color =  SUBTREE_COLOR;
 
@@ -244,7 +248,7 @@ char* give_num_type(node_t *node)
 char* give_op_type(node_t *node)
 {
     char* to_ret = (char *) calloc(32, sizeof(char));
-    strcpy(to_ret, all_ops[(long) node->data].text);
+    strcpy(to_ret, all_ops[(long) node->data].standart_text);
 
     return to_ret;
 }

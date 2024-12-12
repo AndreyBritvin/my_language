@@ -1,6 +1,21 @@
+stocks_inpush 1
 push 2
-push 6
 div
-push 4
-add
-pop [0]hlt
+push 1
+sub
+hlt
+stocks_inhlt
+stocks_inpush 1
+sub
+hlt
+hlt
+hlt
+hlt
+hlt
+hlt
+hlt
+hlt
+hlt
+hlt
+hlt
+hlt

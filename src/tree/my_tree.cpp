@@ -221,6 +221,7 @@ err_code_t overwrite_file(my_tree_t* tree, const char* filename)
 
     FILE * SAFE_OPEN_FILE(overwrite_file, filename, "w");
 
+    fprintf(overwrite_file, "434-format v1.0\n");
     write_node(tree, tree->root, 0, overwrite_file);
 
     fclose(overwrite_file);

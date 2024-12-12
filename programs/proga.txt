@@ -14,7 +14,14 @@ mimic sada ()
 {
     cheekcheeryk x;
 }
-mimic cheek(a, b , c)
+mimic cheek(a)
 {
     forget_mimic_and_feed 1 eat 2;
 }
+mimic cheek(a, b, c, d, eere)
+{
+    forget_mimic_and_feed 3 eat 4;
+}
+
+cheek(1, 2 , x);
+cheekcheeryk cheek(1, 2 , x);

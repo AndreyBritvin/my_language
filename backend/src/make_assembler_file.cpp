@@ -20,7 +20,7 @@ err_code_t write_to_assembler(FILE* output, my_tree_t* tree, node_t* curr_node)
 {
     if (curr_node->type != STATEMENT && curr_node->type != OP)
     {
-        fprintf(stderr, "Type is not statement");
+        fprintf(stderr, "Type is not statement\n");
         return UNKNOWN;
     }
 
@@ -31,7 +31,7 @@ err_code_t write_to_assembler(FILE* output, my_tree_t* tree, node_t* curr_node)
             write_to_assembler(output, tree, curr_node->left);
             break;
         }
-        case EQUAL:
+        case EQUAL_BEGIN:
         {
             write_equal(output, tree, curr_node);
             break;
