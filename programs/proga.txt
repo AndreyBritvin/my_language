@@ -10,7 +10,11 @@ count_seeds_in x more 1:
     }
 }
 forget_mimic_and_feed blabla;
-mimic sada
+mimic sada ()
 {
     cheekcheeryk x;
+}
+mimic cheek(a, b , c)
+{
+    forget_mimic_and_feed 1 eat 2;
 }

@@ -175,7 +175,7 @@ size_t is_key_word(char* begin, char* end)
 {
     for (size_t i = 0; i < sizeof(all_ops) / sizeof(operation); i++)
     {
-        if (!strncmp(all_ops[i].text, begin, end - begin))
+        if (!strncmp(all_ops[i].text, begin, end - begin) && strlen(all_ops[i].text) == end - begin)
         {
             printf("Finded statement is %s. Index = %zu\n", all_ops[i].text, i);
             return i;

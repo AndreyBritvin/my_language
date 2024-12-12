@@ -18,8 +18,8 @@
                                             input[*pos].line, input[*pos].column, expected, CURR_VAL, CURR_VAL);\
                                              abort();}
 
-#define REQUIRE(symbol) if (CURR_TYPE != STATEMENT || (int) CURR_VAL != symbol)     \
-                        SYNTAX_ERROR(all_ops[symbol].text);                         \
+#define REQUIRE(symbol) if (CURR_TYPE != OP && CURR_TYPE != STATEMENT || (int) CURR_VAL != symbol)  \
+                        SYNTAX_ERROR(all_ops[symbol].text);                                         \
                         INCR;
 
 #define CHECK_VALUE(symbol)                                                                       \
@@ -100,7 +100,7 @@ node_t* get_exp(my_tree_t* tree, tokens* input, size_t* pos)
     node_t* val = get_primary(tree, input, pos);
     while ((int) CURR_VAL == EXP)
     {
-        (*pos)++;
+        INCR;
         node_t* val_2 = get_primary(tree, input, pos);
         val = new_node(tree, OP, EXP, val, val_2);
         val->left->parent = val->right->parent = val;
@@ -115,7 +115,7 @@ node_t* get_mul_div(my_tree_t* tree, tokens* input, size_t* pos)
     while ((int) CURR_VAL == MUL || (int) CURR_VAL == DIV)
     {
         int operation = (int) CURR_VAL;
-        (*pos)++;
+        INCR;
         node_t* val_2 = get_exp(tree, input, pos);
         if (operation == MUL)
         {
@@ -137,10 +137,10 @@ node_t* get_primary(my_tree_t* tree, tokens* input, size_t* pos)
     printf("Token type = %d\n", input[*pos].type);
     if (CURR_TYPE == OP && (int) CURR_VAL == BRACKET_OPEN)
     {
-        (*pos)++;
+        INCR;
         node_t* val = get_expression(tree, input, pos);
         if (CURR_TYPE != OP || (int) CURR_VAL != BRACKET_CLOS) SYNTAX_ERROR(all_ops[BRACKET_CLOS].text);
-        (*pos)++;
+        INCR;
         return val;
     }
     if ((int) input[*pos].type == VAR) return get_variable(tree, input, pos);
@@ -341,13 +341,37 @@ node_t* get_func_decl(my_tree_t* tree, tokens* input, size_t* pos)
     CHECK_VALUE(FUNC_DECL);
 
     node_t* func_def = new_node(tree, STATEMENT, FUNC_DECL, NULL, NULL);
+
     REQUIRE_VAR(func_name); // TODO: make id
-    node_t* func_spec = new_node(tree, STATEMENT, FUNC_SPEC, func_name, NULL);
+
+    REQUIRE(BRACKET_OPEN);
+
+    node_t* separator_node = new_node(tree, STATEMENT, SEPARATOR, NULL, NULL);
+
+    node_t* func_spec = new_node(tree, STATEMENT, FUNC_SPEC, func_name, separator_node);
+    separator_node->parent = func_spec;
+    func_name->parent = func_spec;
     func_spec->parent = func_def;
     func_def->left = func_spec;
 
+    while (CURR_TYPE == VAR)
+    {
+        REQUIRE_VAR(var_n);
+        separator_node->left = var_n;
+        var_n->parent = separator_node;
+
+        if (CURR_TYPE == OP && (int) CURR_VAL == BRACKET_CLOS) break;
+        REQUIRE(SEPARATOR);
+        separator_node->right = new_node(tree, STATEMENT, SEPARATOR, NULL, NULL);
+        separator_node->right->parent = separator_node;
+        separator_node = separator_node->right;
+    }
+
+    REQUIRE(BRACKET_CLOS);
+
     REQUIRE(SCOPE_OPEN);
     REQUIRE_STATEMENT(func_body);
+
     func_def->right   = func_body;
     func_body->parent = func_def;
 
