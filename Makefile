@@ -2,6 +2,11 @@ all:
 #	make front
 	make back
 #	make rfront
+	make proc
+
+proc:
+	make -C Processor PROG_NAME=circle
+
 front:
 	make -C frontend
 	./frontend/frontend.out programs/proga.txt trees_binary/test_output.txt

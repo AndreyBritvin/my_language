@@ -13,7 +13,7 @@
 #define POS       (*pos)
 #define INCR      (*pos)++
 
-#define CUSTOM_SYNTAX_ERROR(...) {fprintf(stderr, __VA_ARGS__); }//abort();}
+#define CUSTOM_SYNTAX_ERROR(...) {fprintf(stderr, __VA_ARGS__); abort();}
 #define SYNTAX_ERROR(expected) {fprintf(stderr, "At line %zu column %zu expected %s, but %c (%d) instead\n",\
                                             input[*pos].line, input[*pos].column, expected, CURR_VAL, CURR_VAL);\
                                              abort();}
@@ -42,6 +42,12 @@
                         node_t* name = get_statement(tree, input, pos);                             \
                         if (name == NULL)                                                           \
                         CUSTOM_SYNTAX_ERROR("Expected statement at line %zu column %zu",            \
+                                                   input[*pos].line, input[*pos].column);
+
+#define REQUIRE_RETURN(name)                                                                     \
+                        node_t* name = get_return(tree, input, pos);                             \
+                        if (name == NULL)                                                           \
+                        CUSTOM_SYNTAX_ERROR("Expected return at line %zu column %zu",            \
                                                    input[*pos].line, input[*pos].column);
 
 #define REQUIRE_CUSTOM(name, func)                                                                  \
@@ -235,7 +241,7 @@ node_t* get_statement(my_tree_t* tree, tokens* input, size_t* pos)
     else if ((state = get_while_state(tree, input, pos)) != NULL)  state;
     else if ((state = get_assingnment(tree, input, pos)) != NULL)  state;
     else if ((state = get_print_state(tree, input, pos)) != NULL)  state;
-    else if ((state = get_return     (tree, input, pos)) != NULL)  state;
+    // else if ((state = get_return     (tree, input, pos)) != NULL)  state;
     else if ((state = get_func_decl  (tree, input, pos)) != NULL)  state;
 
     if (state == NULL) return NULL;
@@ -374,9 +380,28 @@ node_t* get_func_decl(my_tree_t* tree, tokens* input, size_t* pos)
     func_def->right   = func_body;
     func_body->parent = func_def;
 
+    REQUIRE_RETURN(ret_node);
+    connect_to_the_end(tree, ret_node, func_body);
     REQUIRE(SCOPE_CLOS);
 
     return func_def;
+}
+
+err_code_t connect_to_the_end(my_tree_t* tree, node_t* what_to_connect, node_t* where_to_connect)
+{
+    if (where_to_connect->right == NULL)
+    {
+        node_t* separator_node  = new_node(tree, STATEMENT, STATEMENT_END, what_to_connect, NULL);
+        where_to_connect->right = separator_node;
+        separator_node->parent  = where_to_connect;
+        what_to_connect->parent = separator_node;
+    }
+    else
+    {
+        connect_to_the_end(tree, what_to_connect, where_to_connect->right);
+    }
+
+    return OK;
 }
 
 node_t* get_func_call(my_tree_t* tree, tokens* input, size_t* pos)
@@ -389,7 +414,7 @@ node_t* get_func_call(my_tree_t* tree, tokens* input, size_t* pos)
 
         REQUIRE(BRACKET_OPEN);
 
-        node_t* separator_node = new_node(tree, STATEMENT, SEPARATOR, NULL, NULL);
+        node_t* separator_node = new_node(tree, STATEMENT, SEPARATOR, NULL, NULL); // TODO: make macros
         node_t* func_spec = new_node(tree, STATEMENT, FUNC_SPEC, func_name, separator_node);
         separator_node->parent = func_spec;
         func_name->parent      = func_spec;

@@ -31,19 +31,24 @@ END_WHILE:
 
 LABEL:
 
-push [0]
-push ax
-ret
-
 jump sada_END:
 sada:
 push [0]
 out
 
+push [0]
+push 2
+sub
+push ax
+ret
+
 sada_END:
 
 jump cheek_END:
 cheek:
+push [0]
+out
+
 push 1
 push 2
 sub
@@ -54,6 +59,9 @@ cheek_END:
 
 jump cheek_END:
 cheek:
+push [0]
+out
+
 push 3
 push 4
 sub

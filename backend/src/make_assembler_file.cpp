@@ -185,7 +185,7 @@ err_code_t write_if_operator(FILE* output, my_tree_t* tree, node_t* node)
 
 err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_level)
 {
-    PRINT("WHILE_LABEL:\n");
+    PRINT("WHILE_LABEL:\n"); // TODO: add index
 
     write_var(output, tree, node->left->left, VAR_PUSH); // left part should be before
     write_expression(output, tree, node->left->right);

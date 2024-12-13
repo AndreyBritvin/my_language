@@ -1,0 +1,28 @@
+Language Grammatic:
+'''
+<GRAMMATIC> ::= <STATEMENT>+ "$"
+
+<STATEMENT> ::= <ASSINGNMENT> | <IF> | <PRINT> | <FUNC_CALL> ";" <empty> | <WHILE> | <FUNC_DECL>
+							  | <empty> "{" <empty> <STATEMENT>+ <empty> "}" <empty>
+
+    <FUNC_CALL>   ::= <ID> <empty> "(" <empty> (<EXPR> (<empty> "," <empty> <EXPR>)*)* ")" <empty>
+    <FUNC_DECL>   ::= "mimic" <empty> <ID> <empty> "(" <empty> (<ID> (<empty> "," <empty> <ID>)*)* ")"
+    				<empty> "{" <empty> <STATEMENT>* <empty> <RETURN> <empty> "}" <empty>
+    <RETURN>      ::= "forget mimic and feed " <empty> <EXPR> <empty> ";" <empty>
+
+	<PRINT>       ::= "cheekcheeryk"  <EXPR>  ";" <empty>
+	<IF>          ::= "count seeds in " <COMPARISON> ":" <empty> <STATEMENT> <empty>
+    <WHILE>       ::= "fly until amount in " <COMPARISON> ":" <empty> <STATEMENT> <empty>
+	<ASSINGNMENT> ::= "stocks in" <empty> <ID>+ <empty> "new amount" <empty> <EXPR> <empty> ";" <empty>
+
+		<ID>             ::= [a-z]+ ([a-z] | [0-9])*
+		<COMPARISON_OPS> ::= "less" | "more"
+        <COMPARISON>     ::= <empty> <ID> <empty> <COMPARISON_OPS> <empty> <EXPR> <empty>
+        <EXPR>           ::= <MUL_DIV> ((<empty> "regurgitation" <empty> | <empty> "eat" <empty>) <MUL_DIV>)*
+		<MUL_DIV>        ::= <POWER> (("growth" | "overeat") <POWER>)*
+		<POWER>          ::= <PRIMARY> ("uncontrolable growth" <PRIMARY>)*
+		<PRIMARY>        ::= <NUM> | "(" <EXPR>+ ")" | <ID> | <FUNC_CALL>
+		<NUM>            ::= [0-9]+
+
+<empty> ::= " "* "\n"*
+'''

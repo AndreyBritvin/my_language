@@ -8,6 +8,7 @@
 typedef node_t* (syntax_analysis_func_t)(my_tree_t* tree, tokens* input, size_t* pos);
 
 my_tree_t get_grammatic(tokens* input);
+err_code_t connect_to_the_end(my_tree_t* tree, node_t* what_to_connect, node_t* where_to_connect);
 
 syntax_analysis_func_t get_number     ;
 syntax_analysis_func_t get_expression ;

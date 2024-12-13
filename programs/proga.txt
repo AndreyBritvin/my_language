@@ -9,17 +9,19 @@ count_seeds_in x more 1:
         stocks_in x new_amount x eat 1;
     }
 }
-forget_mimic_and_feed blabla;
 mimic sada ()
 {
     cheekcheeryk x;
+    forget_mimic_and_feed x eat 2;
 }
 mimic cheek(a)
 {
+    cheekcheeryk x;
     forget_mimic_and_feed 1 eat 2;
 }
 mimic cheek(a, b, c, d, eere)
 {
+    cheekcheeryk x;
     forget_mimic_and_feed 3 eat 4;
 }
 
