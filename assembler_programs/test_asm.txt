@@ -1,21 +1,71 @@
-stocks_inpush 1
+push 1
 push 2
+push 1
 div
+sub
+pop [0]
+
+push [0]
+out
+
+push [0]
+push 1
+ja LABEL:
+push [0]
+pop [0]
+
+WHILE_LABEL:
+push [0]
+push 2
+jb END_WHILE:
+push [0]
+out
+
+push [0]
 push 1
 sub
-hlt
-stocks_inhlt
-stocks_inpush 1
+pop [0]
+
+JUMP WHILE_LABEL:
+END_WHILE:
+
+LABEL:
+
+push [0]
+push ax
+ret
+
+jump sada_END:
+sada:
+push [0]
+out
+
+sada_END:
+
+jump cheek_END:
+cheek:
+push 1
+push 2
 sub
-hlt
-hlt
-hlt
-hlt
-hlt
-hlt
-hlt
-hlt
-hlt
-hlt
-hlt
+push ax
+ret
+
+cheek_END:
+
+jump cheek_END:
+cheek:
+push 3
+push 4
+sub
+push ax
+ret
+
+cheek_END:
+
+call cheek:
+pop ax
+call cheek:
+pop ax
+out
+
 hlt

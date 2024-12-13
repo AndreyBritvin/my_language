@@ -25,7 +25,7 @@ err_code_t fill_buffer(char **buffer_to_fill, const char* filename)
     *buffer_to_fill = temp_buf;
 
     FILE* SAFE_OPEN_FILE(input_file, filename, "r");
-
+    // TODO: make vertical format
     // fread(temp_buf, 1, filesize, input_file);
     for (size_t i = 0; i < filesize; i++)
     {
@@ -57,7 +57,7 @@ size_t lexical_analysis(tokens* token, char* buffer)
         if (isdigit(*end_pos))
         {
             char* begin = end_pos;
-            tree_val_t value = strtod(end_pos, &end_pos);
+            tree_val_t value = strtod(end_pos, &end_pos); // TODO: make unar counting system
             token[token_index].value = value;
             token[token_index].type  = NUM;
             printf("scanned value is %lg\n", value);

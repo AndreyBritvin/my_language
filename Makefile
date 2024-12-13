@@ -1,7 +1,7 @@
 all:
 #	make front
-#	make back
-	make rfront
+	make back
+#	make rfront
 front:
 	make -C frontend
 	./frontend/frontend.out programs/proga.txt trees_binary/test_output.txt

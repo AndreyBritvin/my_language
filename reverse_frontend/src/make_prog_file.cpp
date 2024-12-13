@@ -16,7 +16,8 @@ err_code_t generate_prog_file(my_tree_t* tree, const char* filename)
 
 #define PRINT(...) fprintf(output, __VA_ARGS__);
 #define KEYWORD(name) all_ops[name].text
-#define PRINT_KW(name) PRINT("%s ", KEYWORD(name));
+#define PRINT_KW(name)          PRINT("%s ", KEYWORD(name));
+#define PRINT_KW_WO_SPACE(name) PRINT("%s",  KEYWORD(name));
 
 err_code_t write_to_file(FILE* output, my_tree_t* tree, node_t* curr_node, size_t recurs_level)
 {
@@ -83,7 +84,7 @@ err_code_t write_to_file(FILE* output, my_tree_t* tree, node_t* curr_node, size_
     return OK;
 }
 
-err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node)
+err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node) // TODO: remove extra spaces
 {
     switch (node->type)
     {
@@ -210,9 +211,9 @@ err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node)
 {
     write_var(output, tree, node->left->left);
 
-    PRINT_KW(BRACKET_OPEN);
+    PRINT_KW_WO_SPACE(BRACKET_OPEN);
     write_args(output, tree, node->left->right);
-    PRINT_KW(BRACKET_CLOS);
+    PRINT_KW_WO_SPACE(BRACKET_CLOS);
 
     return OK;
 }
