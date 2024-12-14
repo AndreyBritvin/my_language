@@ -78,14 +78,20 @@
                             }
                         }
                         {OP:";"
-                            {OP:"print"
-                                {ID:"x"}
+                            {OP:"="
+                                {ID:"local_v"}
+                                {NUM:"1"}
                             }
                             {OP:";"
-                                {OP:"return"
-                                    {OP:"-"
-                                        {NUM:"1"}
-                                        {NUM:"2"}
+                                {OP:"print"
+                                    {ID:"a"}
+                                }
+                                {OP:";"
+                                    {OP:"return"
+                                        {OP:"-"
+                                            {NUM:"2"}
+                                            {NUM:"1"}
+                                        }
                                     }
                                 }
                             }
@@ -94,7 +100,7 @@
                     {OP:";"
                         {OP:"def"
                             {OP:"spec"
-                                {ID:"cheek"}
+                                {ID:"cheek_m"}
                                 {OP:","
                                     {ID:"a"}
                                     {OP:","

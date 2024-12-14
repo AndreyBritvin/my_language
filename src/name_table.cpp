@@ -34,8 +34,11 @@ err_code_t print_name_table(identificator* name_table)
 err_code_t add_element(nametable_t nt, identificator id)
 {
     static size_t var_index = 0;
+    static size_t inside_func_index = 0;
+    if (id.type == FUNC_TYPE) inside_func_index = 0;
     static size_t index = 0; // TODO: make universal for different nametables. Now it correctly fill only one table
-    if (id.type == VAR_TYPE) id.full_index = var_index++;
+    if (id.type == VAR_TYPE && id.node_dep == NULL) id.full_index = var_index++;
+    if (id.type == VAR_TYPE && id.node_dep != NULL) id.full_index = inside_func_index++;
     nt[index++] = id;
 
     return OK;

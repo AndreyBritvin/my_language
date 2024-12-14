@@ -49,6 +49,7 @@ my_tree_t make_prog_tree(char *buffer, nametable_t nametable)
 
     tree_to_fill.root = fill_node(buffer + check_signature(buffer), &position, &tree_to_fill, NULL, nametable);
     TREE_DUMP(&tree_to_fill, tree_to_fill.root, "I am gROOT (generated this tree after reading file)");
+    get_func_dependence(nametable);
 
     return tree_to_fill;
 }
@@ -135,10 +136,19 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
             {
                 id.is_defined = true; // TODO: check if not right subtree
             }
+            // if (parent->type == STATEMENT && (int) parent->data == SEPARATOR)
+            // {
+                // maybe fix for local vars
+            id.node_dep = get_func_node_dependence(nametable, parent);
+            // }
             if (parent->type == STATEMENT && (int) parent->data == FUNC_SPEC)
             {
                 id.type = FUNC_TYPE;
-                id.is_defined = true;
+
+                if (parent->parent->type == STATEMENT && (int) parent->parent->data == FUNC_DECL)
+                {
+                    id.is_defined = true;
+                }
             }
 
             add_element(nametable, id);
@@ -171,6 +181,32 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
     }
 
     return node_to_return;
+}
+
+err_code_t get_func_dependence(nametable_t nt)
+{
+    for (size_t i = 0; i < MAX_ID_COUNT; i++)
+    {
+        if (nt[i].node_dep != NULL)
+        {
+            char* func_name = *(char**)&nt[i].node_dep->left->left->data;
+            nt[i].is_defined = true;
+            nt[i].dependence = is_element_in_nt(nt, func_name);
+        }
+    }
+
+    return OK;
+}
+
+node_t* get_func_node_dependence(nametable_t nt, node_t* dep_node)
+{
+    if (dep_node->type == STATEMENT && (int) dep_node->data == FUNC_DECL)
+    {
+        return dep_node;
+    }
+    if (dep_node->parent != NULL) return get_func_node_dependence(nt, dep_node->parent);
+
+    return NULL;
 }
 
 int get_func_num(char* input)

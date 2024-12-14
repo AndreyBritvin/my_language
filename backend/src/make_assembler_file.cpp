@@ -1,6 +1,10 @@
 #include "make_assembler_file.h"
 #include "name_table.h"
 
+#define PRINT(...) fprintf(output, __VA_ARGS__);
+#define PRINT_KW(word) PRINT("%s\n", all_ops[word].assembler_text);
+#define PRINT_KW_WO_NL(word) PRINT("%s ", all_ops[word].assembler_text);
+
 nametable_t nametable = NULL; // TODO: remove this global cringe
 
 err_code_t generate_assembler(my_tree_t* tree, const char* filename, nametable_t nt)
@@ -9,6 +13,8 @@ err_code_t generate_assembler(my_tree_t* tree, const char* filename, nametable_t
     assert(filename);
     nametable = nt;
     FILE* SAFE_OPEN_FILE(output, filename, "w");
+    PRINT("push %zu\n"
+          "pop bx  \n", get_num_of_global_vars());
 
     write_to_assembler(output, tree, tree->root, 0);
 
@@ -17,9 +23,6 @@ err_code_t generate_assembler(my_tree_t* tree, const char* filename, nametable_t
     return OK;
 }
 
-#define PRINT(...) fprintf(output, __VA_ARGS__);
-#define PRINT_KW(word) PRINT("%s\n", all_ops[word].assembler_text);
-#define PRINT_KW_WO_NL(word) PRINT("%s ", all_ops[word].assembler_text);
 
 err_code_t write_to_assembler(FILE* output, my_tree_t* tree, node_t* curr_node, size_t recurs_level)
 {
@@ -122,14 +125,19 @@ err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node)
 err_code_t write_var(FILE* output, my_tree_t* tree, node_t* node, var_writing is_push)
 {
     char* id_name = *(char**)&node->data;
-    size_t id_full_index = nametable[is_element_in_nt(nametable, id_name)].full_index;
+    char* bx_offset = "";
+    size_t elem_num = is_element_in_nt(nametable, id_name);
+
+    if (nametable[elem_num].dependence != 0) bx_offset = "bx + ";
+
+    size_t id_full_index = nametable[elem_num].full_index;
     if (is_push == VAR_PUSH)
     {
-        PRINT("push [%d] ; %s\n", id_full_index, id_name);
+        PRINT("push [%s%d] ; %s\n", bx_offset, id_full_index, id_name);
     }
     else if (is_push == VAR_POP)
     {
-        PRINT("pop [%d] ; %s\n", id_full_index, id_name);
+        PRINT("pop [%s%d] ; %s\n", bx_offset, id_full_index, id_name);
     }
     else if (is_push == VAR_NAME)
     {
@@ -217,7 +225,7 @@ err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recur
 err_code_t write_return(FILE* output, my_tree_t* tree, node_t* node)
 {
     write_expression(output, tree, node->left);
-    PRINT("push ax\n"); // return value
+    PRINT("pop ax\n"); // return value
     PRINT_KW(RETURN);
     PRINT("\n");
 
@@ -226,10 +234,14 @@ err_code_t write_return(FILE* output, my_tree_t* tree, node_t* node)
 
 err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node)
 {
-    PRINT_KW_WO_NL(FUNC_CALL); // TODO: add vars
+    PRINT("push bx\n"); // copy
+
+    write_parametrs(output, tree, node->left->right, 0);
+    PRINT_KW_WO_NL(FUNC_CALL);
     write_var(output, tree, node->left->left, VAR_NAME);
     PRINT(":\n");
-    PRINT("pop ax\n");
+    PRINT("pop bx\n"); // return copy
+    PRINT("push ax\n");
 
     return OK;
 }
@@ -242,13 +254,34 @@ err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t r
 
     write_var(output, tree, node->left->left, VAR_NAME);
     PRINT(":\n");
-    // TODO: write parametrs
+
+    char* func_name = *(char**)&node->left->left->data;
+    size_t func_id  = is_element_in_nt(nametable, func_name);
+
+    PRINT("push bx \n");
+    PRINT("push %zu\n", get_amount_of_local_vars_in_func(func_id));
+    PRINT("add     \n");
+    PRINT("pop  bx \n"); // bx += n of params
+
     write_to_assembler(output, tree, node->right, recurs_level + 1);
 
     write_var(output, tree, node->left->left, VAR_NAME); // func_END:
     PRINT("_END:\n\n");
 
     return OK;
+}
+
+size_t get_amount_of_local_vars_in_func(size_t func_num)
+{
+    assert(nametable[func_num].type == FUNC_TYPE);
+
+    for (size_t i = func_num + 1; i < MAX_ID_COUNT; i++)
+    {
+        if (nametable[i].dependence == 0 || nametable[i].type == FUNC_TYPE)
+        {
+            return i - func_num - 1; // amount means 1,2,3,4...
+        }
+    }
 }
 
 err_code_t print_tabs(FILE* output, size_t recurs_level)
@@ -258,6 +291,32 @@ err_code_t print_tabs(FILE* output, size_t recurs_level)
     {
         PRINT("    ");
     }
+
+    return OK;
+}
+
+size_t get_num_of_global_vars()
+{
+    size_t max_index = 0;
+    for (size_t i = 0; i < MAX_ID_COUNT; i++)
+    {
+        if (nametable[i].full_index > max_index && nametable[i].dependence != 0)
+        {
+            max_index = nametable[i].full_index;
+        }
+    }
+
+    return max_index;
+}
+
+err_code_t write_parametrs(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_level)
+{
+    if (node->left  != NULL)
+    {
+        write_expression(output, tree, node->left);
+        PRINT("pop [bx + %zu]\n", recurs_level)
+    }
+    if (node->right != NULL) write_parametrs(output, tree, node->right, recurs_level + 1);
 
     return OK;
 }

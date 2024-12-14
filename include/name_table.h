@@ -2,6 +2,7 @@
 #define NAME_TABLE_H_
 
 #include "utils.h"
+#include "my_tree.h"
 #define MAX_ID_COUNT 30
 
 enum id_types
@@ -15,6 +16,7 @@ struct identificator
     char        name[MAX_STRING_SIZE];
     size_t      length;
     id_types    type;
+    node_t*     node_dep;
     size_t      dependence;
     bool        is_defined;
     size_t      full_index;

@@ -16,10 +16,11 @@ mimic sada ()
 }
 mimic cheek(a)
 {
-    cheekcheeryk x;
-    forget_mimic_and_feed 1 eat 2;
+    stocks_in local_v new_amount 1;
+    cheekcheeryk a;
+    forget_mimic_and_feed 2 eat 1;
 }
-mimic cheek(a, b, c, d, eere)
+mimic cheek_m(a, b, c, d, eere)
 {
     cheekcheeryk x;
     forget_mimic_and_feed 3 eat 4;

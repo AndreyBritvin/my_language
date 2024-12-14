@@ -1,3 +1,5 @@
+push 3
+pop bx  
 push 1
 push 2
 push 1
@@ -33,47 +35,78 @@ IF_LABEL_0:
 
 jump sada_END:
 sada:
+push bx 
+push 0
+add     
+pop  bx 
 push [0] ; x
 out
 
 push [0] ; x
 push 2
 sub
-push ax
+pop ax
 ret
 
 sada_END:
 
 jump cheek_END:
 cheek:
-push [0] ; x
+push bx 
+push 2
+add     
+pop  bx 
+push 1
+pop [bx + 1] ; local_v
+
+push [bx + 0] ; a
 out
 
-push 1
 push 2
+push 1
 sub
-push ax
+pop ax
 ret
 
 cheek_END:
 
-jump cheek_END:
-cheek:
+jump cheek_m_END:
+cheek_m:
+push bx 
+push 4
+add     
+pop  bx 
 push [0] ; x
 out
 
 push 3
 push 4
 sub
-push ax
+pop ax
 ret
 
-cheek_END:
+cheek_m_END:
 
+push bx
+push 1
+pop [bx + 0]
+push 2
+pop [bx + 1]
+push [0] ; x
+pop [bx + 2]
 call cheek:
-pop ax
+pop bx
+push ax
+push bx
+push 1
+pop [bx + 0]
+push 2
+pop [bx + 1]
+push [0] ; x
+pop [bx + 2]
 call cheek:
-pop ax
+pop bx
+push ax
 out
 
 hlt
