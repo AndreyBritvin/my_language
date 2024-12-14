@@ -11,6 +11,8 @@ enum var_writing
     VAR_PUSH,
 };
 
+err_code_t print_tabs(FILE* output, size_t recurs_level);
+
 err_code_t generate_assembler(my_tree_t* tree, const char* filename);
 err_code_t write_to_assembler(FILE* output, my_tree_t* tree, node_t* curr_node, size_t recurs_level);
 err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node);

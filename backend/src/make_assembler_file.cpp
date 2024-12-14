@@ -154,16 +154,20 @@ err_code_t write_print(FILE* output, my_tree_t* tree, node_t* node)
 
 err_code_t write_if(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_level)
 {
+    static int if_label_counter = 0;
+
     write_var(output, tree, node->left->left, VAR_PUSH); // left part should be before
     write_expression(output, tree, node->left->right);
 
     write_if_operator(output, tree, node->left);
 
-    PRINT(" LABEL:\n"); // TODO: maybe inverse this
+    PRINT(" IF_LABEL_%d:\n", if_label_counter);
 
     write_to_assembler(output, tree, node->right, recurs_level + 1);
 
-    PRINT("LABEL:\n\n");
+    PRINT("IF_LABEL_%d:\n\n", if_label_counter);
+
+    if_label_counter++;
 
     return OK;
 }
@@ -172,12 +176,13 @@ err_code_t write_if_operator(FILE* output, my_tree_t* tree, node_t* node)
 {
     switch ((int) node->data)
     {
-        case MORE:       PRINT("ja"); break;
-        case LESS:       PRINT("jb"); break;
-        case MORE_EQUAL: PRINT("jae"); break;
-        case LESS_EQUAL: PRINT("jbe"); break;
-        case NOOO_EQUAL: PRINT("jne"); break;
-        case FULL_EQUAL: PRINT("je"); break; // TODO: add default!
+        case MORE:       PRINT("jbe"); break;
+        case LESS:       PRINT("jae"); break;
+        case MORE_EQUAL: PRINT("jb"); break;
+        case LESS_EQUAL: PRINT("ja"); break;
+        case NOOO_EQUAL: PRINT("je"); break;
+        case FULL_EQUAL: PRINT("jne"); break;
+        default: fprintf(stderr, "Unknown comp operator %lg\n", node->data);
     }
 
     return OK;
@@ -185,19 +190,21 @@ err_code_t write_if_operator(FILE* output, my_tree_t* tree, node_t* node)
 
 err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_level)
 {
-    PRINT("WHILE_LABEL:\n"); // TODO: add index
+    static int while_label_counter = 0;
 
-    write_var(output, tree, node->left->left, VAR_PUSH); // left part should be before
+    PRINT("WHILE_LABEL_%d:\n", while_label_counter); // TODO: add index
+
+    write_var       (output, tree, node->left->left, VAR_PUSH); // left part should be before
     write_expression(output, tree, node->left->right);
 
     write_if_operator(output, tree, node->left);
 
-    PRINT(" END_WHILE:\n"); // TODO: inverse this
+    PRINT(" END_WHILE_%d:\n", while_label_counter);
 
     write_to_assembler(output, tree, node->right, recurs_level + 1);
 
-    PRINT("JUMP WHILE_LABEL:\n");
-    PRINT("END_WHILE:\n\n");
+    PRINT("jump WHILE_LABEL_%d:\n", while_label_counter);
+    PRINT("END_WHILE_%d:\n\n", while_label_counter);
 
     return OK;
 }
@@ -205,7 +212,7 @@ err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recur
 err_code_t write_return(FILE* output, my_tree_t* tree, node_t* node)
 {
     write_expression(output, tree, node->left);
-    PRINT("push ax\n");
+    PRINT("push ax\n"); // return value
     PRINT_KW(RETURN);
     PRINT("\n");
 
@@ -224,16 +231,28 @@ err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node)
 
 err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_level)
 {
-    PRINT("jump ");
+    PRINT("jump ");                                     // jump func_end
     write_var(output, tree, node->left->left, VAR_NAME);
     PRINT("_END:\n");
+
     write_var(output, tree, node->left->left, VAR_NAME);
     PRINT(":\n");
     // TODO: write parametrs
     write_to_assembler(output, tree, node->right, recurs_level + 1);
 
-    write_var(output, tree, node->left->left, VAR_NAME);
+    write_var(output, tree, node->left->left, VAR_NAME); // func_END:
     PRINT("_END:\n\n");
+
+    return OK;
+}
+
+err_code_t print_tabs(FILE* output, size_t recurs_level)
+{
+    //PRINT("%zu", recurs_level);
+    for (size_t i = 0; i < recurs_level; i++)
+    {
+        PRINT("    ");
+    }
 
     return OK;
 }

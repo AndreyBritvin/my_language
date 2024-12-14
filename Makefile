@@ -2,7 +2,7 @@ all:
 #	make front
 	make back
 #	make rfront
-	make proc
+#	make proc
 
 proc:
 	make -C Processor PROG_NAME=circle
