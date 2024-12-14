@@ -221,7 +221,7 @@ err_code_t overwrite_file(my_tree_t* tree, const char* filename)
 
     FILE * SAFE_OPEN_FILE(overwrite_file, filename, "w");
 
-    fprintf(overwrite_file, "434-format v1.0\n");
+    fprintf(overwrite_file, "434-format v1.5\n");
     write_node(tree, tree->root, 0, overwrite_file);
 
     fclose(overwrite_file);
@@ -238,15 +238,15 @@ err_code_t write_node(my_tree_t* tree, node_t* node, size_t recurs_level, FILE* 
     print_n_spaces(recurs_level * 4, overwrite_file);
     if (node->type == NUM)
     {
-        fprintf(overwrite_file, "{\"%lg\"", node->data);
+        fprintf(overwrite_file, "{NUM:\"%lg\"", node->data);
     }
     else if (node->type == OP || node->type == STATEMENT)
     {
-        fprintf(overwrite_file, "{\"%s\"", all_ops[(int) node->data].standart_text);
+        fprintf(overwrite_file, "{OP:\"%s\"", all_ops[(int) node->data].standart_text);
     }
     else if (node->type == VAR)
     {
-        fprintf(overwrite_file, "{\"%s\"", *(char**)&node->data);
+        fprintf(overwrite_file, "{ID:\"%s\"", *(char**)&node->data);
     }
 
     if (node->left != NULL)

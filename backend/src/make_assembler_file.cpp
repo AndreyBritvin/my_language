@@ -1,10 +1,13 @@
 #include "make_assembler_file.h"
+#include "name_table.h"
 
-err_code_t generate_assembler(my_tree_t* tree, const char* filename)
+nametable_t nametable = NULL; // TODO: remove this global cringe
+
+err_code_t generate_assembler(my_tree_t* tree, const char* filename, nametable_t nt)
 {
     assert(tree);
     assert(filename);
-
+    nametable = nt;
     FILE* SAFE_OPEN_FILE(output, filename, "w");
 
     write_to_assembler(output, tree, tree->root, 0);
@@ -118,17 +121,19 @@ err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node)
 
 err_code_t write_var(FILE* output, my_tree_t* tree, node_t* node, var_writing is_push)
 {
+    char* id_name = *(char**)&node->data;
+    size_t id_full_index = nametable[is_element_in_nt(nametable, id_name)].full_index;
     if (is_push == VAR_PUSH)
     {
-        PRINT("push [0]\n");
+        PRINT("push [%d] ; %s\n", id_full_index, id_name);
     }
     else if (is_push == VAR_POP)
     {
-        PRINT("pop [0]\n");
+        PRINT("pop [%d] ; %s\n", id_full_index, id_name);
     }
     else if (is_push == VAR_NAME)
     {
-        PRINT("%s", *(char**)&node->data);
+        PRINT("%s", id_name);
     }
 
     return OK;
@@ -192,7 +197,7 @@ err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recur
 {
     static int while_label_counter = 0;
 
-    PRINT("WHILE_LABEL_%d:\n", while_label_counter); // TODO: add index
+    PRINT("WHILE_LABEL_%d:\n", while_label_counter);
 
     write_var       (output, tree, node->left->left, VAR_PUSH); // left part should be before
     write_expression(output, tree, node->left->right);

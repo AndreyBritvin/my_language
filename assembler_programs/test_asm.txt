@@ -3,28 +3,28 @@ push 2
 push 1
 div
 sub
-pop [0]
+pop [0] ; x
 
-push [0]
+push [0] ; x
 out
 
-push [0]
+push [0] ; x
 push 1
 jbe IF_LABEL_0:
-push [0]
-pop [0]
+push [2] ; Y
+pop [1] ; y
 
 WHILE_LABEL_0:
-push [0]
+push [0] ; x
 push 2
 jae END_WHILE_0:
-push [0]
+push [1] ; y
 out
 
-push [0]
+push [0] ; x
 push 1
 sub
-pop [0]
+pop [0] ; x
 
 jump WHILE_LABEL_0:
 END_WHILE_0:
@@ -33,10 +33,10 @@ IF_LABEL_0:
 
 jump sada_END:
 sada:
-push [0]
+push [0] ; x
 out
 
-push [0]
+push [0] ; x
 push 2
 sub
 push ax
@@ -46,7 +46,7 @@ sada_END:
 
 jump cheek_END:
 cheek:
-push [0]
+push [0] ; x
 out
 
 push 1
@@ -59,7 +59,7 @@ cheek_END:
 
 jump cheek_END:
 cheek:
-push [0]
+push [0] ; x
 out
 
 push 3

@@ -1,3 +1,5 @@
+#define MAX_STRING_SIZE 128
+
 #ifndef UTILS_H_
 #define UTILS_H_
 

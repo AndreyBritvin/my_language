@@ -5,6 +5,7 @@
 #include "my_tree.h"
 #include <sys/stat.h>
 #include <string.h>
+#include "name_table.h"
 
 size_t get_file_len(const char *filename)
 {
@@ -36,7 +37,7 @@ err_code_t fill_buffer(char **buffer_to_fill, const char* filename)
     return OK;
 }
 
-my_tree_t make_prog_tree(char *buffer)
+my_tree_t make_prog_tree(char *buffer, nametable_t nametable)
 {
     assert(buffer);
 
@@ -46,7 +47,7 @@ my_tree_t make_prog_tree(char *buffer)
 
     size_t position = 0;
 
-    tree_to_fill.root = fill_node(buffer + check_signature(buffer), &position, &tree_to_fill, NULL);
+    tree_to_fill.root = fill_node(buffer + check_signature(buffer), &position, &tree_to_fill, NULL, nametable);
     TREE_DUMP(&tree_to_fill, tree_to_fill.root, "I am gROOT (generated this tree after reading file)");
 
     return tree_to_fill;
@@ -59,7 +60,7 @@ size_t check_signature(char* input)
     return 16; // TODO: check signature and give true offset
 }
 
-node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* parent)
+node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* parent, nametable_t nametable)
 {
     assert(buffer);
     assert(position);
@@ -75,8 +76,8 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
     }
 
     size_t len_of_expr = 0;
-    sscanf(buffer + *position, "\"%[^\"]\"%n", expression, &len_of_expr);
-
+    char expr_type[4] = {};
+    sscanf(buffer + *position, "%[^:]:\"%[^\"]\"%n", expr_type, expression, &len_of_expr);
     *position += len_of_expr;
 
     tree->size++;
@@ -85,7 +86,7 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
     int func_num = get_func_num(expression);
     tree_val_t number_value = 0;
 
-    if (func_num < STATEMENT_BEGIN)
+    if (func_num < STATEMENT_BEGIN) // TODO: make func get_type
     {
         type = OP;
     }
@@ -101,7 +102,7 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
 
     printf("Readed expression is %8s. Type = %d\n", expression, type);
 
-    node_t* node_to_return = NULL;
+    node_t* node_to_return = NULL; // TODO: make func to generate node
     if (type == NUM)
     {
         node_to_return = new_node(tree, type, number_value, NULL, NULL);
@@ -120,7 +121,30 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
         free(expression);
     }
 
-    if (node_to_return != NULL) node_to_return->parent = parent;
+    if (node_to_return != NULL)
+    {
+        node_to_return->parent = parent;
+        //TODO: make func to add to nametable
+        if (type == VAR && is_element_in_nt(nametable, expression) == MAX_ID_COUNT)
+        {
+            identificator id = {};
+            strcpy(id.name, expression);
+            id.length = strlen(expression);
+
+            if (parent->type == STATEMENT && (int) parent->data == EQUAL_BEGIN)
+            {
+                id.is_defined = true; // TODO: check if not right subtree
+            }
+            if (parent->type == STATEMENT && (int) parent->data == FUNC_SPEC)
+            {
+                id.type = FUNC_TYPE;
+                id.is_defined = true;
+            }
+
+            add_element(nametable, id);
+        }
+    }
+
     if (*position == 1)
     {
         tree->root = node_to_return;
@@ -135,12 +159,12 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
         if (buffer[*position] == '{' && is_left)
         {
             is_left = false;
-            node_to_return->left = fill_node(buffer, position, tree, node_to_return);
+            node_to_return->left = fill_node(buffer, position, tree, node_to_return, nametable);
         }
 
         else if (buffer[*position] == '{' && !is_left)
         {
-            node_to_return->right = fill_node(buffer, position, tree, node_to_return);
+            node_to_return->right = fill_node(buffer, position, tree, node_to_return, nametable);
         }
 
         (*position)++;

@@ -1,46 +1,46 @@
-434-format v1.0
-{";"
-    {"="
-        {"x"}
-        {"-"
-            {"1"}
-            {"/"
-                {"2"}
-                {"1"}
+434-format v1.5
+{OP:";"
+    {OP:"="
+        {ID:"x"}
+        {OP:"-"
+            {NUM:"1"}
+            {OP:"/"
+                {NUM:"2"}
+                {NUM:"1"}
             }
         }
     }
-    {";"
-        {"print"
-            {"x"}
+    {OP:";"
+        {OP:"print"
+            {ID:"x"}
         }
-        {";"
-            {"if"
-                {"more"
-                    {"x"}
-                    {"1"}
+        {OP:";"
+            {OP:"if"
+                {OP:"more"
+                    {ID:"x"}
+                    {NUM:"1"}
                 }
-                {";"
-                    {"="
-                        {"y"}
-                        {"Y"}
+                {OP:";"
+                    {OP:"="
+                        {ID:"y"}
+                        {ID:"Y"}
                     }
-                    {";"
-                        {"while"
-                            {"less"
-                                {"x"}
-                                {"2"}
+                    {OP:";"
+                        {OP:"while"
+                            {OP:"less"
+                                {ID:"x"}
+                                {NUM:"2"}
                             }
-                            {";"
-                                {"print"
-                                    {"y"}
+                            {OP:";"
+                                {OP:"print"
+                                    {ID:"y"}
                                 }
-                                {";"
-                                    {"="
-                                        {"x"}
-                                        {"-"
-                                            {"x"}
-                                            {"1"}
+                                {OP:";"
+                                    {OP:"="
+                                        {ID:"x"}
+                                        {OP:"-"
+                                            {ID:"x"}
+                                            {NUM:"1"}
                                         }
                                     }
                                 }
@@ -49,108 +49,108 @@
                     }
                 }
             }
-            {";"
-                {"def"
-                    {"spec"
-                        {"sada"}
-                        {","}
+            {OP:";"
+                {OP:"def"
+                    {OP:"spec"
+                        {ID:"sada"}
+                        {OP:","}
                     }
-                    {";"
-                        {"print"
-                            {"x"}
+                    {OP:";"
+                        {OP:"print"
+                            {ID:"x"}
                         }
-                        {";"
-                            {"return"
-                                {"-"
-                                    {"x"}
-                                    {"2"}
+                        {OP:";"
+                            {OP:"return"
+                                {OP:"-"
+                                    {ID:"x"}
+                                    {NUM:"2"}
                                 }
                             }
                         }
                     }
                 }
-                {";"
-                    {"def"
-                        {"spec"
-                            {"cheek"}
-                            {","
-                                {"a"}
+                {OP:";"
+                    {OP:"def"
+                        {OP:"spec"
+                            {ID:"cheek"}
+                            {OP:","
+                                {ID:"a"}
                             }
                         }
-                        {";"
-                            {"print"
-                                {"x"}
+                        {OP:";"
+                            {OP:"print"
+                                {ID:"x"}
                             }
-                            {";"
-                                {"return"
-                                    {"-"
-                                        {"1"}
-                                        {"2"}
+                            {OP:";"
+                                {OP:"return"
+                                    {OP:"-"
+                                        {NUM:"1"}
+                                        {NUM:"2"}
                                     }
                                 }
                             }
                         }
                     }
-                    {";"
-                        {"def"
-                            {"spec"
-                                {"cheek"}
-                                {","
-                                    {"a"}
-                                    {","
-                                        {"b"}
-                                        {","
-                                            {"c"}
-                                            {","
-                                                {"d"}
-                                                {","
-                                                    {"eere"}
+                    {OP:";"
+                        {OP:"def"
+                            {OP:"spec"
+                                {ID:"cheek"}
+                                {OP:","
+                                    {ID:"a"}
+                                    {OP:","
+                                        {ID:"b"}
+                                        {OP:","
+                                            {ID:"c"}
+                                            {OP:","
+                                                {ID:"d"}
+                                                {OP:","
+                                                    {ID:"eere"}
                                                 }
                                             }
                                         }
                                     }
                                 }
                             }
-                            {";"
-                                {"print"
-                                    {"x"}
+                            {OP:";"
+                                {OP:"print"
+                                    {ID:"x"}
                                 }
-                                {";"
-                                    {"return"
-                                        {"-"
-                                            {"3"}
-                                            {"4"}
+                                {OP:";"
+                                    {OP:"return"
+                                        {OP:"-"
+                                            {NUM:"3"}
+                                            {NUM:"4"}
                                         }
                                     }
                                 }
                             }
                         }
-                        {";"
-                            {"call"
-                                {"spec"
-                                    {"cheek"}
-                                    {","
-                                        {"1"}
-                                        {","
-                                            {"2"}
-                                            {","
-                                                {"x"}
+                        {OP:";"
+                            {OP:"call"
+                                {OP:"spec"
+                                    {ID:"cheek"}
+                                    {OP:","
+                                        {NUM:"1"}
+                                        {OP:","
+                                            {NUM:"2"}
+                                            {OP:","
+                                                {ID:"x"}
                                             }
                                         }
                                     }
                                 }
                             }
-                            {";"
-                                {"print"
-                                    {"call"
-                                        {"spec"
-                                            {"cheek"}
-                                            {","
-                                                {"1"}
-                                                {","
-                                                    {"2"}
-                                                    {","
-                                                        {"x"}
+                            {OP:";"
+                                {OP:"print"
+                                    {OP:"call"
+                                        {OP:"spec"
+                                            {ID:"cheek"}
+                                            {OP:","
+                                                {NUM:"1"}
+                                                {OP:","
+                                                    {NUM:"2"}
+                                                    {OP:","
+                                                        {ID:"x"}
                                                     }
                                                 }
                                             }
