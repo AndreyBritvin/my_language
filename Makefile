@@ -1,11 +1,15 @@
 all:
-#	make front
+	make front
 	make back
 #	make rfront
-#	make proc
+	make proc
 
 proc:
-	make -C Processor PROG_NAME=circle
+	make -C Processor/assembler
+	Processor/assembler/assembler.out assembler_programs/$(PROG_NAME).txt assembler_programs/compiled/$(PROG_NAME)_asm.txt
+
+	make -C Processor/processor
+	Processor/processor/proc.out assembler_programs/compiled/$(PROG_NAME)_asm.txt
 
 front:
 	make -C frontend

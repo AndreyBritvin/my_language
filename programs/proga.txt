@@ -1,30 +1,18 @@
-stocks_in x new_amount 1 eat 2 overeat 1;
-cheekcheeryk x;
-count_seeds_in x more 1:
-{
-    stocks_in y new_amount Y;
-    fly_until_amount_in x less 2:
-    {
-        cheekcheeryk y;
-        stocks_in x new_amount x eat 1;
-    }
-}
-mimic sada ()
-{
-    cheekcheeryk x;
-    forget_mimic_and_feed x eat 2;
-}
-mimic cheek(a)
-{
-    stocks_in local_v new_amount 1;
-    cheekcheeryk a;
-    forget_mimic_and_feed 2 eat 1;
-}
-mimic cheek_m(a, b, c, d, eere)
-{
-    cheekcheeryk x;
-    forget_mimic_and_feed 3 eat 4;
-}
+stocks_in x new_amount 1;
+cheekcheeryk fact(5);
 
-cheek(1, 2 , x);
-cheekcheeryk cheek(1, 2 , x);
+mimic fact(n)
+{
+    count_seeds_in n full_equal 0:
+    {
+        cheekcheeryk n;
+        forget_mimic_and_feed 0;
+    }
+    count_seeds_in n full_equal 1:
+    {
+        cheekcheeryk n;
+        forget_mimic_and_feed 0;
+    }
+
+    forget_mimic_and_feed n grow fact(n eat 1);
+}

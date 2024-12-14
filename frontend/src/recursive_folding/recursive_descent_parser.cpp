@@ -45,8 +45,7 @@
                                                    input[*pos].line, input[*pos].column);
 
 #define REQUIRE_RETURN(name)                                                                     \
-                        node_t* name = get_return(tree, input, pos);                             \
-                        if (name == NULL)                                                           \
+                        if (check_return_to_the_end(tree, func_body) == NULL)                    \
                         CUSTOM_SYNTAX_ERROR("Expected return at line %zu column %zu",            \
                                                    input[*pos].line, input[*pos].column);
 
@@ -241,7 +240,7 @@ node_t* get_statement(my_tree_t* tree, tokens* input, size_t* pos)
     else if ((state = get_while_state(tree, input, pos)) != NULL)  state;
     else if ((state = get_assingnment(tree, input, pos)) != NULL)  state;
     else if ((state = get_print_state(tree, input, pos)) != NULL)  state;
-    // else if ((state = get_return     (tree, input, pos)) != NULL)  state;
+    else if ((state = get_return     (tree, input, pos)) != NULL)  state;
     else if ((state = get_func_decl  (tree, input, pos)) != NULL)  state;
 
     if (state == NULL) return NULL;
@@ -380,28 +379,30 @@ node_t* get_func_decl(my_tree_t* tree, tokens* input, size_t* pos)
     func_def->right   = func_body;
     func_body->parent = func_def;
 
-    REQUIRE_RETURN(ret_node);
-    connect_to_the_end(tree, ret_node, func_body);
+    REQUIRE_RETURN();
     REQUIRE(SCOPE_CLOS);
 
     return func_def;
 }
 
-err_code_t connect_to_the_end(my_tree_t* tree, node_t* what_to_connect, node_t* where_to_connect)
+bool check_return_to_the_end(my_tree_t* tree, node_t* where_to_connect)
 {
     if (where_to_connect->right == NULL)
     {
-        node_t* separator_node  = new_node(tree, STATEMENT, STATEMENT_END, what_to_connect, NULL);
-        where_to_connect->right = separator_node;
-        separator_node->parent  = where_to_connect;
-        what_to_connect->parent = separator_node;
+        if (where_to_connect->left->type != STATEMENT || (int) where_to_connect->left->data != RETURN)
+        return false;
+        return true;
+        // node_t* separator_node  = new_node(tree, STATEMENT, STATEMENT_END, what_to_connect, NULL);
+        // where_to_connect->right = separator_node;
+        // separator_node->parent  = where_to_connect;
+        // what_to_connect->parent = separator_node;
     }
     else
     {
-        connect_to_the_end(tree, what_to_connect, where_to_connect->right);
+        return check_return_to_the_end(tree, where_to_connect->right);
     }
 
-    return OK;
+    return false;
 }
 
 node_t* get_func_call(my_tree_t* tree, tokens* input, size_t* pos)
