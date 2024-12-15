@@ -168,17 +168,17 @@ err_code_t write_print(FILE* output, my_tree_t* tree, node_t* node)
 err_code_t write_if(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_level)
 {
     static int if_label_counter = 0;
-
+    int buffer_index = if_label_counter;
     write_var(output, tree, node->left->left, VAR_PUSH); // left part should be before
     write_expression(output, tree, node->left->right);
 
     write_if_operator(output, tree, node->left);
 
-    PRINT(" IF_LABEL_%d:\n", if_label_counter);
+    PRINT(" IF_LABEL_%d:\n", if_label_counter++);
 
     write_to_assembler(output, tree, node->right, recurs_level + 1);
 
-    PRINT("IF_LABEL_%d:\n\n", if_label_counter);
+    PRINT("IF_LABEL_%d:\n\n", buffer_index);
 
     if_label_counter++;
 
@@ -204,6 +204,7 @@ err_code_t write_if_operator(FILE* output, my_tree_t* tree, node_t* node)
 err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_level)
 {
     static int while_label_counter = 0;
+    int buffer_counter = while_label_counter;
 
     PRINT("WHILE_LABEL_%d:\n", while_label_counter);
 
@@ -212,12 +213,12 @@ err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recur
 
     write_if_operator(output, tree, node->left);
 
-    PRINT(" END_WHILE_%d:\n", while_label_counter);
+    PRINT(" END_WHILE_%d:\n", while_label_counter++);
 
     write_to_assembler(output, tree, node->right, recurs_level + 1);
 
-    PRINT("jump WHILE_LABEL_%d:\n", while_label_counter);
-    PRINT("END_WHILE_%d:\n\n", while_label_counter);
+    PRINT("jump WHILE_LABEL_%d:\n", buffer_counter);
+    PRINT("END_WHILE_%d:\n\n", buffer_counter);
 
     return OK;
 }

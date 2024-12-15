@@ -5,7 +5,7 @@
 #include "my_tree.h"
 // #include "differenciator.h"
 
-#define MAXIMUM_LEXEMS_COUNT 150
+#define MAXIMUM_LEXEMS_COUNT 500
 
 struct tokens
 {

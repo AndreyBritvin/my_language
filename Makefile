@@ -28,3 +28,4 @@ back:
 clean:
 	rm frontend/frontend.out
 	rm backend/backend.out
+	rm reverse_frontend/rfrontend.out

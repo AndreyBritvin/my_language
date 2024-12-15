@@ -10,6 +10,7 @@ enum id_types
     VAR_TYPE,
     FUNC_TYPE,
     PARAM_TYPE,
+    LOC_TYPE,
 };
 
 struct identificator

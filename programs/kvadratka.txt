@@ -1,10 +1,72 @@
-cheekcheeryk 234;
-mimic solve_equation(a, b, c)
+stocks_in left_wing  new_amount 0;
+stocks_in right_wing new_amount 0;
+
+mimic fly_line(a1, b1, c1)
+{
+    count_seeds_in b1 full_equal 0:
+    {
+        count_seeds_in c1 full_equal 0:
+        {
+            forget_mimic_and_feed 21343;
+        }
+        count_seeds_in c1 not_equal 0:
+        {
+            forget_mimic_and_feed 0;
+        }
+    }
+
+    stocks_in left_wing  new_amount (0 eat c1) overeat b1;
+    stocks_in right_wing new_amount left_wing;
+
+    forget_mimic_and_feed 1;
+}
+
+mimic fly_square(a, b, c)
 {
     stocks_in parrot_discrimination new_amount (b growth b) eat (4 growth a growth c);
     cheekcheeryk parrot_discrimination;
 
-    forget_mimic_and_feed 78;
+    count_seeds_in parrot_discrimination less 0:
+    {
+        cheekcheeryk 0;
+        cheekcheeryk 0;
+        cheekcheeryk 0;
+        cheekcheeryk 0;
+        forget_mimic_and_feed 0;
+    }
+    count_seeds_in parrot_discrimination full_equal 0:
+    {
+        stocks_in left_wing  new_amount (0 eat b) overeat 2;
+        stocks_in right_wing new_amount left_wing;
+        forget_mimic_and_feed 1;
+    }
+    count_seeds_in parrot_discrimination more 0:
+    {
+        stocks_in left_wing  new_amount (0 eat b regurgitation parrot_discrimination uncontrolable_growth (1 overeat 2)) overeat 2;
+        stocks_in right_wing new_amount (0 eat b eat           parrot_discrimination uncontrolable_growth (1 overeat 2)) overeat 2;
+        forget_mimic_and_feed 2;
+    }
+
+    forget_mimic_and_feed 4567;
 }
 
-solve_equation(1, 10, 100);
+mimic prepare_for_flight(a12, b12, c12)
+{
+    count_seeds_in a12 full_equal 0:
+    {
+        forget_mimic_and_feed fly_line(a12,b12,c12);
+    }
+    count_seeds_in a12 not_equal 0:
+    {
+        forget_mimic_and_feed fly_square(a12,b12,c12);
+    }
+
+    forget_mimic_and_feed 1234;
+}
+
+
+
+cheekcheeryk prepare_for_flight(1, 5, 6);
+
+cheekcheeryk left_wing;
+cheekcheeryk right_wing;

@@ -129,6 +129,7 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
         if (type == VAR && is_element_in_nt(nametable, expression) == MAX_ID_COUNT)
         {
             identificator id = {};
+            id.dependence = MAX_ID_COUNT;
             strcpy(id.name, expression);
             id.length = strlen(expression);
 
