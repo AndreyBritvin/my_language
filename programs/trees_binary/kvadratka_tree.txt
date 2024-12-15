@@ -1,12 +1,66 @@
 434-format v1.5
 {OP:";"
-    {OP:"="
-        {ID:"abcdefghgf"}
-        {NUM:"3"}
+    {OP:"print"
+        {NUM:"234"}
     }
     {OP:";"
-        {OP:"print"
-            {ID:"abcdefghgf"}
+        {OP:"def"
+            {OP:"spec"
+                {ID:"solve_equation"}
+                {OP:","
+                    {ID:"a"}
+                    {OP:","
+                        {ID:"b"}
+                        {OP:","
+                            {ID:"c"}
+                        }
+                    }
+                }
+            }
+            {OP:";"
+                {OP:"="
+                    {ID:"parrot_discrimination"}
+                    {OP:"-"
+                        {OP:"*"
+                            {ID:"b"}
+                            {ID:"b"}
+                        }
+                        {OP:"*"
+                            {OP:"*"
+                                {NUM:"4"}
+                                {ID:"a"}
+                            }
+                            {ID:"c"}
+                        }
+                    }
+                }
+                {OP:";"
+                    {OP:"print"
+                        {ID:"parrot_discrimination"}
+                    }
+                    {OP:";"
+                        {OP:"return"
+                            {NUM:"78"}
+                        }
+                    }
+                }
+            }
+        }
+        {OP:";"
+            {OP:"call"
+                {OP:"spec"
+                    {ID:"solve_equation"}
+                    {OP:","
+                        {NUM:"1"}
+                        {OP:","
+                            {NUM:"10"}
+                            {OP:","
+                                {NUM:"100"}
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

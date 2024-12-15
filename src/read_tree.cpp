@@ -136,11 +136,13 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
             {
                 id.is_defined = true; // TODO: check if not right subtree
             }
-            // if (parent->type == STATEMENT && (int) parent->data == SEPARATOR)
-            // {
+            if (parent->type == STATEMENT && (int) parent->data == SEPARATOR)
+            {
+                id.type = PARAM_TYPE;
+            }
                 // maybe fix for local vars
             id.node_dep = get_func_node_dependence(nametable, parent);
-            // }
+
             if (parent->type == STATEMENT && (int) parent->data == FUNC_SPEC)
             {
                 id.type = FUNC_TYPE;

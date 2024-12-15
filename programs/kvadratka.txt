@@ -1,2 +1,10 @@
-stocks_in abcdefghgf new_amount 3;
-cheekcheeryk abcdefghgf;
+cheekcheeryk 234;
+mimic solve_equation(a, b, c)
+{
+    stocks_in parrot_discrimination new_amount (b growth b) eat (4 growth a growth c);
+    cheekcheeryk parrot_discrimination;
+
+    forget_mimic_and_feed 78;
+}
+
+solve_equation(1, 10, 100);

@@ -1,0 +1,40 @@
+push 3
+pop bx  
+push 234
+out
+
+jump solve_equation_END:
+solve_equation:
+push [bx + 1] ; 
+push [bx + 1] ; 
+mul
+push 4
+push [bx + 0] ; 
+mul
+push [bx + 2] ; 
+mul
+sub
+pop [bx + 3] ; 
+
+push [bx + 3] ; 
+out
+
+push 78
+pop ax
+ret
+
+solve_equation_END:
+
+push bx
+push 1
+push 10
+push 100
+push bx + 4
+pop  bx 
+pop [bx + 2]
+pop [bx + 1]
+pop [bx + 0]
+call solve_equation:
+pop bx
+push ax
+hlt

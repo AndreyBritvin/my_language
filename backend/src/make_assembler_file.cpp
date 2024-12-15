@@ -244,7 +244,7 @@ err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node)
     PRINT("push bx + %zu\n", local_vars);
     PRINT("pop  bx \n"); // bx += n of params
 
-    if (local_vars != 0) write_parametrs(output, tree, node->left->right, local_vars - 1, true);
+    if (local_vars != 0) write_parametrs(output, tree, node->left->right, get_amount_of_parametrs(func_id) - 1, true);
     PRINT_KW_WO_NL(FUNC_CALL);
     write_var(output, tree, node->left->left, VAR_NAME);
     PRINT(":\n");
@@ -278,6 +278,19 @@ size_t get_amount_of_local_vars_in_func(size_t func_num)
     for (size_t i = func_num + 1; i < MAX_ID_COUNT; i++)
     {
         if (nametable[i].dependence != func_num || nametable[i].type == FUNC_TYPE || nametable[i].name[0] == '\0')
+        {
+            return i - func_num - 1; // amount means 1,2,3,4...
+        }
+    }
+}
+
+size_t get_amount_of_parametrs(size_t func_num)
+{
+    assert(nametable[func_num].type == FUNC_TYPE);
+
+    for (size_t i = func_num + 1; i < MAX_ID_COUNT; i++)
+    {
+        if (nametable[i].dependence != func_num || nametable[i].type != PARAM_TYPE || nametable[i].name[0] == '\0')
         {
             return i - func_num - 1; // amount means 1,2,3,4...
         }

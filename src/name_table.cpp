@@ -27,8 +27,8 @@ err_code_t print_name_table(identificator* name_table)
     for (size_t i = 0; i < MAX_ID_COUNT; i++)
     {
         identificator id = name_table[i];
-        printf("Name = %-10s type = %-4s len = %3zu dep = %3zu is_def = %1d full_ind = %2d\n",
-                id.name,   id.type == VAR_TYPE ? "VAR":"FUNC",
+        printf("Name = %-10.10s type = %-4s len = %3zu dep = %3zu is_def = %1d full_ind = %2d\n",
+                id.name,   id.type == VAR_TYPE ? "VAR": id.type == FUNC_TYPE ? "FUNC" : "PARM",
                 id.length, id.dependence, id.is_defined, id.full_index);
     }
 
@@ -41,8 +41,8 @@ err_code_t add_element(nametable_t nt, identificator id)
     static size_t inside_func_index = 0;
     if (id.type == FUNC_TYPE) inside_func_index = 0;
     static size_t index = 0; // TODO: make universal for different nametables. Now it correctly fill only one table
-    if (id.type == VAR_TYPE && id.node_dep == NULL) id.full_index = var_index++;
-    if (id.type == VAR_TYPE && id.node_dep != NULL) id.full_index = inside_func_index++;
+    if ((id.type == VAR_TYPE || id.type == PARAM_TYPE) && id.node_dep == NULL) id.full_index = var_index++;
+    if ((id.type == VAR_TYPE || id.type == PARAM_TYPE) && id.node_dep != NULL) id.full_index = inside_func_index++;
     nt[index++] = id;
 
     return OK;
