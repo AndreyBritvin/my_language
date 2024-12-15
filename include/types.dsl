@@ -18,8 +18,8 @@ OPERATION(CTH, "coth", "coth")
 
 OPERATION(MORE, "more", "more")
 OPERATION(LESS, "less", "less")
-OPERATION(MORE_EQUAL, "more_eq",    ">=")
-OPERATION(LESS_EQUAL, "less_eq",    "<=")
+OPERATION(MORE_EQUAL, "more_eq",    "more_equal")
+OPERATION(LESS_EQUAL, "less_eq",    "less_equal")
 OPERATION(NOOO_EQUAL, "not_equal",  "!=")
 OPERATION(FULL_EQUAL, "full_equal", "==")
 

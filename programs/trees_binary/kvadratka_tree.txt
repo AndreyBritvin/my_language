@@ -1,0 +1,12 @@
+434-format v1.5
+{OP:";"
+    {OP:"="
+        {ID:"abcdefghgf"}
+        {NUM:"3"}
+    }
+    {OP:";"
+        {OP:"print"
+            {ID:"abcdefghgf"}
+        }
+    }
+}

@@ -3,9 +3,9 @@
     {OP:"print"
         {OP:"call"
             {OP:"spec"
-                {ID:"fact"}
+                {ID:"feed"}
                 {OP:","
-                    {NUM:"5"}
+                    {NUM:"0"}
                 }
             }
         }
@@ -13,20 +13,28 @@
     {OP:";"
         {OP:"def"
             {OP:"spec"
-                {ID:"fact"}
+                {ID:"feed"}
                 {OP:","
-                    {ID:"n"}
+                    {ID:"seed"}
                 }
             }
             {OP:";"
                 {OP:"if"
-                    {OP:"=="
-                        {ID:"n"}
+                    {OP:"less_equal"
+                        {ID:"seed"}
                         {NUM:"0"}
                     }
                     {OP:";"
-                        {OP:"print"
-                            {ID:"n"}
+                        {OP:"return"
+                            {NUM:"1"}
+                        }
+                    }
+                }
+                {OP:";"
+                    {OP:"if"
+                        {OP:"=="
+                            {ID:"seed"}
+                            {NUM:"1"}
                         }
                         {OP:";"
                             {OP:"return"
@@ -34,34 +42,16 @@
                             }
                         }
                     }
-                }
-                {OP:";"
-                    {OP:"if"
-                        {OP:"=="
-                            {ID:"n"}
-                            {NUM:"1"}
-                        }
-                        {OP:";"
-                            {OP:"print"
-                                {ID:"n"}
-                            }
-                            {OP:";"
-                                {OP:"return"
-                                    {NUM:"1"}
-                                }
-                            }
-                        }
-                    }
                     {OP:";"
                         {OP:"return"
                             {OP:"*"
-                                {ID:"n"}
+                                {ID:"seed"}
                                 {OP:"call"
                                     {OP:"spec"
-                                        {ID:"fact"}
+                                        {ID:"feed"}
                                         {OP:","
                                             {OP:"-"
-                                                {ID:"n"}
+                                                {ID:"seed"}
                                                 {NUM:"1"}
                                             }
                                         }

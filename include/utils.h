@@ -4,13 +4,14 @@
 #define UTILS_H_
 
 #include <errno.h>
+#include <string.h>
 #include <math.h>
 
 #define SAFE_OPEN_FILE(file_ptr, filename, mode)                                   \
                         file_ptr = fopen(filename, mode);                    \
                         if (file_ptr == NULL)                                      \
                         {                                                          \
-                            printf("Unable open output file '%s'\n", filename);    \
+                            printf("Unable open output file '%s': %s\n", filename, strerror(errno));    \
                             return ERROR_FILE;                                     \
                         }
 #define SAFE_CALLOC(var_name, type, size) type *var_name = (type *) calloc(size, sizeof(type)); \

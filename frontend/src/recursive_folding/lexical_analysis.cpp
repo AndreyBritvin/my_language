@@ -83,12 +83,12 @@ size_t lexical_analysis(tokens* token, char* buffer)
                 // TODO: increase more than 8 bytes
                 // memcpy(&tokens[token_index].value, begin, end_pos - begin);
                 // printf("Var_name = %8s\n", tokens[token_index].value);
-                if (end_pos - begin >= 8)
-                {
-                    assert("Var name should be shorter 8 symbols" == NULL);
-                }
+                // if (end_pos - begin >= 8)
+                // {
+                //     assert("Var name should be shorter 8 symbols" == NULL);
+                // }
                 printf("Var_name: End_pos = %p, begin = %p, diff = %zu\n", end_pos, begin, end_pos - begin);
-                char* var_name = (char*) calloc(sizeof(tree_val_t), sizeof(char));
+                char* var_name = (char*) calloc(end_pos - begin + 1, sizeof(char));
                 strncpy(var_name, begin, end_pos - begin);
 
                 memcpy(&token[token_index].value, &var_name, sizeof(tree_val_t));

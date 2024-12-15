@@ -1,0 +1,15 @@
+cheekcheeryk fact (5 ); 
+mimic fact ( n ) 
+{ 
+    count_seeds_in n full_equal 0 : 
+    { 
+        cheekcheeryk n ; 
+        forget_mimic_and_feed 1 ; 
+    } 
+    count_seeds_in n full_equal 1 : 
+    { 
+        cheekcheeryk n ; 
+        forget_mimic_and_feed 1 ; 
+    } 
+    forget_mimic_and_feed n growth fact (n eat 1 ); 
+} 

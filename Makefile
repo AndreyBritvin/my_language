@@ -1,5 +1,5 @@
-PROG_NAME=test_asm
-
+PROG_NAME=kvadratka
+#TODO: make vars with paths
 all:
 	make front
 	make back
@@ -8,22 +8,22 @@ all:
 
 proc:
 	make -C Processor/assembler
-	Processor/assembler/assembler.out assembler_programs/$(PROG_NAME).txt assembler_programs/compiled/$(PROG_NAME)_asm.txt
+	Processor/assembler/assembler.out programs/assembler_programs/$(PROG_NAME)_asm.txt programs/assembler_programs/compiled/$(PROG_NAME)_comp.txt
 
 	make -C Processor/processor
-	Processor/processor/proc.out assembler_programs/compiled/$(PROG_NAME)_asm.txt
+	Processor/processor/proc.out programs/assembler_programs/compiled/$(PROG_NAME)_comp.txt
 
 front:
 	make -C frontend
-	./frontend/frontend.out programs/proga.txt trees_binary/test_output.txt
+	./frontend/frontend.out programs/$(PROG_NAME).txt programs/trees_binary/$(PROG_NAME)_tree.txt
 
 rfront:
 	make -C reverse_frontend
-	./reverse_frontend/rfrontend.out programs/proga.txt rebuild_codes/test_output.txt
+	./reverse_frontend/rfrontend.out programs/trees_binary/$(PROG_NAME)_tree.txt programs/rebuild_codes/$(PROG_NAME)_rebuild.txt
 
 back:
 	make -C backend
-	./backend/backend.out
+	./backend/backend.out programs/trees_binary/$(PROG_NAME)_tree.txt programs/assembler_programs/$(PROG_NAME)_asm.txt
 
 clean:
 	rm frontend/frontend.out

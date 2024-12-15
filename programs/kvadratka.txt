@@ -1,0 +1,2 @@
+stocks_in abcdefghgf new_amount 3;
+cheekcheeryk abcdefghgf;

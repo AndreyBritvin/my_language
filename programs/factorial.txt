@@ -1,0 +1,15 @@
+cheekcheeryk feed(0);
+
+mimic feed(seed)
+{
+    count_seeds_in seed less_eq 0:
+    {
+        forget_mimic_and_feed 1;
+    }
+    count_seeds_in seed full_equal 1:
+    {
+        forget_mimic_and_feed 1;
+    }
+
+    forget_mimic_and_feed seed growth feed(seed eat 1);
+}
