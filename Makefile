@@ -1,3 +1,5 @@
+PROG_NAME=test_asm
+
 all:
 	make front
 	make back

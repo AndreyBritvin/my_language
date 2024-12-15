@@ -7,6 +7,10 @@ err_code_t create_name_table(identificator** name_table)
     SAFE_CALLOC(temp_nt, identificator, MAX_ID_COUNT);
 
     *name_table = temp_nt;
+    for (size_t i = 0; i < MAX_ID_COUNT; i++)
+    {
+        temp_nt[i].dependence = MAX_ID_COUNT;
+    }
 
     return OK;
 }
