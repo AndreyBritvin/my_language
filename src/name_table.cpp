@@ -48,7 +48,7 @@ err_code_t add_element(nametable_t nt, identificator id)
     return OK;
 }
 
-size_t is_element_in_nt(nametable_t nt, char* elem)
+size_t get_element_index(nametable_t nt, char* elem)
 {
     for (size_t i = 0; i < MAX_ID_COUNT; i++)
     {

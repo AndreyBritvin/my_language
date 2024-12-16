@@ -126,7 +126,7 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
     {
         node_to_return->parent = parent;
         //TODO: make func to add to nametable
-        if (type == VAR && is_element_in_nt(nametable, expression) == MAX_ID_COUNT)
+        if (type == VAR && get_element_index(nametable, expression) == MAX_ID_COUNT)
         {
             identificator id = {};
             id.dependence = MAX_ID_COUNT;
@@ -194,7 +194,7 @@ err_code_t get_func_dependence(nametable_t nt)
         {
             char* func_name = *(char**)&nt[i].node_dep->left->left->data;
             nt[i].is_defined = true;
-            nt[i].dependence = is_element_in_nt(nt, func_name);
+            nt[i].dependence = get_element_index(nt, func_name);
         }
     }
 
