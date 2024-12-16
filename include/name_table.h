@@ -32,4 +32,9 @@ err_code_t print_name_table(nametable_t name_table);
 err_code_t add_element(nametable_t nt, identificator id);
 size_t get_element_index(nametable_t nt, char* elem);
 
+size_t get_num_of_global_vars(nametable_t nametable);
+size_t get_amount_of_local_vars_in_func(size_t func_num, nametable_t nametable);
+size_t get_amount_of_parametrs(size_t func_num, nametable_t nametable);
+size_t get_current_func(node_t* node, nametable_t nametable);
+
 #endif // NAME_TABLE_H_

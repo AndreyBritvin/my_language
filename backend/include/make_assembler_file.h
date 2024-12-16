@@ -18,10 +18,6 @@ enum var_writing
 };
 
 err_code_t print_tabs(FILE* output, size_t recurs_level);
-size_t get_num_of_global_vars(nametable_t nametable);
-size_t get_amount_of_local_vars_in_func(size_t func_num, nametable_t nametable);
-size_t get_amount_of_parametrs(size_t func_num, nametable_t nametable);
-size_t get_current_func(node_t* node, nametable_t nametable);
 
 err_code_t             generate_assembler(my_tree_t* tree, const char* filename, nametable_t nt);
 write_op_with_recurs_t write_to_assembler;

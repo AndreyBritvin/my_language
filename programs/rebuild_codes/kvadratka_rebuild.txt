@@ -1,61 +1,61 @@
-stocks_in no_food new_amount . eat . blink 
-stocks_in left_wing new_amount no_food blink 
-stocks_in right_wing new_amount no_food blink 
+stocks_in no_food new_amount . eat . blink
+stocks_in left_wing new_amount no_food blink
+stocks_in right_wing new_amount no_food blink
 mimic fly_line(stomach, field, grass)
-{ 
-    count_seeds_in field full_equal no_food : 
-    { 
-        count_seeds_in grass full_equal no_food : 
-        { 
-            forget_mimic_and_feed .... growth ...... blink 
-        } 
-        count_seeds_in grass not_equal no_food : 
-        { 
-            forget_mimic_and_feed no_food blink 
-        } 
-    } 
-    stocks_in left_wing new_amount no_food eat grass overeat field blink 
-    stocks_in right_wing new_amount left_wing blink 
-    forget_mimic_and_feed . blink 
-} 
+{
+    count_seeds_in field full_equal no_food :
+    {
+        count_seeds_in grass full_equal no_food :
+        {
+            forget_mimic_and_feed .... growth ...... blink
+        }
+        count_seeds_in grass not_equal no_food :
+        {
+            forget_mimic_and_feed no_food blink
+        }
+    }
+    stocks_in left_wing new_amount no_food eat grass overeat field blink
+    stocks_in right_wing new_amount left_wing blink
+    forget_mimic_and_feed . blink
+}
 mimic fly_square(seed_area, beak, feather)
-{ 
-    stocks_in parrot_discrimination new_amount beak growth beak eat .... growth seed_area growth feather blink 
-    cheekcheeryk parrot_discrimination blink 
-    count_seeds_in parrot_discrimination less no_food : 
-    { 
-        cheekcheeryk no_food blink 
-        cheekcheeryk no_food blink 
-        cheekcheeryk no_food blink 
-        cheekcheeryk no_food blink 
-        forget_mimic_and_feed no_food blink 
-    } 
-    count_seeds_in parrot_discrimination full_equal no_food : 
-    { 
-        stocks_in left_wing new_amount no_food eat beak overeat .. overeat seed_area blink 
-        stocks_in right_wing new_amount left_wing blink 
-        forget_mimic_and_feed . blink 
-    } 
-    count_seeds_in parrot_discrimination more no_food : 
-    { 
-        stocks_in left_wing new_amount no_food eat beak regurgitation parrot_discrimination uncontrolable_growth . overeat .. overeat .. overeat seed_area blink 
-        stocks_in right_wing new_amount no_food eat beak eat parrot_discrimination uncontrolable_growth . overeat .. overeat .. overeat seed_area blink 
-        forget_mimic_and_feed .. blink 
-    } 
-    forget_mimic_and_feed ... growth .... blink 
-} 
+{
+    stocks_in parrot_discrimination new_amount beak growth beak eat .... growth seed_area growth feather blink
+    cheekcheeryk parrot_discrimination blink
+    count_seeds_in parrot_discrimination less no_food :
+    {
+        cheekcheeryk no_food blink
+        cheekcheeryk no_food blink
+        cheekcheeryk no_food blink
+        cheekcheeryk no_food blink
+        forget_mimic_and_feed no_food blink
+    }
+    count_seeds_in parrot_discrimination full_equal no_food :
+    {
+        stocks_in left_wing new_amount no_food eat beak overeat .. overeat seed_area blink
+        stocks_in right_wing new_amount left_wing blink
+        forget_mimic_and_feed . blink
+    }
+    count_seeds_in parrot_discrimination more no_food :
+    {
+        stocks_in left_wing new_amount no_food eat beak regurgitation parrot_discrimination uncontrolable_growth . overeat .. overeat .. overeat seed_area blink
+        stocks_in right_wing new_amount no_food eat beak eat parrot_discrimination uncontrolable_growth . overeat .. overeat .. overeat seed_area blink
+        forget_mimic_and_feed .. blink
+    }
+    forget_mimic_and_feed ... growth .... blink
+}
 mimic prepare_for_flight(bowl, secret, ZOB)
-{ 
-    count_seeds_in bowl full_equal (. eat .) : 
-    { 
-        forget_mimic_and_feed fly_line(bowl, secret, ZOB) blink 
-    } 
-    count_seeds_in bowl not_equal (. eat .) : 
-    { 
-        forget_mimic_and_feed fly_square(bowl, secret, ZOB) blink 
-    } 
-    forget_mimic_and_feed .... growth ..... blink 
-} 
-cheekcheeryk prepare_for_flight(.., . eat ..........., ............) blink 
-cheekcheeryk left_wing blink 
-cheekcheeryk right_wing blink 
+{
+    count_seeds_in bowl full_equal (. eat .) :
+    {
+        forget_mimic_and_feed fly_line(bowl, secret, ZOB) blink
+    }
+    count_seeds_in bowl not_equal (. eat .) :
+    {
+        forget_mimic_and_feed fly_square(bowl, secret, ZOB) blink
+    }
+    forget_mimic_and_feed .... growth ..... blink
+}
+cheekcheeryk prepare_for_flight(.., . eat ..........., ............) blink
+cheekcheeryk left_wing blink
+cheekcheeryk right_wing blink

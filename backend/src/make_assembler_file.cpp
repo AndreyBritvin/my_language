@@ -272,17 +272,6 @@ err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node, nametabl
     return OK;
 }
 
-size_t get_current_func(node_t* node, nametable_t nametable)
-{
-    if (node->type == STATEMENT && (int) node->data == FUNC_DECL)
-    {
-        return get_element_index(nametable, FUNC_NAME_BY_NODE(node));
-    }
-    if (node->parent != NULL) return get_current_func(node->parent, nametable);
-
-    return MAX_ID_COUNT;
-}
-
 err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_level, nametable_t nametable)
 {
     PRINT("jump ");                                     // jump func_END:
@@ -300,38 +289,6 @@ err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t r
     return OK;
 }
 
-size_t get_amount_of_local_vars_in_func(size_t func_num, nametable_t nametable)
-{
-    assert(nametable[func_num].type == FUNC_TYPE);
-
-    for (size_t i = func_num + 1; i < MAX_ID_COUNT; i++)
-    {
-        if (nametable[i].dependence != func_num
-         || nametable[i].type       == FUNC_TYPE
-         || nametable[i].name[0]    == '\0')
-        {
-            return i - func_num - 1; // amount means 1,2,3,4...
-        }
-    }
-
-    return 0;
-}
-// TODO: think about merging up and down function
-size_t get_amount_of_parametrs(size_t func_num, nametable_t nametable)
-{
-    assert(nametable[func_num].type == FUNC_TYPE);
-
-    for (size_t i = func_num + 1; i < MAX_ID_COUNT; i++)
-    {
-        if (nametable[i].dependence != func_num
-         || nametable[i].type       != PARAM_TYPE
-         || nametable[i].name[0]    == '\0')
-        {
-            return i - func_num - 1; // amount means 1,2,3,4...
-        }
-    }
-}
-
 err_code_t print_tabs(FILE* output, size_t recurs_level)
 {
     //PRINT("%zu", recurs_level);
@@ -341,20 +298,6 @@ err_code_t print_tabs(FILE* output, size_t recurs_level)
     }
 
     return OK;
-}
-
-size_t get_num_of_global_vars(nametable_t nametable)
-{
-    size_t max_index = 0;
-    for (size_t i = 0; i < MAX_ID_COUNT; i++)
-    {
-        if (nametable[i].full_index > max_index && nametable[i].dependence == MAX_ID_COUNT)
-        {
-            max_index = nametable[i].full_index;
-        }
-    }
-
-    return max_index > 0 ? max_index + 1 : 0;
 }
 
 err_code_t write_parametrs(FILE* output, my_tree_t* tree, node_t* node, int recurs_level, bool is_memory, nametable_t nametable)
