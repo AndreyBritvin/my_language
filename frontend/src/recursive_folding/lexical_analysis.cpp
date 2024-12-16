@@ -57,7 +57,7 @@ size_t lexical_analysis(tokens* token, char* buffer)
         if (isdigit(*end_pos))
         {
             char* begin = end_pos;
-            tree_val_t value = strtod(end_pos, &end_pos); // TODO: make unar counting system
+            tree_val_t value = strtod(end_pos, &end_pos);
             token[token_index].value = value;
             token[token_index].type  = NUM;
             printf("scanned value is %lg\n", value);

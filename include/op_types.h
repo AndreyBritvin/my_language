@@ -28,11 +28,13 @@ struct operation
     const char*  standart_text;
     const char*  assembler_text;
 };
-
-static operation all_ops[] = {//!!! order should be equal to enum!!! // TODO: codegen as in proc
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+static operation all_ops[] = {
 #define OPERATION(num, ...) {num, __VA_ARGS__},
 #include "types.dsl"
 #undef OPERATION
 };
+#pragma GCC diagnostic pop
 
 #endif // OP_TYPES_H_

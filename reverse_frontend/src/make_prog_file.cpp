@@ -90,7 +90,27 @@ err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node) // TODO
     {
         case NUM:
         {
-            PRINT("%lg ", node->data);
+            if (is_integer(node->data))
+            {
+                if (is_double_equal(node->data, 0))
+                {
+                    PRINT("(. eat .) ");
+                    return OK;
+                }
+                else if (node->data < 0)
+                {
+                    PRINT("(. eat .) eat");
+                }
+                for (size_t i = 0; i < (size_t) fabs(node->data); i++)
+                {
+                    PRINT(".");
+                }
+                PRINT(" ");
+            }
+            else
+            {
+                PRINT("%lg ", node->data);
+            }
             return OK;
         }
         case OP :

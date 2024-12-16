@@ -40,6 +40,9 @@ enum errors
     ERROR_FILENAME_IS_EMPTY
 };
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 static bool is_double_equal(double d1, double d2)
 {
   if (fabs(d1 - d2) < EPSILON)
@@ -49,5 +52,11 @@ static bool is_double_equal(double d1, double d2)
 
   return false;
 }
+
+static bool is_integer(double num)
+{
+  return is_double_equal(num, (int) num);
+}
+#pragma GCC diagnostic pop
 
 #endif //UTILS_H_
