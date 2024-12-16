@@ -32,7 +32,7 @@
                         CUSTOM_SYNTAX_ERROR("Expected expression at line %zu column %zu",           \
                                                    input[*pos].line, input[*pos].column);
 
-#define REQUIRE_VAR(name)                                                                           \
+#define REQUIRE_ID(name)                                                                           \
                         node_t* name = get_variable(tree, input, pos);                              \
                         if (name == NULL)                                                           \
                         CUSTOM_SYNTAX_ERROR("Expected variable at line %zu column %zu",             \
@@ -54,6 +54,8 @@
                         if (name == NULL)                                                           \
                         CUSTOM_SYNTAX_ERROR("Expected comparison at line %zu column %zu",           \
                                                    input[*pos].line, input[*pos].column);
+
+#define SEPARATOR_NODE new_node(tree, STATEMENT, SEPARATOR, NULL, NULL)
 
 my_tree_t make_tree(char *buffer)
 {
@@ -210,7 +212,7 @@ node_t* get_assingnment(my_tree_t* tree, tokens* input, size_t* pos)
 {
     CHECK_VALUE(EQUAL_BEGIN);
 
-    REQUIRE_VAR(identificator);
+    REQUIRE_ID(identificator);
 
     REQUIRE(EQUAL_MIDDLE);
 
@@ -258,7 +260,7 @@ node_t* get_if_state(my_tree_t* tree, tokens* input, size_t* pos)
 {
     CHECK_VALUE(IF_STATE);
 
-    REQUIRE_VAR(cond_var)
+    REQUIRE_ID(cond_var)
     REQUIRE_CUSTOM(condition, get_comparison);
     REQUIRE_EXPR(cond_expr);
 
@@ -280,7 +282,7 @@ node_t* get_while_state(my_tree_t* tree, tokens* input, size_t* pos)
 {
     CHECK_VALUE(WHILE_STATE);
 
-    REQUIRE_VAR(cond_var)
+    REQUIRE_ID(cond_var)
     REQUIRE_CUSTOM(condition, get_comparison);
     REQUIRE_EXPR(cond_expr);
 
@@ -346,7 +348,7 @@ node_t* get_return(my_tree_t* tree, tokens* input, size_t* pos)
                                                                                     \
         if (CURR_TYPE == OP && (int) CURR_VAL == BRACKET_CLOS) break;               \
         REQUIRE(SEPARATOR);                                                         \
-        separator_node->right = new_node(tree, STATEMENT, SEPARATOR, NULL, NULL);   \
+        separator_node->right = SEPARATOR_NODE;   \
         separator_node->right->parent = separator_node;                             \
         separator_node = separator_node->right;                                     \
     }
@@ -357,11 +359,11 @@ node_t* get_func_decl(my_tree_t* tree, tokens* input, size_t* pos)
 
     node_t* func_def = new_node(tree, STATEMENT, FUNC_DECL, NULL, NULL);
 
-    REQUIRE_VAR(func_name); // TODO: make id
+    REQUIRE_ID(func_name);
 
     REQUIRE(BRACKET_OPEN);
 
-    node_t* separator_node = new_node(tree, STATEMENT, SEPARATOR, NULL, NULL);
+    node_t* separator_node = SEPARATOR_NODE;
 
     node_t* func_spec = new_node(tree, STATEMENT, FUNC_SPEC, func_name, separator_node);
     separator_node->parent = func_spec;
@@ -369,7 +371,7 @@ node_t* get_func_decl(my_tree_t* tree, tokens* input, size_t* pos)
     func_spec->parent = func_def;
     func_def->left = func_spec;
 
-    REQUIRE_ID_SEQUENCE(_VAR);
+    REQUIRE_ID_SEQUENCE(_ID);
 
     REQUIRE(BRACKET_CLOS);
 
@@ -409,13 +411,13 @@ node_t* get_func_call(my_tree_t* tree, tokens* input, size_t* pos)
 {
     if (CURR_TYPE == VAR && input[*pos + 1].type == OP && (int) input[*pos + 1].value == BRACKET_OPEN)
     {
-        REQUIRE_VAR(func_name);
+        REQUIRE_ID(func_name);
 
         node_t* func_call = new_node(tree, STATEMENT, FUNC_CALL, NULL, NULL);
 
         REQUIRE(BRACKET_OPEN);
 
-        node_t* separator_node = new_node(tree, STATEMENT, SEPARATOR, NULL, NULL); // TODO: make macros
+        node_t* separator_node = SEPARATOR_NODE;
         node_t* func_spec = new_node(tree, STATEMENT, FUNC_SPEC, func_name, separator_node);
         separator_node->parent = func_spec;
         func_name->parent      = func_spec;
@@ -430,7 +432,7 @@ node_t* get_func_call(my_tree_t* tree, tokens* input, size_t* pos)
                                                                                         \
             if (CURR_TYPE == OP && (int) CURR_VAL == BRACKET_CLOS) break;               \
             REQUIRE(SEPARATOR);                                                         \
-            separator_node->right = new_node(tree, STATEMENT, SEPARATOR, NULL, NULL);   \
+            separator_node->right = SEPARATOR_NODE;   \
             separator_node->right->parent = separator_node;                             \
             separator_node = separator_node->right;                                     \
         }
