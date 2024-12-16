@@ -1,29 +1,36 @@
-push 2
+push 3
 pop bx  
-push 0
+push 1
+push 1
+sub
 pop [0] ; 
 
-push 0
+push [0] ; 
 pop [1] ; 
+
+push [0] ; 
+pop [2] ; 
 
 jump fly_line_END:
 fly_line:
 push [bx + 1] ; 
-push 0
+push [0] ; 
 jne IF_LABEL_0:
 push [bx + 2] ; 
-push 0
+push [0] ; 
 jne IF_LABEL_1:
-push 21343
+push 4
+push 6
+mul
 pop ax
 ret
 
 IF_LABEL_1:
 
 push [bx + 2] ; 
-push 0
+push [0] ; 
 je IF_LABEL_3:
-push 0
+push [0] ; 
 pop ax
 ret
 
@@ -31,15 +38,15 @@ IF_LABEL_3:
 
 IF_LABEL_0:
 
-push 0
+push [0] ; 
 push [bx + 2] ; 
 sub
 push [bx + 1] ; 
 div
-pop [0] ; 
-
-push [0] ; 
 pop [1] ; 
+
+push [1] ; 
+pop [2] ; 
 
 push 1
 pop ax
@@ -64,40 +71,40 @@ push [bx + 3] ;
 out
 
 push [bx + 3] ; 
-push 0
+push [0] ; 
 jae IF_LABEL_6:
-push 0
+push [0] ; 
 out
 
-push 0
+push [0] ; 
 out
 
-push 0
+push [0] ; 
 out
 
-push 0
+push [0] ; 
 out
 
-push 0
+push [0] ; 
 pop ax
 ret
 
 IF_LABEL_6:
 
 push [bx + 3] ; 
-push 0
+push [0] ; 
 jne IF_LABEL_8:
-push 0
+push [0] ; 
 push [bx + 1] ; 
 sub
 push 2
 div
 push [bx + 0] ; 
 div
-pop [0] ; 
-
-push [0] ; 
 pop [1] ; 
+
+push [1] ; 
+pop [2] ; 
 
 push 1
 pop ax
@@ -106,9 +113,9 @@ ret
 IF_LABEL_8:
 
 push [bx + 3] ; 
-push 0
+push [0] ; 
 jbe IF_LABEL_10:
-push 0
+push [0] ; 
 push [bx + 1] ; 
 sub
 push [bx + 3] ; 
@@ -121,9 +128,9 @@ push 2
 div
 push [bx + 0] ; 
 div
-pop [0] ; 
+pop [1] ; 
 
-push 0
+push [0] ; 
 push [bx + 1] ; 
 sub
 push [bx + 3] ; 
@@ -136,7 +143,7 @@ push 2
 div
 push [bx + 0] ; 
 div
-pop [1] ; 
+pop [2] ; 
 
 push 2
 pop ax
@@ -144,7 +151,9 @@ ret
 
 IF_LABEL_10:
 
-push 4567
+push 3
+push 4
+mul
 pop ax
 ret
 
@@ -194,7 +203,9 @@ ret
 
 IF_LABEL_14:
 
-push 1234
+push 4
+push 5
+mul
 pop ax
 ret
 
@@ -202,8 +213,8 @@ prepare_for_flight_END:
 
 push bx
 push 2
-push 0
-push 10
+push 1
+push 11
 sub
 push 12
 pop [bx + 2]
@@ -215,10 +226,10 @@ pop bx
 push ax
 out
 
-push [0] ; 
+push [1] ; 
 out
 
-push [1] ; 
+push [2] ; 
 out
 
 hlt

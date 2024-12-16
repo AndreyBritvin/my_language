@@ -198,11 +198,13 @@ err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t r
     PRINT_KW_WO_SPACE(BRACKET_OPEN);
     write_args(output, tree, node->left->right);
     PRINT_KW_WO_SPACE(BRACKET_CLOS);  PRINT("\n");
+
     print_tabs(output, recurs_level);
     PRINT_KW(SCOPE_OPEN);    PRINT("\n");
     write_to_file(output, tree, node->right, recurs_level + 1);
     print_tabs(output, recurs_level);
     PRINT_KW(SCOPE_CLOS);
+
     PRINT("\n");
 
     return OK;
@@ -234,7 +236,7 @@ err_code_t write_args(FILE* output, my_tree_t* tree, node_t* node)
     if (node->left  != NULL)
     {
         write_expression(output, tree, node->left);
-        fseek(output, -1, SEEK_END);
+        fseek(output, -1, SEEK_END); // delete extra space
         if (node->right != NULL) {PRINT_KW(SEPARATOR);}
     }
     if (node->right != NULL) write_args      (output, tree, node->right);

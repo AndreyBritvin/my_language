@@ -22,7 +22,7 @@ Language Grammatic:
 		<MUL_DIV>        ::= <POWER> (("growth" | "overeat") <POWER>)*
 		<POWER>          ::= <PRIMARY> ("uncontrolable growth" <PRIMARY>)*
 		<PRIMARY>        ::= <NUM> | "(" <EXPR>+ ")" | <ID> | <FUNC_CALL>
-		<NUM>            ::= [0-9]+
+		<NUM>            ::= [0-9]+ | "."+
 
 <empty> ::= " "* "\n"*
 '''

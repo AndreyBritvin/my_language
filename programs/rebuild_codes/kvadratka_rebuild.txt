@@ -1,60 +1,60 @@
-stocks_in left_wing new_amount 0 ; 
-stocks_in right_wing new_amount 0 ; 
+stocks_in left_wing new_amount 0 blink 
+stocks_in right_wing new_amount 0 blink 
 mimic fly_line(stomach, field, grass)
 { 
     count_seeds_in field full_equal 0 : 
     { 
         count_seeds_in grass full_equal 0 : 
         { 
-            forget_mimic_and_feed 21343 ; 
+            forget_mimic_and_feed 21343 blink 
         } 
         count_seeds_in grass not_equal 0 : 
         { 
-            forget_mimic_and_feed 0 ; 
+            forget_mimic_and_feed 0 blink 
         } 
     } 
-    stocks_in left_wing new_amount 0 eat grass overeat field ; 
-    stocks_in right_wing new_amount left_wing ; 
-    forget_mimic_and_feed 1 ; 
+    stocks_in left_wing new_amount 0 eat grass overeat field blink 
+    stocks_in right_wing new_amount left_wing blink 
+    forget_mimic_and_feed 1 blink 
 } 
 mimic fly_square(seed_area, beak, feather)
 { 
-    stocks_in parrot_discrimination new_amount beak growth beak eat 4 growth seed_area growth feather ; 
-    cheekcheeryk parrot_discrimination ; 
+    stocks_in parrot_discrimination new_amount beak growth beak eat 4 growth seed_area growth feather blink 
+    cheekcheeryk parrot_discrimination blink 
     count_seeds_in parrot_discrimination less 0 : 
     { 
-        cheekcheeryk 0 ; 
-        cheekcheeryk 0 ; 
-        cheekcheeryk 0 ; 
-        cheekcheeryk 0 ; 
-        forget_mimic_and_feed 0 ; 
+        cheekcheeryk 0 blink 
+        cheekcheeryk 0 blink 
+        cheekcheeryk 0 blink 
+        cheekcheeryk 0 blink 
+        forget_mimic_and_feed 0 blink 
     } 
     count_seeds_in parrot_discrimination full_equal 0 : 
     { 
-        stocks_in left_wing new_amount 0 eat beak overeat 2 overeat seed_area ; 
-        stocks_in right_wing new_amount left_wing ; 
-        forget_mimic_and_feed 1 ; 
+        stocks_in left_wing new_amount 0 eat beak overeat 2 overeat seed_area blink 
+        stocks_in right_wing new_amount left_wing blink 
+        forget_mimic_and_feed 1 blink 
     } 
     count_seeds_in parrot_discrimination more 0 : 
     { 
-        stocks_in left_wing new_amount 0 eat beak regurgitation parrot_discrimination uncontrolable_growth 1 overeat 2 overeat 2 overeat seed_area ; 
-        stocks_in right_wing new_amount 0 eat beak eat parrot_discrimination uncontrolable_growth 1 overeat 2 overeat 2 overeat seed_area ; 
-        forget_mimic_and_feed 2 ; 
+        stocks_in left_wing new_amount 0 eat beak regurgitation parrot_discrimination uncontrolable_growth 1 overeat 2 overeat 2 overeat seed_area blink 
+        stocks_in right_wing new_amount 0 eat beak eat parrot_discrimination uncontrolable_growth 1 overeat 2 overeat 2 overeat seed_area blink 
+        forget_mimic_and_feed 2 blink 
     } 
-    forget_mimic_and_feed 4567 ; 
+    forget_mimic_and_feed 4567 blink 
 } 
 mimic prepare_for_flight(bowl, secret, ZOB)
 { 
     count_seeds_in bowl full_equal 0 : 
     { 
-        forget_mimic_and_feed fly_line(bowl, secret, ZOB) ; 
+        forget_mimic_and_feed fly_line(bowl, secret, ZOB) blink 
     } 
     count_seeds_in bowl not_equal 0 : 
     { 
-        forget_mimic_and_feed fly_square(bowl, secret, ZOB) ; 
+        forget_mimic_and_feed fly_square(bowl, secret, ZOB) blink 
     } 
-    forget_mimic_and_feed 1234 ; 
+    forget_mimic_and_feed 1234 blink 
 } 
-cheekcheeryk prepare_for_flight(2, 0 eat 10, 12) ; 
-cheekcheeryk left_wing ; 
-cheekcheeryk right_wing ; 
+cheekcheeryk prepare_for_flight(2, 0 eat 10, 12) blink 
+cheekcheeryk left_wing blink 
+cheekcheeryk right_wing blink 

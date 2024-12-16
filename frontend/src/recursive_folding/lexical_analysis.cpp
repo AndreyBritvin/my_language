@@ -66,6 +66,19 @@ size_t lexical_analysis(tokens* token, char* buffer)
             // printf("buffer = %p, end_pos = %p, diff = %zu\n", buffer, end_pos, end_pos - buffer);
             token_index++;
         }
+        else if (*end_pos == '.')
+        {
+            char* begin = end_pos;
+            while (*end_pos == '.')
+            {
+                end_pos++;
+            }
+            column += end_pos - begin;
+            token[token_index].value = end_pos - begin;
+            token[token_index].type  = NUM;
+            end_pos--;
+            token_index++;
+        }
         else if (isalpha(*end_pos))
         {
             char* begin = end_pos;
@@ -79,20 +92,11 @@ size_t lexical_analysis(tokens* token, char* buffer)
             printf("key word is %zu\n", key_word);
             if(key_word == UNKNOWN)
             {
-                // tokens[token_index].value = ;
-                // TODO: increase more than 8 bytes
-                // memcpy(&tokens[token_index].value, begin, end_pos - begin);
-                // printf("Var_name = %8s\n", tokens[token_index].value);
-                // if (end_pos - begin >= 8)
-                // {
-                //     assert("Var name should be shorter 8 symbols" == NULL);
-                // }
                 printf("Var_name: End_pos = %p, begin = %p, diff = %zu\n", end_pos, begin, end_pos - begin);
                 char* var_name = (char*) calloc(end_pos - begin + 1, sizeof(char));
                 strncpy(var_name, begin, end_pos - begin);
 
                 memcpy(&token[token_index].value, &var_name, sizeof(tree_val_t));
-                // printf();
                 token[token_index].type  = VAR;
                 token_index++;
             }
