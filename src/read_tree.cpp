@@ -146,7 +146,7 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
 
             if (parent->type == STATEMENT && (int) parent->data == FUNC_SPEC)
             {
-                id.type = FUNC_TYPE;
+                id.type = FUNC_TYPE; // TODO: enable same local vars in different functions
 
                 if (parent->parent->type == STATEMENT && (int) parent->parent->data == FUNC_DECL)
                 {

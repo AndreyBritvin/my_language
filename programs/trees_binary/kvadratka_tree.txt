@@ -14,11 +14,11 @@
                 {OP:"spec"
                     {ID:"fly_line"}
                     {OP:","
-                        {ID:"a1"}
+                        {ID:"stomach"}
                         {OP:","
-                            {ID:"b1"}
+                            {ID:"field"}
                             {OP:","
-                                {ID:"c1"}
+                                {ID:"grass"}
                             }
                         }
                     }
@@ -26,13 +26,13 @@
                 {OP:";"
                     {OP:"if"
                         {OP:"=="
-                            {ID:"b1"}
+                            {ID:"field"}
                             {NUM:"0"}
                         }
                         {OP:";"
                             {OP:"if"
                                 {OP:"=="
-                                    {ID:"c1"}
+                                    {ID:"grass"}
                                     {NUM:"0"}
                                 }
                                 {OP:";"
@@ -44,7 +44,7 @@
                             {OP:";"
                                 {OP:"if"
                                     {OP:"!="
-                                        {ID:"c1"}
+                                        {ID:"grass"}
                                         {NUM:"0"}
                                     }
                                     {OP:";"
@@ -62,9 +62,9 @@
                             {OP:"/"
                                 {OP:"-"
                                     {NUM:"0"}
-                                    {ID:"c1"}
+                                    {ID:"grass"}
                                 }
-                                {ID:"b1"}
+                                {ID:"field"}
                             }
                         }
                         {OP:";"
@@ -86,11 +86,11 @@
                     {OP:"spec"
                         {ID:"fly_square"}
                         {OP:","
-                            {ID:"a"}
+                            {ID:"seed_area"}
                             {OP:","
-                                {ID:"b"}
+                                {ID:"beak"}
                                 {OP:","
-                                    {ID:"c"}
+                                    {ID:"feather"}
                                 }
                             }
                         }
@@ -100,15 +100,15 @@
                             {ID:"parrot_discrimination"}
                             {OP:"-"
                                 {OP:"*"
-                                    {ID:"b"}
-                                    {ID:"b"}
+                                    {ID:"beak"}
+                                    {ID:"beak"}
                                 }
                                 {OP:"*"
                                     {OP:"*"
                                         {NUM:"4"}
-                                        {ID:"a"}
+                                        {ID:"seed_area"}
                                     }
-                                    {ID:"c"}
+                                    {ID:"feather"}
                                 }
                             }
                         }
@@ -158,11 +158,14 @@
                                             {OP:"="
                                                 {ID:"left_wing"}
                                                 {OP:"/"
-                                                    {OP:"-"
-                                                        {NUM:"0"}
-                                                        {ID:"b"}
+                                                    {OP:"/"
+                                                        {OP:"-"
+                                                            {NUM:"0"}
+                                                            {ID:"beak"}
+                                                        }
+                                                        {NUM:"2"}
                                                     }
-                                                    {NUM:"2"}
+                                                    {ID:"seed_area"}
                                                 }
                                             }
                                             {OP:";"
@@ -188,30 +191,11 @@
                                                 {OP:"="
                                                     {ID:"left_wing"}
                                                     {OP:"/"
-                                                        {OP:"+"
-                                                            {OP:"-"
-                                                                {NUM:"0"}
-                                                                {ID:"b"}
-                                                            }
-                                                            {OP:"^"
-                                                                {ID:"parrot_discrimination"}
-                                                                {OP:"/"
-                                                                    {NUM:"1"}
-                                                                    {NUM:"2"}
-                                                                }
-                                                            }
-                                                        }
-                                                        {NUM:"2"}
-                                                    }
-                                                }
-                                                {OP:";"
-                                                    {OP:"="
-                                                        {ID:"right_wing"}
                                                         {OP:"/"
-                                                            {OP:"-"
+                                                            {OP:"+"
                                                                 {OP:"-"
                                                                     {NUM:"0"}
-                                                                    {ID:"b"}
+                                                                    {ID:"beak"}
                                                                 }
                                                                 {OP:"^"
                                                                     {ID:"parrot_discrimination"}
@@ -222,6 +206,31 @@
                                                                 }
                                                             }
                                                             {NUM:"2"}
+                                                        }
+                                                        {ID:"seed_area"}
+                                                    }
+                                                }
+                                                {OP:";"
+                                                    {OP:"="
+                                                        {ID:"right_wing"}
+                                                        {OP:"/"
+                                                            {OP:"/"
+                                                                {OP:"-"
+                                                                    {OP:"-"
+                                                                        {NUM:"0"}
+                                                                        {ID:"beak"}
+                                                                    }
+                                                                    {OP:"^"
+                                                                        {ID:"parrot_discrimination"}
+                                                                        {OP:"/"
+                                                                            {NUM:"1"}
+                                                                            {NUM:"2"}
+                                                                        }
+                                                                    }
+                                                                }
+                                                                {NUM:"2"}
+                                                            }
+                                                            {ID:"seed_area"}
                                                         }
                                                     }
                                                     {OP:";"
@@ -248,11 +257,11 @@
                         {OP:"spec"
                             {ID:"prepare_for_flight"}
                             {OP:","
-                                {ID:"a12"}
+                                {ID:"bowl"}
                                 {OP:","
-                                    {ID:"b12"}
+                                    {ID:"secret"}
                                     {OP:","
-                                        {ID:"c12"}
+                                        {ID:"ZOB"}
                                     }
                                 }
                             }
@@ -260,7 +269,7 @@
                         {OP:";"
                             {OP:"if"
                                 {OP:"=="
-                                    {ID:"a12"}
+                                    {ID:"bowl"}
                                     {NUM:"0"}
                                 }
                                 {OP:";"
@@ -269,11 +278,11 @@
                                             {OP:"spec"
                                                 {ID:"fly_line"}
                                                 {OP:","
-                                                    {ID:"a12"}
+                                                    {ID:"bowl"}
                                                     {OP:","
-                                                        {ID:"b12"}
+                                                        {ID:"secret"}
                                                         {OP:","
-                                                            {ID:"c12"}
+                                                            {ID:"ZOB"}
                                                         }
                                                     }
                                                 }
@@ -285,7 +294,7 @@
                             {OP:";"
                                 {OP:"if"
                                     {OP:"!="
-                                        {ID:"a12"}
+                                        {ID:"bowl"}
                                         {NUM:"0"}
                                     }
                                     {OP:";"
@@ -294,11 +303,11 @@
                                                 {OP:"spec"
                                                     {ID:"fly_square"}
                                                     {OP:","
-                                                        {ID:"a12"}
+                                                        {ID:"bowl"}
                                                         {OP:","
-                                                            {ID:"b12"}
+                                                            {ID:"secret"}
                                                             {OP:","
-                                                                {ID:"c12"}
+                                                                {ID:"ZOB"}
                                                             }
                                                         }
                                                     }
@@ -321,11 +330,14 @@
                                 {OP:"spec"
                                     {ID:"prepare_for_flight"}
                                     {OP:","
-                                        {NUM:"1"}
+                                        {NUM:"2"}
                                         {OP:","
-                                            {NUM:"5"}
+                                            {OP:"-"
+                                                {NUM:"0"}
+                                                {NUM:"10"}
+                                            }
                                             {OP:","
-                                                {NUM:"6"}
+                                                {NUM:"12"}
                                             }
                                         }
                                     }
