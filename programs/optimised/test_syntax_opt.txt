@@ -1,8 +1,8 @@
 stocks_in x new_amount . blink 
 stocks_in y new_amount .. blink 
 stocks_in g new_amount (. eat .) eat.. blink 
-abcd(., .., ...) blink 
-mimic abcd()
+abcd(., ..) blink 
+mimic abcd(f1, f2)
 { 
     forget_mimic_and_feed . blink 
 } 

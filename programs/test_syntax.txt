@@ -1,9 +1,9 @@
 stocks_in x new_amount 1 blink
 stocks_in y new_amount 2 blink
 stocks_in g new_amount . eat 3 blink
-abcd(1, 2, 3) blink
+abcd(1, 2) blink
 
-mimic abcd()
+mimic abcd(f1, f2)
 {
     forget_mimic_and_feed . blink
 }
