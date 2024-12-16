@@ -102,7 +102,7 @@ err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node) // TODO
         }
         case VAR:
         {
-            write_var(output, tree, node);
+            write_var(output, tree, node, true);
             return OK;
         }
         case STATEMENT:
@@ -119,9 +119,10 @@ err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node) // TODO
     return OK;
 }
 
-err_code_t write_var(FILE* output, my_tree_t* tree, node_t* node)
+err_code_t write_var(FILE* output, my_tree_t* tree, node_t* node, bool is_space)
 {
-    PRINT("%s ", *(char**)&node->data);
+    if (is_space) {PRINT("%s ", *(char**)&node->data);}
+    else          {PRINT("%s",  *(char**)&node->data);}
 
     return OK;
 }
@@ -129,7 +130,7 @@ err_code_t write_var(FILE* output, my_tree_t* tree, node_t* node)
 err_code_t write_equal(FILE* output, my_tree_t* tree, node_t* node)
 {
     PRINT_KW(EQUAL_BEGIN);
-    write_var(output, tree, node->left);
+    write_var(output, tree, node->left, true);
     PRINT_KW(EQUAL_MIDDLE);
     write_expression(output, tree, node->right);
     PRINT_KW(STATEMENT_END);
@@ -192,11 +193,11 @@ err_code_t print_tabs(FILE* output, size_t recurs_level)
 err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_level)
 {
     PRINT_KW(FUNC_DECL);
-    write_var(output, tree, node->left->left);
+    write_var(output, tree, node->left->left, false);
 
-    PRINT_KW(BRACKET_OPEN);
+    PRINT_KW_WO_SPACE(BRACKET_OPEN);
     write_args(output, tree, node->left->right);
-    PRINT_KW(BRACKET_CLOS);  PRINT("\n");
+    PRINT_KW_WO_SPACE(BRACKET_CLOS);  PRINT("\n");
     print_tabs(output, recurs_level);
     PRINT_KW(SCOPE_OPEN);    PRINT("\n");
     write_to_file(output, tree, node->right, recurs_level + 1);
@@ -209,11 +210,11 @@ err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t r
 
 err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node)
 {
-    write_var(output, tree, node->left->left);
+    write_var(output, tree, node->left->left, false);
 
     PRINT_KW_WO_SPACE(BRACKET_OPEN);
     write_args(output, tree, node->left->right);
-    PRINT_KW_WO_SPACE(BRACKET_CLOS);
+    PRINT_KW(BRACKET_CLOS);
 
     return OK;
 }
@@ -233,7 +234,8 @@ err_code_t write_args(FILE* output, my_tree_t* tree, node_t* node)
     if (node->left  != NULL)
     {
         write_expression(output, tree, node->left);
-        if (node->right != NULL) PRINT(", ");
+        fseek(output, -1, SEEK_END);
+        if (node->right != NULL) {PRINT_KW(SEPARATOR);}
     }
     if (node->right != NULL) write_args      (output, tree, node->right);
 
