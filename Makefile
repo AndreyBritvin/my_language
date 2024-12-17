@@ -1,8 +1,10 @@
-PROG_NAME=test_syntax
+PROG_NAME=kvadratka
 #TODO: make vars with paths
 all:
 	make front
+	make middle
 	make back
+	make rm_cm
 #	make rfront
 	make proc
 
@@ -23,11 +25,16 @@ rfront:
 
 back:
 	make -C backend
-	./backend/backend.out programs/trees_binary/$(PROG_NAME)_tree.txt programs/assembler_programs/$(PROG_NAME)_asm.txt
+	./backend/backend.out programs/trees_binary/$(PROG_NAME)_tree.txt programs/assembler_programs/$(PROG_NAME)_asm_com.txt
 
 middle:
 	make -C middle_end
 	./middle_end/middle_end.out programs/trees_binary/$(PROG_NAME)_tree.txt programs/optimised/$(PROG_NAME)_opt.txt
+
+rm_cm:
+	make -C remove_comments
+	./remove_comments/comm_removal.out programs/assembler_programs/$(PROG_NAME)_asm_com.txt programs/assembler_programs/$(PROG_NAME)_asm.txt
+
 
 clean:
 	rm frontend/frontend.out

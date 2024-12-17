@@ -1,0 +1,253 @@
+push 3
+pop bx  
+push 1
+push 1
+sub
+pop [0] ; no_food
+;stocks_in no_food new_amount . eat . blink 
+
+push [0] ; no_food
+pop [1] ; left_wing
+;stocks_in left_wing new_amount no_food blink 
+
+push [0] ; no_food
+pop [2] ; right_wing
+;stocks_in right_wing new_amount no_food blink 
+
+jump fly_line_END:
+fly_line:
+push [bx + 1] ; field
+push [0] ; no_food
+jne IF_LABEL_0:
+push [bx + 2] ; grass
+push [0] ; no_food
+jne IF_LABEL_1:
+push 4
+push 6
+mul
+pop ax; save return value to ax
+ret
+
+IF_LABEL_1:
+
+push [bx + 2] ; grass
+push [0] ; no_food
+je IF_LABEL_3:
+push [0] ; no_food
+pop ax; save return value to ax
+ret
+
+IF_LABEL_3:
+
+IF_LABEL_0:
+
+push [0] ; no_food
+push [bx + 2] ; grass
+sub
+push [bx + 1] ; field
+div
+pop [1] ; left_wing
+;stocks_in left_wing new_amount no_food eat grass overeat field blink 
+
+push [1] ; left_wing
+pop [2] ; right_wing
+;stocks_in right_wing new_amount left_wing blink 
+
+push 1
+pop ax; save return value to ax
+ret
+
+fly_line_END:
+
+jump fly_square_END:
+fly_square:
+push [bx + 1] ; beak
+push [bx + 1] ; beak
+mul
+push 4
+push [bx + 0] ; seed_area
+mul
+push [bx + 2] ; feather
+mul
+sub
+pop [bx + 3] ; parrot_discrimination
+;stocks_in parrot_discrimination new_amount beak growth beak eat .... growth seed_area growth feather blink 
+
+push [bx + 3] ; parrot_discrimination
+out
+;cheekcheeryk parrot_discrimination blink 
+
+push [bx + 3] ; parrot_discrimination
+push [0] ; no_food
+jae IF_LABEL_6:
+push [0] ; no_food
+out
+;cheekcheeryk no_food blink 
+
+push [0] ; no_food
+out
+;cheekcheeryk no_food blink 
+
+push [0] ; no_food
+out
+;cheekcheeryk no_food blink 
+
+push [0] ; no_food
+out
+;cheekcheeryk no_food blink 
+
+push [0] ; no_food
+pop ax; save return value to ax
+ret
+
+IF_LABEL_6:
+
+push [bx + 3] ; parrot_discrimination
+push [0] ; no_food
+jne IF_LABEL_8:
+push [0] ; no_food
+push [bx + 1] ; beak
+sub
+push 2
+div
+push [bx + 0] ; seed_area
+div
+pop [1] ; left_wing
+;stocks_in left_wing new_amount no_food eat beak overeat .. overeat seed_area blink 
+
+push [1] ; left_wing
+pop [2] ; right_wing
+;stocks_in right_wing new_amount left_wing blink 
+
+push 1
+pop ax; save return value to ax
+ret
+
+IF_LABEL_8:
+
+push [bx + 3] ; parrot_discrimination
+push [0] ; no_food
+jbe IF_LABEL_10:
+push [0] ; no_food
+push [bx + 1] ; beak
+sub
+push [bx + 3] ; parrot_discrimination
+push 1
+push 2
+div
+power
+add
+push 2
+div
+push [bx + 0] ; seed_area
+div
+pop [1] ; left_wing
+;stocks_in left_wing new_amount no_food eat beak regurgitation parrot_discrimination uncontrolable_growth . overeat .. overeat .. overeat seed_area blink 
+
+push [0] ; no_food
+push [bx + 1] ; beak
+sub
+push [bx + 3] ; parrot_discrimination
+push 1
+push 2
+div
+power
+sub
+push 2
+div
+push [bx + 0] ; seed_area
+div
+pop [2] ; right_wing
+;stocks_in right_wing new_amount no_food eat beak eat parrot_discrimination uncontrolable_growth . overeat .. overeat .. overeat seed_area blink 
+
+push 2
+pop ax; save return value to ax
+ret
+
+IF_LABEL_10:
+
+push 3
+push 4
+mul
+pop ax; save return value to ax
+ret
+
+fly_square_END:
+
+jump prepare_for_flight_END:
+prepare_for_flight:
+push [bx + 0] ; bowl
+push 0
+jne IF_LABEL_12:
+push bx; save a copy
+push [bx + 0] ; bowl
+push [bx + 1] ; secret
+push [bx + 2] ; ZOB
+push bx + 3
+pop  bx 
+pop [bx + 2]
+pop [bx + 1]
+pop [bx + 0]
+dump
+call fly_line:
+pop bx; push copy back
+push ax; returned value
+pop ax; save return value to ax
+ret
+
+IF_LABEL_12:
+
+push [bx + 0] ; bowl
+push 0
+je IF_LABEL_14:
+push bx; save a copy
+push [bx + 0] ; bowl
+push [bx + 1] ; secret
+push [bx + 2] ; ZOB
+push bx + 3
+pop  bx 
+pop [bx + 2]
+pop [bx + 1]
+pop [bx + 0]
+dump
+call fly_square:
+pop bx; push copy back
+push ax; returned value
+pop ax; save return value to ax
+ret
+
+IF_LABEL_14:
+
+push 4
+push 5
+mul
+pop ax; save return value to ax
+ret
+
+prepare_for_flight_END:
+
+push bx; save a copy
+push 2
+push 1
+push 11
+sub
+push 12
+pop [bx + 2]
+pop [bx + 1]
+pop [bx + 0]
+dump
+call prepare_for_flight:
+pop bx; push copy back
+push ax; returned value
+out
+;cheekcheeryk prepare_for_flight(.., . eat ..........., ............) blink 
+
+push [1] ; left_wing
+out
+;cheekcheeryk left_wing blink 
+
+push [2] ; right_wing
+out
+;cheekcheeryk right_wing blink 
+
+hlt

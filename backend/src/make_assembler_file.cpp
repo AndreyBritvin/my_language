@@ -1,11 +1,13 @@
 #include "make_assembler_file.h"
 #include "name_table.h"
+#include "make_prog_file.h"
 
 #define PRINT(...) fprintf(output, __VA_ARGS__);
 #define PRINT_KW(word) PRINT("%s\n", all_ops[word].assembler_text);
 #define PRINT_KW_WO_NL(word) PRINT("%s ", all_ops[word].assembler_text);
 
 #define FUNC_NAME_BY_NODE(node) *(char**)&node->left->left->data
+#define COMMENT(func) PRINT(";"); write_##func(output, tree, node); PRINT("\n");
 
 err_code_t generate_assembler(my_tree_t* tree, const char* filename, nametable_t nt)
 {
@@ -143,11 +145,11 @@ err_code_t write_var(FILE* output, my_tree_t* tree, node_t* node, var_writing is
     size_t id_full_index = nametable[elem_num].full_index;
     if (is_push == VAR_PUSH)
     {
-        PRINT("push [%s%d] ; \n", bx_offset, id_full_index);//, id_name);
+        PRINT("push [%s%d] ; %s\n", bx_offset, id_full_index, id_name);
     }
     else if (is_push == VAR_POP)
     {
-        PRINT("pop [%s%d] ; \n", bx_offset, id_full_index);//, id_name);
+        PRINT("pop [%s%d] ; %s\n", bx_offset, id_full_index, id_name);
     }
     else if (is_push == VAR_NAME)
     {
@@ -161,7 +163,7 @@ err_code_t write_equal(FILE* output, my_tree_t* tree, node_t* node, nametable_t 
 {
     write_expression(output, tree, node->right, nametable);
     write_var(output, tree, node->left, VAR_POP, nametable);
-    PRINT("\n");
+    COMMENT(equal);
 
     return OK;
 }
@@ -170,7 +172,7 @@ err_code_t write_print(FILE* output, my_tree_t* tree, node_t* node, nametable_t 
 {
     write_expression(output, tree, node->left, nametable);
     PRINT_KW(PRINT_STATE)
-    PRINT("\n");
+    COMMENT(print);
 
     return OK;
 }
@@ -236,7 +238,7 @@ err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recur
 err_code_t write_return(FILE* output, my_tree_t* tree, node_t* node, nametable_t nametable)
 {
     write_expression(output, tree, node->left, nametable);
-    PRINT("pop ax\n"); // return value
+    PRINT("pop ax; save return value to ax\n"); // return value
     PRINT_KW(RETURN);
     PRINT("\n");
 
@@ -245,7 +247,7 @@ err_code_t write_return(FILE* output, my_tree_t* tree, node_t* node, nametable_t
 
 err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node, nametable_t nametable)
 {
-    PRINT("push bx\n"); // copy
+    PRINT("push bx; save a copy\n"); // copy
 
     write_parametrs(output, tree, node->left->right, 0, false, nametable);
 
@@ -266,8 +268,8 @@ err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node, nametabl
     write_var(output, tree, node->left->left, VAR_NAME, nametable);
     PRINT(":\n");
 
-    PRINT("pop bx\n"); // return copy
-    PRINT("push ax\n");
+    PRINT("pop bx; push copy back\n"); // return copy
+    PRINT("push ax; returned value\n");
 
     return OK;
 }
@@ -285,17 +287,6 @@ err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t r
 
     write_var(output, tree, node->left->left, VAR_NAME, nametable); // func_END:
     PRINT("_END:\n\n");
-
-    return OK;
-}
-
-err_code_t print_tabs(FILE* output, size_t recurs_level)
-{
-    //PRINT("%zu", recurs_level);
-    for (size_t i = 0; i < recurs_level; i++)
-    {
-        PRINT("    ");
-    }
 
     return OK;
 }
