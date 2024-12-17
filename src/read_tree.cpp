@@ -7,6 +7,36 @@
 #include <string.h>
 #include "name_table.h"
 
+#define PARSE_FUNC_TYPE     \
+    if (type == NUM)        \
+    {       \
+        node_to_return = new_node(tree, type, number_value, NULL, NULL);        \
+    }       \
+    else if (type == STATEMENT || type == OP)       \
+    {       \
+        node_to_return = new_node(tree, type, func_num, NULL, NULL);        \
+    }       \
+    else if (type == VAR)       \
+    {       \
+        node_to_return = new_node(tree, type, '\0', NULL, NULL);        \
+        memcpy(&node_to_return->data, &expression, sizeof(tree_val_t));     \
+    }
+
+#define GET_EXPR_TYPE       \
+    if (func_num < STATEMENT_BEGIN)     \
+    {       \
+        type = OP;      \
+    }       \
+    else if (func_num > STATEMENT_BEGIN && func_num != UNKNOWN)     \
+    {       \
+        type = STATEMENT;       \
+    }       \
+    else if (func_num == UNKNOWN)       \
+    {       \
+        if (sscanf(expression, "%lg", &number_value) == 0) type = VAR;      \
+        else                                               type = NUM;      \
+    }
+
 size_t get_file_len(const char *filename)
 {
     assert(filename != NULL);
@@ -86,37 +116,12 @@ node_t* fill_node(char * buffer, size_t* position, my_tree_t* tree, node_t* pare
     int type = END;
     int func_num = get_func_num(expression);
     tree_val_t number_value = 0;
-
-    if (func_num < STATEMENT_BEGIN) // TODO: make func get_type
-    {
-        type = OP;
-    }
-    else if (func_num > STATEMENT_BEGIN && func_num != UNKNOWN)
-    {
-        type = STATEMENT;
-    }
-    else if (func_num == UNKNOWN)
-    {
-        if (sscanf(expression, "%lg", &number_value) == 0) type = VAR;
-        else                                               type = NUM;
-    }
-
+    GET_EXPR_TYPE;
     printf("Readed expression is %8s. Type = %d\n", expression, type);
 
-    node_t* node_to_return = NULL; // TODO: make func to generate node
-    if (type == NUM)
-    {
-        node_to_return = new_node(tree, type, number_value, NULL, NULL);
-    }
-    else if (type == STATEMENT || type == OP)
-    {
-        node_to_return = new_node(tree, type, func_num, NULL, NULL);
-    }
-    else if (type == VAR)
-    {
-        node_to_return = new_node(tree, type, '\0', NULL, NULL);
-        memcpy(&node_to_return->data, &expression, sizeof(tree_val_t));
-    }
+    node_t* node_to_return = NULL;
+    PARSE_FUNC_TYPE;
+
     if (type != VAR)
     {
         free(expression);

@@ -38,10 +38,12 @@ err_code_t print_name_table(identificator* name_table)
 
 err_code_t add_element(nametable_t nt, identificator id)
 {
+
     static size_t var_index = 0;
     static size_t inside_func_index = 0;
     if (id.type == FUNC_TYPE) inside_func_index = 0;
     static size_t index = 0; // TODO: make universal for different nametables. Now it correctly fill only one table
+    assert(index < MAX_ID_COUNT);
     if ((id.type == VAR_TYPE || id.type == PARAM_TYPE) && id.node_dep == NULL) id.full_index = var_index++;
     if ((id.type == VAR_TYPE || id.type == PARAM_TYPE) && id.node_dep != NULL) id.full_index = inside_func_index++;
     nt[index++] = id;
@@ -62,6 +64,19 @@ size_t get_element_index(nametable_t nt, char* elem)
     return MAX_ID_COUNT;
 }
 
+size_t get_element_index(nametable_t nt, char* elem, node_t* func_node)
+{
+    for (size_t i = 0; i < MAX_ID_COUNT; i++)
+    {
+        if (!strcmp(nt[i].name, elem) && func_node == nt[i].node_dep)
+        {
+            return i;
+        }
+    }
+
+    return MAX_ID_COUNT;
+}
+
 size_t get_num_of_global_vars(nametable_t nametable)
 {
     size_t max_index = 0;
@@ -73,39 +88,39 @@ size_t get_num_of_global_vars(nametable_t nametable)
         }
     }
 
-    return max_index > 0 ? max_index + 1 : 0;
+    return max_index > 0 ? max_index + 1: 0;
 }
 
 size_t get_amount_of_local_vars_in_func(size_t func_num, nametable_t nametable)
 {
     assert(nametable[func_num].type == FUNC_TYPE);
+    size_t counter = 0;
 
     for (size_t i = func_num + 1; i < MAX_ID_COUNT; i++)
     {
-        if (nametable[i].dependence != func_num
-         || nametable[i].type       == FUNC_TYPE
-         || nametable[i].name[0]    == '\0')
+        if (nametable[i].dependence == func_num && nametable[i].type != FUNC_TYPE)
         {
-            return i - func_num - 1; // amount means 1,2,3,4...
+            counter++;
         }
     }
 
-    return 0;
+    return counter; // amount means 1,2,3,4...
 }
 // TODO: think about merging up and down function
 size_t get_amount_of_parametrs(size_t func_num, nametable_t nametable)
 {
     assert(nametable[func_num].type == FUNC_TYPE);
+    size_t counter = 0;
 
     for (size_t i = func_num + 1; i < MAX_ID_COUNT; i++)
     {
-        if (nametable[i].dependence != func_num
-         || nametable[i].type       != PARAM_TYPE
-         || nametable[i].name[0]    == '\0')
+        if (nametable[i].dependence == func_num && nametable[i].type == PARAM_TYPE)
         {
-            return i - func_num - 1; // amount means 1,2,3,4...
+            counter++; // amount means 1,2,3,4...
         }
     }
+
+    return counter;
 }
 
 #define FUNC_NAME_BY_NODE(node) *(char**)&node->left->left->data
