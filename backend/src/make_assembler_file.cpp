@@ -7,7 +7,9 @@
 #define PRINT_KW_WO_NL(word) PRINT("%s ", all_ops[word].assembler_text);
 
 #define FUNC_NAME_BY_NODE(node) *(char**)&node->left->left->data
-#define COMMENT(func) PRINT(";"); write_##func(output, tree, node); PRINT("\n");
+#define COMMENT(node, comment) PRINT(";"); PRINT("%s", comment);\
+                               write_expression(output, tree, node); PRINT("\n");
+#define PASTE_SPACES_IN_COMMENT bx_offset[0] == '\0' ? "     " : ""
 
 err_code_t generate_assembler(my_tree_t* tree, const char* filename, nametable_t nt)
 {
@@ -145,11 +147,13 @@ err_code_t write_var(FILE* output, my_tree_t* tree, node_t* node, var_writing is
     size_t id_full_index = nametable[elem_num].full_index;
     if (is_push == VAR_PUSH)
     {
-        PRINT("push [%s%d] ; %s\n", bx_offset, id_full_index, id_name);
+        PRINT("push [%s%d]              %s; %s\n", bx_offset, id_full_index,
+                        PASTE_SPACES_IN_COMMENT, id_name);
     }
     else if (is_push == VAR_POP)
     {
-        PRINT("pop [%s%d] ; %s\n", bx_offset, id_full_index, id_name);
+        PRINT("pop [%s%d]               %s; %s\n", bx_offset, id_full_index,
+                        PASTE_SPACES_IN_COMMENT, id_name);
     }
     else if (is_push == VAR_NAME)
     {
@@ -163,7 +167,8 @@ err_code_t write_equal(FILE* output, my_tree_t* tree, node_t* node, nametable_t 
 {
     write_expression(output, tree, node->right, nametable);
     write_var(output, tree, node->left, VAR_POP, nametable);
-    COMMENT(equal);
+    COMMENT(node->right, "put in this ^ value: ");
+    PRINT("\n");
 
     return OK;
 }
@@ -172,7 +177,7 @@ err_code_t write_print(FILE* output, my_tree_t* tree, node_t* node, nametable_t 
 {
     write_expression(output, tree, node->left, nametable);
     PRINT_KW(PRINT_STATE)
-    COMMENT(print);
+    COMMENT(node->left, "print");
 
     return OK;
 }
