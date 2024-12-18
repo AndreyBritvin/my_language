@@ -1,0 +1,14 @@
+stocks_in Michella new_amount .... blink
+stocks_in Maliketh new_amount FACTORIAL(Michella) blink
+cheekcheeryk Maliketh blink
+mimic FACTORIAL(Tarnished)
+{
+    count_seeds_in Tarnished less .. :
+    {
+        forget_mimic_and_feed . blink
+    }
+    stocks_in Malenia new_amount Tarnished blink
+    stocks_in Tarnished new_amount Tarnished eat . blink
+    stocks_in Malenia new_amount Malenia growth FACTORIAL(Tarnished) blink
+    forget_mimic_and_feed Malenia blink
+}

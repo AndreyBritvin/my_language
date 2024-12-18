@@ -166,7 +166,7 @@ node_t* get_expression(my_tree_t* tree, tokens* input, size_t* pos)
     while ((int) CURR_VAL == ADD || (int) CURR_VAL == SUB)
     {
         int operation = (int) CURR_VAL;
-        (*pos)++;
+        INCR;
         node_t* val_2 = get_mul_div(tree, input, pos);
         if (operation == ADD)
         {
@@ -424,7 +424,7 @@ node_t* get_func_call(my_tree_t* tree, tokens* input, size_t* pos)
         func_spec->parent      = func_call;
         func_call->left        = func_spec;
 
-        while (CURR_TYPE != OP || (int) CURR_VAL != BRACKET_OPEN)                       \
+        while (CURR_TYPE != OP || (int) CURR_VAL != BRACKET_CLOS)                       \
         {                                                                               \
             REQUIRE_EXPR(var_n);                                                         \
             separator_node->left = var_n;                                               \

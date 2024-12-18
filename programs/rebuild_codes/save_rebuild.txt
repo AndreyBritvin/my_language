@@ -1,0 +1,10 @@
+stocks_in wuki_wuki new_amount ....... blink 
+mimic fact(paki_paki)
+{ 
+    count_seeds_in paki_paki full_equal . : 
+    { 
+        forget_mimic_and_feed . blink 
+    } 
+    forget_mimic_and_feed paki_paki growth fact(paki_paki eat .) blink 
+} 
+cheekcheeryk fact(wuki_wuki) blink 

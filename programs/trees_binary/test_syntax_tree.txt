@@ -1,50 +1,30 @@
 434-format v1.5
 {OP:";"
     {OP:"="
-        {ID:"x"}
-        {NUM:"1"}
+        {ID:"first"}
+        {NUM:"10"}
     }
     {OP:";"
-        {OP:"="
-            {ID:"y"}
-            {NUM:"2"}
-        }
-        {OP:";"
-            {OP:"="
-                {ID:"g"}
-                {OP:"-"
-                    {NUM:"1"}
-                    {NUM:"3"}
-                }
+        {OP:"if"
+            {OP:"more"
+                {ID:"first"}
+                {NUM:"2"}
             }
             {OP:";"
-                {OP:"call"
-                    {OP:"spec"
-                        {ID:"abcd"}
-                        {OP:","
-                            {NUM:"1"}
-                            {OP:","
-                                {NUM:"2"}
-                            }
-                        }
-                    }
+                {OP:"print"
+                    {NUM:"2"}
+                }
+            }
+        }
+        {OP:";"
+            {OP:"if"
+                {OP:"less"
+                    {ID:"first"}
+                    {NUM:"2"}
                 }
                 {OP:";"
-                    {OP:"def"
-                        {OP:"spec"
-                            {ID:"abcd"}
-                            {OP:","
-                                {ID:"f1"}
-                                {OP:","
-                                    {ID:"f2"}
-                                }
-                            }
-                        }
-                        {OP:";"
-                            {OP:"return"
-                                {NUM:"1"}
-                            }
-                        }
+                    {OP:"print"
+                        {NUM:"1"}
                     }
                 }
             }

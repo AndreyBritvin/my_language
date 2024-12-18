@@ -1,0 +1,62 @@
+push 2
+pop bx  
+push 4
+pop [0]                    ; Michella
+;put in this ^ value: .... 
+
+push bx; save a copy
+push [0]                   ; Michella
+pop [bx + 0]
+dump
+call FACTORIAL:
+pop bx; push copy back
+push ax; returned value
+pop [1]                    ; Maliketh
+;put in this ^ value: FACTORIAL(Michella) 
+
+push [1]                   ; Maliketh
+out
+;print Maliketh 
+
+jump FACTORIAL_END:
+FACTORIAL:
+push [bx + 0]              ; Tarnished
+push 2
+jae IF_LABEL_0:
+push 1
+pop ax; save return value to ax
+ret
+
+IF_LABEL_0:
+
+push [bx + 0]              ; Tarnished
+pop [bx + 1]               ; Malenia
+;put in this ^ value: Tarnished 
+
+push [bx + 0]              ; Tarnished
+push 1
+sub
+pop [bx + 0]               ; Tarnished
+;put in this ^ value: Tarnished eat . 
+
+push [bx + 1]              ; Malenia
+push bx; save a copy
+push [bx + 0]              ; Tarnished
+push bx + 2
+pop  bx 
+pop [bx + 0]
+dump
+call FACTORIAL:
+pop bx; push copy back
+push ax; returned value
+mul
+pop [bx + 1]               ; Malenia
+;put in this ^ value: Malenia growth FACTORIAL(Tarnished) 
+
+push [bx + 1]              ; Malenia
+pop ax; save return value to ax
+ret
+
+FACTORIAL_END:
+
+hlt

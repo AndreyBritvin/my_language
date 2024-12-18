@@ -75,22 +75,27 @@ pop [bx + 3]               ; parrot_discrimination
 
 push [bx + 3]              ; parrot_discrimination
 out
-;printparrot_discrimination 
+;print parrot_discrimination 
+
 push [bx + 3]              ; parrot_discrimination
 push [0]                   ; no_food
 jae IF_LABEL_6:
 push [0]                   ; no_food
 out
-;printno_food 
+;print no_food 
+
 push [0]                   ; no_food
 out
-;printno_food 
+;print no_food 
+
 push [0]                   ; no_food
 out
-;printno_food 
+;print no_food 
+
 push [0]                   ; no_food
 out
-;printno_food 
+;print no_food 
+
 push [0]                   ; no_food
 pop ax; save return value to ax
 ret
@@ -235,11 +240,14 @@ call prepare_for_flight:
 pop bx; push copy back
 push ax; returned value
 out
-;printprepare_for_flight(.., . eat ..........., ............) 
+;print prepare_for_flight(.., . eat ..........., ............) 
+
 push [1]                   ; left_wing
 out
-;printleft_wing 
+;print left_wing 
+
 push [2]                   ; right_wing
 out
-;printright_wing 
+;print right_wing 
+
 hlt

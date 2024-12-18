@@ -11,6 +11,13 @@
                                write_expression(output, tree, node); PRINT("\n");
 #define PASTE_SPACES_IN_COMMENT bx_offset[0] == '\0' ? "     " : ""
 
+#define PRINT_ARG node->left
+#define COMP_LEFT_ARG  node->left->left
+#define COMP_RIGHT_ARG node->left->right
+#define SCOPE_EXPRESSION node->right
+#define FUNC_NAME_NODE node->left->left
+#define FUNC_PARM_NODE node->left->right
+
 err_code_t generate_assembler(my_tree_t* tree, const char* filename, nametable_t nt)
 {
     assert(tree);
@@ -165,7 +172,7 @@ err_code_t write_var(FILE* output, my_tree_t* tree, node_t* node, var_writing is
 
 err_code_t write_equal(FILE* output, my_tree_t* tree, node_t* node, nametable_t nametable)
 {
-    write_expression(output, tree, node->right, nametable);
+    write_expression(output, tree, SCOPE_EXPRESSION, nametable);
     write_var(output, tree, node->left, VAR_POP, nametable);
     COMMENT(node->right, "put in this ^ value: ");
     PRINT("\n");
@@ -175,9 +182,10 @@ err_code_t write_equal(FILE* output, my_tree_t* tree, node_t* node, nametable_t 
 
 err_code_t write_print(FILE* output, my_tree_t* tree, node_t* node, nametable_t nametable)
 {
-    write_expression(output, tree, node->left, nametable);
+    write_expression(output, tree, PRINT_ARG, nametable);
     PRINT_KW(PRINT_STATE)
-    COMMENT(node->left, "print");
+    COMMENT(PRINT_ARG, "print ");
+    PRINT("\n");
 
     return OK;
 }
@@ -186,14 +194,14 @@ err_code_t write_if(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_l
 {
     static int if_label_counter = 0;
     int buffer_index = if_label_counter;
-    write_var(output, tree, node->left->left, VAR_PUSH, nametable); // left part should be before
-    write_expression(output, tree, node->left->right, nametable);
+    write_var(output, tree, COMP_LEFT_ARG, VAR_PUSH, nametable); // left part should be before
+    write_expression(output, tree, COMP_RIGHT_ARG, nametable);
 
     write_if_operator(output, tree, node->left, nametable);
 
     PRINT(" IF_LABEL_%d:\n", if_label_counter++);
 
-    write_to_assembler(output, tree, node->right, recurs_level + 1, nametable);
+    write_to_assembler(output, tree, SCOPE_EXPRESSION, recurs_level + 1, nametable);
 
     PRINT("IF_LABEL_%d:\n\n", buffer_index);
 
@@ -225,14 +233,14 @@ err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recur
 
     PRINT("WHILE_LABEL_%d:\n", while_label_counter);
 
-    write_var       (output, tree, node->left->left, VAR_PUSH, nametable); // left part should be before
-    write_expression(output, tree, node->left->right, nametable);
+    write_var       (output, tree, COMP_LEFT_ARG , VAR_PUSH, nametable); // left part should be before
+    write_expression(output, tree, COMP_RIGHT_ARG,           nametable);
 
     write_if_operator(output, tree, node->left, nametable);
 
     PRINT(" END_WHILE_%d:\n", while_label_counter++);
 
-    write_to_assembler(output, tree, node->right, recurs_level + 1, nametable);
+    write_to_assembler(output, tree, SCOPE_EXPRESSION, recurs_level + 1, nametable);
 
     PRINT("jump WHILE_LABEL_%d:\n", buffer_counter);
     PRINT("END_WHILE_%d:\n\n", buffer_counter);
@@ -254,7 +262,7 @@ err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node, nametabl
 {
     PRINT("push bx; save a copy\n"); // copy
 
-    write_parametrs(output, tree, node->left->right, 0, false, nametable);
+    write_parametrs(output, tree, FUNC_PARM_NODE, 0, false, nametable);
 
     char* func_name = FUNC_NAME_BY_NODE(node);
     size_t func_id  = get_element_index(nametable, func_name);
@@ -266,11 +274,15 @@ err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node, nametabl
         PRINT("push bx + %zu\n", get_amount_of_local_vars_in_func(func_above_id, nametable));
         PRINT("pop  bx \n"); // bx += n of params
     }
-    if (local_vars != 0) write_parametrs(output, tree, node->left->right, get_amount_of_parametrs(func_id, nametable) - 1, true, nametable);
+    if (local_vars != 0)
+    {
+        write_parametrs(output, tree, FUNC_PARM_NODE,
+                        get_amount_of_parametrs(func_id, nametable) - 1, true, nametable);
+    }
     PRINT("dump\n");
 
     PRINT_KW_WO_NL(FUNC_CALL);
-    write_var(output, tree, node->left->left, VAR_NAME, nametable);
+    write_var(output, tree, FUNC_NAME_NODE, VAR_NAME, nametable);
     PRINT(":\n");
 
     PRINT("pop bx; push copy back\n"); // return copy
@@ -282,15 +294,15 @@ err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node, nametabl
 err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_level, nametable_t nametable)
 {
     PRINT("jump ");                                     // jump func_END:
-    write_var(output, tree, node->left->left, VAR_NAME, nametable);
+    write_var(output, tree, FUNC_NAME_NODE, VAR_NAME, nametable);
     PRINT("_END:\n");
 
-    write_var(output, tree, node->left->left, VAR_NAME, nametable);
+    write_var(output, tree, FUNC_NAME_NODE, VAR_NAME, nametable);
     PRINT(":\n");
 
-    write_to_assembler(output, tree, node->right, recurs_level + 1, nametable);
+    write_to_assembler(output, tree, SCOPE_EXPRESSION, recurs_level + 1, nametable);
 
-    write_var(output, tree, node->left->left, VAR_NAME, nametable); // func_END:
+    write_var(output, tree, FUNC_NAME_NODE, VAR_NAME, nametable); // func_END:
     PRINT("_END:\n\n");
 
     return OK;

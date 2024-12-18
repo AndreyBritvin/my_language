@@ -1,0 +1,46 @@
+push 0
+pop bx  
+push 7
+pop [0]                    ; x
+;put in this ^ value: ....... 
+
+jump fact_END:
+fact:
+push [bx + 0]              ; A
+push 1
+jne IF_LABEL_0:
+push 1
+pop ax; save return value to ax
+ret
+
+IF_LABEL_0:
+
+push [bx + 0]              ; A
+push bx; save a copy
+push [bx + 0]              ; A
+push 1
+sub
+push bx + 1
+pop  bx 
+pop [bx + 0]
+dump
+call fact:
+pop bx; push copy back
+push ax; returned value
+mul
+pop ax; save return value to ax
+ret
+
+fact_END:
+
+push bx; save a copy
+push [0]                   ; x
+pop [bx + 0]
+dump
+call fact:
+pop bx; push copy back
+push ax; returned value
+out
+;print fact(x) 
+
+hlt

@@ -1,0 +1,97 @@
+push 2
+
+pop bx  
+
+push 4
+
+pop [0]                    
+
+
+
+push bx
+push [0]                   
+pop [bx + 0]
+
+dump
+
+call FACTORIAL:
+
+pop bx
+push ax
+pop [1]                    
+
+
+
+push [1]                   
+out
+
+
+
+
+jump FACTORIAL_END:
+
+FACTORIAL:
+
+push [bx + 0]              
+push 2
+
+jae IF_LABEL_0:
+
+push 1
+
+pop ax
+ret
+
+
+
+IF_LABEL_0:
+
+
+
+push [bx + 0]              
+pop [bx + 1]               
+
+
+
+push [bx + 0]              
+push 1
+
+sub
+
+pop [bx + 0]               
+
+
+
+push [bx + 1]              
+push bx
+push [bx + 0]              
+push bx + 2
+
+pop  bx 
+
+pop [bx + 0]
+
+dump
+
+call FACTORIAL:
+
+pop bx
+push ax
+mul
+
+pop [bx + 1]               
+
+
+
+push [bx + 1]              
+pop ax
+ret
+
+
+
+FACTORIAL_END:
+
+
+
+hlt
+

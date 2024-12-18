@@ -115,9 +115,19 @@ err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node) // TODO
         }
         case OP :
         {
+            if ((node->data == ADD || node->data == SUB) &&
+                node->parent->type == OP &&
+                node->parent->data == MUL || node->parent->data == DIV || node->parent->data == EXP)
+                PRINT("(");
             write_expression(output, tree, node->left);
             PRINT_KW((int) node->data);
             write_expression(output, tree, node->right);
+
+            if ((node->data == ADD || node->data == SUB) &&
+                node->parent->type == OP &&
+                node->parent->data == MUL || node->parent->data == DIV || node->parent->data == EXP)
+                PRINT(")");
+
             return OK;
         }
         case VAR:

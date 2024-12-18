@@ -1,9 +1,11 @@
-stocks_in x new_amount 1 blink
-stocks_in y new_amount 2 blink
-stocks_in g new_amount . eat 3 blink
-abcd(1, 2) blink
+stocks_in first new_amount .......... blink
 
-mimic abcd(f1, f2)
+count_seeds_in first more ..:
 {
-    forget_mimic_and_feed . blink
+    cheekcheeryk .. blink
+}
+
+count_seeds_in first less ..:
+{
+    cheekcheeryk . blink
 }

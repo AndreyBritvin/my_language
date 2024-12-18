@@ -1,0 +1,77 @@
+push 0
+
+pop bx  
+
+push 7
+
+pop [0]                    
+
+
+
+jump fact_END:
+
+fact:
+
+push [bx + 0]              
+push 1
+
+jne IF_LABEL_0:
+
+push 1
+
+pop ax
+ret
+
+
+
+IF_LABEL_0:
+
+
+
+push [bx + 0]              
+push bx
+push [bx + 0]              
+push 1
+
+sub
+
+push bx + 1
+
+pop  bx 
+
+pop [bx + 0]
+
+dump
+
+call fact:
+
+pop bx
+push ax
+mul
+
+pop ax
+ret
+
+
+
+fact_END:
+
+
+
+push bx
+push [0]                   
+pop [bx + 0]
+
+dump
+
+call fact:
+
+pop bx
+push ax
+out
+
+
+
+
+hlt
+
