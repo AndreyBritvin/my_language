@@ -1,14 +1,49 @@
-stocks_in Michella new_amount .... blink
-stocks_in Maliketh new_amount FACTORIAL(Michella) blink
-cheekcheeryk Maliketh blink
-mimic FACTORIAL(Tarnished)
+stocks_in aCoeff new_amount (. eat .) blink
+stocks_in bCoeff new_amount (. eat .) blink
+stocks_in cCoeff new_amount (. eat .) blink
+stocks_in first new_amount (. eat .) blink
+stocks_in second new_amount (. eat .) blink
+stocks_in numofanswers new_amount (. eat .) blink
+stocks_in aCoeff new_amount (. eat .) eat ..... blink
+stocks_in bCoeff new_amount . blink
+stocks_in cCoeff new_amount .. blink
+mimic LINEAR(LinC, LinB)
 {
-    count_seeds_in Tarnished less .. :
+        count_seeds_in LinB full_equal (. eat .) :
     {
-        forget_mimic_and_feed . blink
+        count_seeds_in LinC full_equal (. eat .) :
+        {
+forget_mimic_and_feed ..... blink
+        }
+forget_mimic_and_feed (. eat .) blink
     }
-    stocks_in Malenia new_amount Tarnished blink
-    stocks_in Tarnished new_amount Tarnished eat . blink
-    stocks_in Malenia new_amount Malenia growth FACTORIAL(Tarnished) blink
-    forget_mimic_and_feed Malenia blink
+stocks_in first new_amount LinC overeat LinB blink
+forget_mimic_and_feed . blink
 }
+mimic SQSOLVER(c, b, a)
+{
+                    count_seeds_in a full_equal (. eat .) :
+    {
+forget_mimic_and_feed LINEAR(c, b) blink
+    }
+stocks_in D new_amount (. eat .) blink
+stocks_in D new_amount b growth b eat c growth a growth .... blink
+count_seeds_in D full_equal (. eat .) :
+    {
+        stocks_in first new_amount (. eat .) eat b overeat .. blink
+forget_mimic_and_feed . blink
+    }
+count_seeds_in D more (. eat .) :
+    {
+                        stocks_in D new_amount D uncontrolable_growth (. overeat .. )blink
+stocks_in first new_amount (. eat .) eat (b regurgitation D )overeat (.. growth a )blink
+stocks_in second new_amount (. eat .) eat (b eat D )overeat (.. growth a )blink
+forget_mimic_and_feed .. blink
+    }
+forget_mimic_and_feed D blink
+}
+
+stocks_in numofanswers new_amount SQSOLVER(cCoeff, bCoeff, aCoeff) blink
+cheekcheeryk numofanswers blink
+cheekcheeryk first blink
+cheekcheeryk second blink

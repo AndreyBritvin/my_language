@@ -1,0 +1,54 @@
+     1                                  BITS 64
+     2                                  section .data
+     3 00000000 256C660A00                  fmt db "%lf", 10, 0
+     4                                  section .text
+     5                                  
+     6                                  out:
+     7 00000000 B801000000                      mov rax, 0x01           ; write64 (rdi, rsi, rdx) ... r10, r8, r9
+     8 00000005 BF01000000                      mov rdi, 1              ; stdout
+     9 0000000A 48BE-                           mov rsi, fmt
+     9 0000000C [0000000000000000] 
+    10                                          ; mov rsi, Buffer
+    11 00000014 BA0A000000                      mov rdx, 10             ; strlen (Msg)
+    12 00000019 4152                    	    push r10
+    13 0000001B 0F05                            syscall
+    14 0000001D C3                              ret
+    15                                  
+    16                                  global _start
+    17                                  
+    18                                  
+    19                                  _start:
+    20 0000001E 55                      push rbp
+    21 0000001F 4889EC                  mov rsp, rbp
+    22 00000022 4883EC08                sub rsp, 8
+    23 00000026 6A0A                    push 10
+    24 00000028 8F45F8                  pop qword [rbp - 8]               ; first
+    25                                  ;put in this ^ value: ..........
+    26                                  
+    27 0000002B FF75F8                  push qword [rbp - 8]              ; first
+    28 0000002E 6A02                    push 2
+    29 00000030 5B                      pop rbx
+    30 00000031 59                      pop rcx
+    31 00000032 4839CB                  cmp rbx, rcx
+    32 00000035 7607                    jbe IF_LABEL_0
+    33 00000037 6A02                    push 2
+    34 00000039 E8C2FFFFFF              call out
+    35                                  ;print ..
+    36                                  
+    37                                  IF_LABEL_0:
+    38                                  
+    39 0000003E FF75F8                  push qword [rbp - 8]              ; first
+    40 00000041 6A02                    push 2
+    41 00000043 5B                      pop rbx
+    42 00000044 59                      pop rcx
+    43 00000045 4839CB                  cmp rbx, rcx
+    44 00000048 7307                    jae IF_LABEL_2
+    45 0000004A 6A01                    push 1
+    46 0000004C E8AFFFFFFF              call out
+    47                                  ;print .
+    48                                  
+    49                                  IF_LABEL_2:
+    50                                  
+    51 00000051 4889EC                  mov rsp, rbp
+    52 00000054 5D                      pop rbp
+    53 00000055 C3                      ret

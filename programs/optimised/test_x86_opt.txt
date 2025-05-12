@@ -1,0 +1,9 @@
+stocks_in first new_amount .......... blink 
+count_seeds_in first more .. : 
+{ 
+    cheekcheeryk .. blink 
+} 
+count_seeds_in first less .. : 
+{ 
+    cheekcheeryk . blink 
+} 

@@ -1,62 +1,234 @@
-push 2
+push 6
 pop bx  
-push 4
-pop [0]                    ; Michella
-;put in this ^ value: .... 
-
-push bx; save a copy
-push [0]                   ; Michella
-pop [bx + 0]
-dump
-call FACTORIAL:
-pop bx; push copy back
-push ax; returned value
-pop [1]                    ; Maliketh
-;put in this ^ value: FACTORIAL(Michella) 
-
-push [1]                   ; Maliketh
-out
-;print Maliketh 
-
-jump FACTORIAL_END:
-FACTORIAL:
-push [bx + 0]              ; Tarnished
-push 2
-jae IF_LABEL_0:
 push 1
+push 1
+sub
+pop [0]                    ; aCoeff
+;put in this ^ value: . eat . 
+
+push 1
+push 1
+sub
+pop [1]                    ; bCoeff
+;put in this ^ value: . eat . 
+
+push 1
+push 1
+sub
+pop [2]                    ; cCoeff
+;put in this ^ value: . eat . 
+
+push 1
+push 1
+sub
+pop [3]                    ; first
+;put in this ^ value: . eat . 
+
+push 1
+push 1
+sub
+pop [4]                    ; second
+;put in this ^ value: . eat . 
+
+push 1
+push 1
+sub
+pop [5]                    ; numofanswers
+;put in this ^ value: . eat . 
+
+push 1
+push 1
+sub
+push 5
+sub
+pop [0]                    ; aCoeff
+;put in this ^ value: . eat . eat ..... 
+
+push 1
+pop [1]                    ; bCoeff
+;put in this ^ value: . 
+
+push 2
+pop [2]                    ; cCoeff
+;put in this ^ value: .. 
+
+jump LINEAR_END:
+LINEAR:
+push [bx + 1]              ; LinB
+push 1
+push 1
+sub
+jne IF_LABEL_0:
+push [bx + 0]              ; LinC
+push 1
+push 1
+sub
+jne IF_LABEL_1:
+push 5
+pop ax; save return value to ax
+ret
+
+IF_LABEL_1:
+
+push 1
+push 1
+sub
 pop ax; save return value to ax
 ret
 
 IF_LABEL_0:
 
-push [bx + 0]              ; Tarnished
-pop [bx + 1]               ; Malenia
-;put in this ^ value: Tarnished 
+push [bx + 0]              ; LinC
+push [bx + 1]              ; LinB
+div
+pop [3]                    ; first
+;put in this ^ value: LinC overeat LinB 
 
-push [bx + 0]              ; Tarnished
 push 1
-sub
-pop [bx + 0]               ; Tarnished
-;put in this ^ value: Tarnished eat . 
-
-push [bx + 1]              ; Malenia
-push bx; save a copy
-push [bx + 0]              ; Tarnished
-push bx + 2
-pop  bx 
-pop [bx + 0]
-dump
-call FACTORIAL:
-pop bx; push copy back
-push ax; returned value
-mul
-pop [bx + 1]               ; Malenia
-;put in this ^ value: Malenia growth FACTORIAL(Tarnished) 
-
-push [bx + 1]              ; Malenia
 pop ax; save return value to ax
 ret
 
-FACTORIAL_END:
+LINEAR_END:
+
+jump SQSOLVER_END:
+SQSOLVER:
+push [bx + 2]              ; a
+push 1
+push 1
+sub
+jne IF_LABEL_4:
+push bx; save a copy
+push [bx + 0]              ; c
+push [bx + 1]              ; b
+push bx + 4
+pop  bx 
+pop [bx + 1]
+pop [bx + 0]
+dump
+call LINEAR:
+pop bx; push copy back
+push ax; returned value
+pop ax; save return value to ax
+ret
+
+IF_LABEL_4:
+
+push 1
+push 1
+sub
+pop [bx + 3]               ; D
+;put in this ^ value: . eat . 
+
+push [bx + 1]              ; b
+push [bx + 1]              ; b
+mul
+push [bx + 0]              ; c
+push [bx + 2]              ; a
+mul
+push 4
+mul
+sub
+pop [bx + 3]               ; D
+;put in this ^ value: b growth b eat c growth a growth .... 
+
+push [bx + 3]              ; D
+push 1
+push 1
+sub
+jne IF_LABEL_6:
+push 1
+push 1
+sub
+push [bx + 1]              ; b
+push 2
+div
+sub
+pop [3]                    ; first
+;put in this ^ value: . eat . eat b overeat .. 
+
+push 1
+pop ax; save return value to ax
+ret
+
+IF_LABEL_6:
+
+push [bx + 3]              ; D
+push 1
+push 1
+sub
+jbe IF_LABEL_8:
+push [bx + 3]              ; D
+push 1
+push 2
+div
+power
+pop [bx + 3]               ; D
+;put in this ^ value: D uncontrolable_growth (. overeat .. )
+
+push 1
+push 1
+sub
+push [bx + 1]              ; b
+push [bx + 3]              ; D
+add
+push 2
+push [bx + 2]              ; a
+mul
+div
+sub
+pop [3]                    ; first
+;put in this ^ value: . eat . eat (b regurgitation D )overeat (.. growth a )
+
+push 1
+push 1
+sub
+push [bx + 1]              ; b
+push [bx + 3]              ; D
+sub
+push 2
+push [bx + 2]              ; a
+mul
+div
+sub
+pop [4]                    ; second
+;put in this ^ value: . eat . eat (b eat D )overeat (.. growth a )
+
+push 2
+pop ax; save return value to ax
+ret
+
+IF_LABEL_8:
+
+push [bx + 3]              ; D
+pop ax; save return value to ax
+ret
+
+SQSOLVER_END:
+
+push bx; save a copy
+push [2]                   ; cCoeff
+push [1]                   ; bCoeff
+push [0]                   ; aCoeff
+pop [bx + 2]
+pop [bx + 1]
+pop [bx + 0]
+dump
+call SQSOLVER:
+pop bx; push copy back
+push ax; returned value
+pop [5]                    ; numofanswers
+;put in this ^ value: SQSOLVER(cCoeff, bCoeff, aCoeff) 
+
+push [5]                   ; numofanswers
+out
+;print numofanswers 
+
+push [3]                   ; first
+out
+;print first 
+
+push [4]                   ; second
+out
+;print second 
 
 hlt

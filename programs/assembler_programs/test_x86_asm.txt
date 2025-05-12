@@ -1,0 +1,105 @@
+section .data
+
+    fmt db "%lf", 10, 0
+
+
+
+section .text
+
+    global main
+
+    extern printf
+
+
+
+main:
+
+    push rbp
+
+    mov rbp, rsp
+
+    sub rsp, 0
+
+    mov rax, __float64__(10)
+
+    sub rsp, 8
+
+    mov [rsp], rax
+
+    pop rax
+
+    mov [rbp + -8], rax 
+    mov rax, [rbp + -8] 
+    push rax
+
+    mov rax, __float64__(2)
+
+    sub rsp, 8
+
+    mov [rsp], rax
+
+    pop rbx
+
+    pop rax
+
+    cmp rax, rbx
+
+    jne IF_LABEL_0
+
+    mov rax, __float64__(2)
+
+    sub rsp, 8
+
+    mov [rsp], rax
+
+    pop xmm0
+
+    mov rdi, fmt
+
+    xor rax, rax
+
+    call printf
+
+IF_LABEL_0:
+
+    mov rax, [rbp + -8] 
+    push rax
+
+    mov rax, __float64__(2)
+
+    sub rsp, 8
+
+    mov [rsp], rax
+
+    pop rbx
+
+    pop rax
+
+    cmp rax, rbx
+
+    jne IF_LABEL_1
+
+    mov rax, __float64__(1)
+
+    sub rsp, 8
+
+    mov [rsp], rax
+
+    pop xmm0
+
+    mov rdi, fmt
+
+    xor rax, rax
+
+    call printf
+
+IF_LABEL_1:
+
+    mov rsp, rbp
+
+    pop rbp
+
+    ret
+
+
+

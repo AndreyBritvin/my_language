@@ -65,7 +65,7 @@ mimic prepare_for_flight(bowl, secret, ZOB)
     forget_mimic_and_feed .... growth ..... blink
 }
 
-cheekcheeryk prepare_for_flight(.., . eat ..........., ............) blink
+cheekcheeryk prepare_for_flight((. eat .) eat ....., ., ..) blink
 
 cheekcheeryk left_wing blink
 cheekcheeryk right_wing blink

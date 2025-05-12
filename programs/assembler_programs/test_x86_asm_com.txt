@@ -1,0 +1,53 @@
+BITS 64
+section .data
+    fmt db "%lf", 10, 0
+section .text
+
+out:
+        mov rax, 0x01           ; write64 (rdi, rsi, rdx) ... r10, r8, r9
+        mov rdi, 1              ; stdout
+        mov rsi, fmt
+        ; mov rsi, Buffer
+        mov rdx, 10             ; strlen (Msg)
+	    push r10
+        syscall
+        ret
+
+global _start
+
+
+_start:
+push rbp
+mov rsp, rbp
+sub rsp, 8
+push 10
+pop qword [rbp - 8]               ; first
+;put in this ^ value: ..........
+
+push qword [rbp - 8]              ; first
+push 2
+pop rbx
+pop rcx
+cmp rbx, rcx
+jbe IF_LABEL_0
+push 2
+call out
+;print ..
+
+IF_LABEL_0:
+
+push qword [rbp - 8]              ; first
+push 2
+pop rbx
+pop rcx
+cmp rbx, rcx
+jae IF_LABEL_2
+push 1
+call out
+;print .
+
+IF_LABEL_2:
+
+mov rsp, rbp
+pop rbp
+ret

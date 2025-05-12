@@ -1,4 +1,4 @@
-PROG_NAME=kvadratka
+PROG_NAME=test_x86
 #TODO: make vars with paths
 all:
 	make front
@@ -35,6 +35,9 @@ rm_cm:
 	make -C remove_comments
 	./remove_comments/comm_removal.out programs/assembler_programs/$(PROG_NAME)_asm_com.txt programs/assembler_programs/$(PROG_NAME)_asm.txt
 
+nasm:
+	nasm -f elf64 -o nasm_prog.o -l listing.lst programs/assembler_programs/$(PROG_NAME)_asm_com.txt
+	ld nasm_prog.o -o nasm_prog.elf
 
 clean:
 	rm frontend/frontend.out

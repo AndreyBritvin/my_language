@@ -365,15 +365,19 @@ prepare_for_flight_END:
 
 
 push bx
-push 2
+push 1
 
 push 1
 
-push 11
+sub
+
+push 5
 
 sub
 
-push 12
+push 1
+
+push 2
 
 pop [bx + 2]
 

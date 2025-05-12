@@ -1,0 +1,33 @@
+434-format v1.5
+{OP:";"
+    {OP:"="
+        {ID:"first"}
+        {NUM:"10"}
+    }
+    {OP:";"
+        {OP:"if"
+            {OP:"more"
+                {ID:"first"}
+                {NUM:"2"}
+            }
+            {OP:";"
+                {OP:"print"
+                    {NUM:"2"}
+                }
+            }
+        }
+        {OP:";"
+            {OP:"if"
+                {OP:"less"
+                    {ID:"first"}
+                    {NUM:"2"}
+                }
+                {OP:";"
+                    {OP:"print"
+                        {NUM:"1"}
+                    }
+                }
+            }
+        }
+    }
+}

@@ -13,7 +13,7 @@ Language Grammatic:
 	<PRINT>       ::= "cheekcheeryk"  <EXPR>  ";" <empty>
 	<IF>          ::= "count seeds in " <COMPARISON> ":" <empty> <STATEMENT> <empty>
     <WHILE>       ::= "fly until amount in " <COMPARISON> ":" <empty> <STATEMENT> <empty>
-	<ASSINGNMENT> ::= "stocks in" <empty> <ID>+ <empty> "new amount" <empty> <EXPR> <empty> ";" <empty>
+	<ASSINGNMENT> ::= "stocks in" <empty> <ID>+ <empty> "new amount" <empty> <EXPR> <empty> "blink" <empty>
 
 		<ID>             ::= [a-z]+ ([a-z] | [0-9])*
 		<COMPARISON_OPS> ::= "less" | "more"

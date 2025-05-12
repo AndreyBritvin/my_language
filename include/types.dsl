@@ -43,7 +43,7 @@ OPERATION(EQUAL_BEGIN,   "stocks_in",               "=")
 OPERATION(EQUAL_MIDDLE,  "new_amount",              "=")
 OPERATION(IF_STATE,      "count_seeds_in",          "if")
 OPERATION(WHILE_STATE,   "fly_until_amount_in",     "while")
-OPERATION(PRINT_STATE,   "cheekcheeryk",            "print", "out")
+OPERATION(PRINT_STATE,   "cheekcheeryk",            "print", "call out")
 OPERATION(STATEMENT_END, "blink", ";")
 OPERATION(CONDITION_END, ":", ":")
 

@@ -1,15 +1,15 @@
-mimic feed()
+mimic feed(seed)
 {
     count_seeds_in seed less_eq 0:
     {
-        forget_mimic_and_feed 1 blink
+        forget_mimic_and_feed . blink
     }
-    count_seeds_in seed full_equal 1:
+    count_seeds_in seed full_equal .:
     {
-        forget_mimic_and_feed 1 blink
+        forget_mimic_and_feed . blink
     }
 
-    forget_mimic_and_feed seed growth feed(seed eat 1) blink
+    forget_mimic_and_feed seed growth feed(seed eat .) blink
 }
 
-cheekcheeryk feed() blink
+cheekcheeryk feed(........) blink

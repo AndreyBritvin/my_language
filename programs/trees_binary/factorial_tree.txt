@@ -3,7 +3,9 @@
     {OP:"def"
         {OP:"spec"
             {ID:"feed"}
-            {OP:","}
+            {OP:","
+                {ID:"seed"}
+            }
         }
         {OP:";"
             {OP:"if"
@@ -55,7 +57,9 @@
             {OP:"call"
                 {OP:"spec"
                     {ID:"feed"}
-                    {OP:","}
+                    {OP:","
+                        {NUM:"8"}
+                    }
                 }
             }
         }
