@@ -1,44 +1,45 @@
 BITS 64
 section .data
-    fmt db "%lf", 10, 0
+    fmt db "Hello world", 10, 0
 
 section .text
-global _start
+global main
 extern out
 extern hlt
 
 
-_start:
+main:
 push rbp
 mov rbp, rsp
 sub rsp, 8
 push 10
 pop qword [rbp - 8]               ; first
-;put in this ^ value: .......... 
+;put in this ^ value: ..........
 
 push qword [rbp - 8]              ; first
 push 3
-pop rbx
 pop rcx
+pop rbx
 cmp rbx, rcx
 jbe IF_LABEL_0
 push 2
 call out
-;print .. 
+;print ..
 
 IF_LABEL_0:
 
 push qword [rbp - 8]              ; first
 push 2
-pop rbx
 pop rcx
+pop rbx
 cmp rbx, rcx
 jae IF_LABEL_2
 push 1
 call out
-;print . 
+;print .
 
 IF_LABEL_2:
+call out
 
 call hlt
 mov rsp, rbp

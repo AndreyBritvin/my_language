@@ -214,8 +214,8 @@ err_code_t write_if(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_l
     int buffer_index = if_label_counter;
     write_var(output, tree, COMP_LEFT_ARG, VAR_PUSH, nametable); // left part should be before
     write_expression(output, tree, COMP_RIGHT_ARG, nametable);
-    PRINT("pop rbx\n"
-          "pop rcx\n"
+    PRINT("pop rcx\n"
+          "pop rbx\n"
           "cmp rbx, rcx\n")
     write_if_operator(output, tree, node->left, nametable);
 
