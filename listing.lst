@@ -1,45 +1,46 @@
      1                                  BITS 64
      2                                  section .data
      3 00000000 256C660A00                  fmt db "%lf", 10, 0
-     4                                  section .text
-     5                                  
+     4                                  
+     5                                  section .text
      6                                  global _start
      7                                  extern out
      8                                  extern hlt
      9                                  
-    10                                  _start:
-    11 00000000 55                      push rbp
-    12 00000001 4889E5                  mov rbp, rsp
-    13 00000004 4883EC08                sub rsp, 8
-    14 00000008 6A0A                    push 10
-    15 0000000A 8F45F8                  pop qword [rbp - 8]               ; first
-    16                                  ;put in this ^ value: ..........
-    17                                  
-    18 0000000D FF75F8                  push qword [rbp - 8]              ; first
-    19 00000010 6A02                    push 2
-    20 00000012 5B                      pop rbx
-    21 00000013 59                      pop rcx
-    22 00000014 4839CB                  cmp rbx, rcx
-    23 00000017 7607                    jbe IF_LABEL_0
-    24 00000019 6A02                    push 2
-    25 0000001B E8(00000000)            call out
-    26                                  ;print ..
-    27                                  
-    28                                  IF_LABEL_0:
-    29                                  
-    30 00000020 FF75F8                  push qword [rbp - 8]              ; first
-    31 00000023 6A02                    push 2
-    32 00000025 5B                      pop rbx
-    33 00000026 59                      pop rcx
-    34 00000027 4839CB                  cmp rbx, rcx
-    35 0000002A 7307                    jae IF_LABEL_2
-    36 0000002C 6A01                    push 1
-    37 0000002E E8(00000000)            call out
-    38                                  ;print .
-    39                                  
-    40                                  IF_LABEL_2:
-    41                                  
-    42 00000033 4889EC                  mov rsp, rbp
-    43 00000036 5D                      pop rbp
-    44 00000037 E8(00000000)            call hlt
-    45 0000003C C3                      ret
+    10                                  
+    11                                  _start:
+    12 00000000 55                      push rbp
+    13 00000001 4889E5                  mov rbp, rsp
+    14 00000004 4883EC08                sub rsp, 8
+    15 00000008 6A0A                    push 10
+    16 0000000A 8F45F8                  pop qword [rbp - 8]               ; first
+    17                                  ;put in this ^ value: .......... 
+    18                                  
+    19 0000000D FF75F8                  push qword [rbp - 8]              ; first
+    20 00000010 6A03                    push 3
+    21 00000012 5B                      pop rbx
+    22 00000013 59                      pop rcx
+    23 00000014 4839CB                  cmp rbx, rcx
+    24 00000017 7607                    jbe IF_LABEL_0
+    25 00000019 6A02                    push 2
+    26 0000001B E8(00000000)            call out
+    27                                  ;print .. 
+    28                                  
+    29                                  IF_LABEL_0:
+    30                                  
+    31 00000020 FF75F8                  push qword [rbp - 8]              ; first
+    32 00000023 6A02                    push 2
+    33 00000025 5B                      pop rbx
+    34 00000026 59                      pop rcx
+    35 00000027 4839CB                  cmp rbx, rcx
+    36 0000002A 7307                    jae IF_LABEL_2
+    37 0000002C 6A01                    push 1
+    38 0000002E E8(00000000)            call out
+    39                                  ;print . 
+    40                                  
+    41                                  IF_LABEL_2:
+    42                                  
+    43 00000033 E8(00000000)            call hlt
+    44 00000038 4889EC                  mov rsp, rbp
+    45 0000003B 5D                      pop rbp
+    46 0000003C C3                      ret

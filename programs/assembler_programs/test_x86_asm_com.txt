@@ -1,11 +1,12 @@
 BITS 64
 section .data
     fmt db "%lf", 10, 0
-section .text
 
+section .text
 global _start
 extern out
 extern hlt
+
 
 _start:
 push rbp
@@ -13,17 +14,17 @@ mov rbp, rsp
 sub rsp, 8
 push 10
 pop qword [rbp - 8]               ; first
-;put in this ^ value: ..........
+;put in this ^ value: .......... 
 
 push qword [rbp - 8]              ; first
-push 2
+push 3
 pop rbx
 pop rcx
 cmp rbx, rcx
 jbe IF_LABEL_0
 push 2
 call out
-;print ..
+;print .. 
 
 IF_LABEL_0:
 
@@ -35,11 +36,11 @@ cmp rbx, rcx
 jae IF_LABEL_2
 push 1
 call out
-;print .
+;print . 
 
 IF_LABEL_2:
 
+call hlt
 mov rsp, rbp
 pop rbp
-call hlt
 ret

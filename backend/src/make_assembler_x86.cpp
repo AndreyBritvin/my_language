@@ -31,6 +31,8 @@ err_code_t generate_assembler(my_tree_t* tree, const char* filename, nametable_t
 
     PRINT("section .text\n"
           "global _start\n" // todo: add external printf/input?
+          "extern out\n"
+          "extern hlt\n"
           "\n\n"
           "_start:\n"
           "push rbp\n"
