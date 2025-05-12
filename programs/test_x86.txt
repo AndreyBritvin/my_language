@@ -1,6 +1,6 @@
 stocks_in first new_amount .......... blink
 
-count_seeds_in first more ..:
+count_seeds_in first more ...:
 {
     cheekcheeryk .. blink
 }

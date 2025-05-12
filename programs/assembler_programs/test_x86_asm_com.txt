@@ -18,7 +18,7 @@ global _start
 
 _start:
 push rbp
-mov rsp, rbp
+mov rbp, rsp
 sub rsp, 8
 push 10
 pop qword [rbp - 8]               ; first

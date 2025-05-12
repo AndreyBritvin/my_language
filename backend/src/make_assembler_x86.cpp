@@ -34,7 +34,7 @@ err_code_t generate_assembler(my_tree_t* tree, const char* filename, nametable_t
           "\n\n"
           "_start:\n"
           "push rbp\n"
-          "mov rsp, rbp\n"
+          "mov rbp, rsp\n"
           "sub rsp, %zu\n", (get_num_of_global_vars(nt) + 1) * 8);
 
     write_to_assembler(output, tree, tree->root, 0, nt);
@@ -113,7 +113,7 @@ err_code_t write_to_assembler(FILE* output, my_tree_t* tree, node_t* curr_node, 
           && (int) curr_node->data == STATEMENT_END
             )
     {
-        //  PRINT("hlt\n")
+         PRINT("call hlt\n")
     }
 
     return OK;

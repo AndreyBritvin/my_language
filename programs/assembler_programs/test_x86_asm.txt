@@ -1,3 +1,5 @@
+BITS 64
+
 section .data
 
     fmt db "%lf", 10, 0
@@ -6,100 +8,75 @@ section .data
 
 section .text
 
-    global main
-
-    extern printf
+global _start
 
 
 
-main:
 
-    push rbp
 
-    mov rbp, rsp
+_start:
 
-    sub rsp, 0
+push rbp
 
-    mov rax, __float64__(10)
+mov rbp, rsp
 
-    sub rsp, 8
+sub rsp, 8
 
-    mov [rsp], rax
+push 10
 
-    pop rax
+pop qword [rbp - 8]               
 
-    mov [rbp + -8], rax 
-    mov rax, [rbp + -8] 
-    push rax
 
-    mov rax, __float64__(2)
 
-    sub rsp, 8
+push qword [rbp - 8]              
+push 3
 
-    mov [rsp], rax
+pop rbx
 
-    pop rbx
+pop rcx
 
-    pop rax
+cmp rbx, rcx
 
-    cmp rax, rbx
+jbe IF_LABEL_0
 
-    jne IF_LABEL_0
+push 2
 
-    mov rax, __float64__(2)
+call out
 
-    sub rsp, 8
 
-    mov [rsp], rax
 
-    pop xmm0
-
-    mov rdi, fmt
-
-    xor rax, rax
-
-    call printf
 
 IF_LABEL_0:
 
-    mov rax, [rbp + -8] 
-    push rax
-
-    mov rax, __float64__(2)
-
-    sub rsp, 8
-
-    mov [rsp], rax
-
-    pop rbx
-
-    pop rax
-
-    cmp rax, rbx
-
-    jne IF_LABEL_1
-
-    mov rax, __float64__(1)
-
-    sub rsp, 8
-
-    mov [rsp], rax
-
-    pop xmm0
-
-    mov rdi, fmt
-
-    xor rax, rax
-
-    call printf
-
-IF_LABEL_1:
-
-    mov rsp, rbp
-
-    pop rbp
-
-    ret
 
 
+push qword [rbp - 8]              
+push 2
+
+pop rbx
+
+pop rcx
+
+cmp rbx, rcx
+
+jae IF_LABEL_2
+
+push 1
+
+call out
+
+
+
+
+IF_LABEL_2:
+
+
+
+call hlt
+
+mov rsp, rbp
+
+pop rbp
+
+ret
 

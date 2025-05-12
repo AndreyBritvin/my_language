@@ -19,7 +19,7 @@
     18                                  
     19                                  _start:
     20 0000001E 55                      push rbp
-    21 0000001F 4889EC                  mov rsp, rbp
+    21 0000001F 4889E5                  mov rbp, rsp
     22 00000022 4883EC08                sub rsp, 8
     23 00000026 6A0A                    push 10
     24 00000028 8F45F8                  pop qword [rbp - 8]               ; first

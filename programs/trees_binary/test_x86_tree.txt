@@ -8,7 +8,7 @@
         {OP:"if"
             {OP:"more"
                 {ID:"first"}
-                {NUM:"2"}
+                {NUM:"3"}
             }
             {OP:";"
                 {OP:"print"
