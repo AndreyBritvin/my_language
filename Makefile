@@ -36,8 +36,9 @@ rm_cm:
 	./remove_comments/comm_removal.out programs/assembler_programs/$(PROG_NAME)_asm_com.txt programs/assembler_programs/$(PROG_NAME)_asm.txt
 
 nasm:
+	nasm -f elf64 -o stdlib.o    -l listing.lst programs/assembler_programs/stdlib.asm
 	nasm -f elf64 -o nasm_prog.o -l listing.lst programs/assembler_programs/$(PROG_NAME)_asm_com.txt
-	ld nasm_prog.o -o nasm_prog.elf
+	ld nasm_prog.o stdlib.o -o nasm_prog.elf
 
 clean:
 	rm frontend/frontend.out

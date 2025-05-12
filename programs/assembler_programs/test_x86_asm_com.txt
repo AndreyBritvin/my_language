@@ -3,18 +3,9 @@ section .data
     fmt db "%lf", 10, 0
 section .text
 
-out:
-        mov rax, 0x01           ; write64 (rdi, rsi, rdx) ... r10, r8, r9
-        mov rdi, 1              ; stdout
-        mov rsi, fmt
-        ; mov rsi, Buffer
-        mov rdx, 10             ; strlen (Msg)
-	    push r10
-        syscall
-        ret
-
 global _start
-
+extern out
+extern hlt
 
 _start:
 push rbp
@@ -50,4 +41,5 @@ IF_LABEL_2:
 
 mov rsp, rbp
 pop rbp
+call hlt
 ret
