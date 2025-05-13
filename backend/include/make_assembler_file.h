@@ -32,5 +32,6 @@ write_op_t             write_return;
 write_op_t             write_func_call;
 write_op_with_recurs_t write_func_decl;
 err_code_t             write_parametrs(FILE* output, my_tree_t* tree, node_t* node, int recurs_level, bool is_memory, nametable_t nametable);
+err_code_t align_rsp(FILE* output);
 
 #endif // MAKE_ASSEMBLER_FILE_H_

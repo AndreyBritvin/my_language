@@ -26,15 +26,22 @@ err_code_t generate_assembler(my_tree_t* tree, const char* filename, nametable_t
 
     FILE* SAFE_OPEN_FILE(output, filename, "w");
     PRINT("BITS 64\n" // for pop and push in 64bit mode
-          "section .data\n"
-          "    fmt db \"%%lf\", 10, 0\n\n");
+          );
 
     PRINT("section .text\n"
-          "global _start\n" // todo: add external printf/input?
+          "global main\n" // todo: add external printf/input?
           "extern out\n"
           "extern hlt\n"
+          "%%macro XMM_POP 1\n"
+          "movsd %1, [rsp]\n"
+          "add rsp, 8\n"
+          "%%endmacro\n"
+          "%%macro XMM_PUSH 1\n"
+          "sub rsp, 8\n"
+          "movsd [rsp], %1\n"
+          "%%endmacro\n"
           "\n\n"
-          "_start:\n"
+          "main:\n"
           "push rbp\n"
           "mov rbp, rsp\n"
           "sub rsp, %zu\n", (get_num_of_global_vars(nt) + 1) * 8);
@@ -127,16 +134,20 @@ err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node, nametab
     {
         case NUM:
         {
-            PRINT("push %lg\n", node->data);
+            PRINT("mov rax, __float64__(%lf)\n", node->data);
+            PRINT("movq xmm1, rax\n")
+            PRINT("XMM_PUSH xmm1\n");
             return OK;
         }
         case OP :
         {
             write_expression(output, tree, node->left, nametable);
             write_expression(output, tree, node->right, nametable);
-            PRINT("pop bx\n"
-                  "pop cx\n")
-            PRINT("%s bx, cx\n", all_ops[(int) node->data].assembler_text);
+            PRINT("XMM_POP xmm1\n"
+                  "XMM_POP xmm2\n");
+            PRINT("%s xmm1, xmm2\n", all_ops[(int) node->data].assembler_text);
+            PRINT("XMM_PUSH xmm1\n");
+
             return OK;
         }
         case VAR:
@@ -172,12 +183,14 @@ err_code_t write_var(FILE* output, my_tree_t* tree, node_t* node, var_writing is
     size_t id_full_index = (nametable[elem_num].full_index + 1) * 8;
     if (is_push == VAR_PUSH)
     {
-        PRINT("push qword [%s%d]              %s; %s\n", bx_offset, id_full_index,
+        PRINT("movsd xmm1, [%s%d]             %s; %s\n", bx_offset, id_full_index,
                         PASTE_SPACES_IN_COMMENT, id_name);
+        PRINT("XMM_PUSH xmm1\n");
     }
     else if (is_push == VAR_POP)
     {
-        PRINT("pop qword [%s%d]               %s; %s\n", bx_offset, id_full_index,
+        PRINT("XMM_POP xmm1\n")
+        PRINT("movsd [%s%d], xmm1             %s; %s\n", bx_offset, id_full_index,
                         PASTE_SPACES_IN_COMMENT, id_name);
     }
     else if (is_push == VAR_NAME)
@@ -198,9 +211,26 @@ err_code_t write_equal(FILE* output, my_tree_t* tree, node_t* node, nametable_t 
     return OK;
 }
 
+err_code_t align_rsp(FILE* output)
+{
+    static int number_of_aligned = 0;
+    PRINT("mov rax, rsp\n"
+          "and rax, 0xF\n"
+          "cmp rax, 8\n"
+          "jne .already_aligned_%d\n"
+          "sub rsp, 8\n"
+          ".already_aligned_%d:\n", number_of_aligned, number_of_aligned);
+
+    number_of_aligned++;
+
+    return OK;
+}
+
 err_code_t write_print(FILE* output, my_tree_t* tree, node_t* node, nametable_t nametable)
 {
     write_expression(output, tree, PRINT_ARG, nametable);
+    PRINT("XMM_POP xmm0\n");
+    align_rsp(output);
     PRINT_KW(PRINT_STATE)
     COMMENT(PRINT_ARG, "print ");
     PRINT("\n");
@@ -214,9 +244,9 @@ err_code_t write_if(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_l
     int buffer_index = if_label_counter;
     write_var(output, tree, COMP_LEFT_ARG, VAR_PUSH, nametable); // left part should be before
     write_expression(output, tree, COMP_RIGHT_ARG, nametable);
-    PRINT("pop rcx\n"
-          "pop rbx\n"
-          "cmp rbx, rcx\n")
+    PRINT("XMM_POP xmm1\n"
+          "XMM_POP xmm2\n"
+          "comisd xmm2, xmm1\n")
     write_if_operator(output, tree, node->left, nametable);
 
     PRINT(" IF_LABEL_%d\n", if_label_counter++);

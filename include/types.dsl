@@ -1,7 +1,7 @@
-OPERATION(ADD, "regurgitation",                     "+", "add")
-OPERATION(SUB, "eat",                               "-", "sub")
-OPERATION(MUL, "growth",                            "*", "mul")
-OPERATION(DIV, "overeat",                           "/", "div")
+OPERATION(ADD, "regurgitation",                     "+", "addsd")
+OPERATION(SUB, "eat",                               "-", "subsd")
+OPERATION(MUL, "growth",                            "*", "mulsd")
+OPERATION(DIV, "overeat",                           "/", "divsd")
 
 OPERATION(EXP, "uncontrolable_growth",              "^", "power")
 OPERATION(LOG, "ln", "ln")
