@@ -1,12 +1,13 @@
-PROG_NAME=test_x86
+PROG_NAME=factorial
 #TODO: make vars with paths
 all:
 	make front
 	make middle
 	make back
-	make rm_cm
+	make nasm
+#	make rm_cm
 #	make rfront
-	make proc
+#	make proc
 
 proc:
 	make -C Processor/assembler

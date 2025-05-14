@@ -244,9 +244,7 @@ err_code_t write_if(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_l
     int buffer_index = if_label_counter;
     write_var(output, tree, COMP_LEFT_ARG, VAR_PUSH, nametable); // left part should be before
     write_expression(output, tree, COMP_RIGHT_ARG, nametable);
-    PRINT("XMM_POP xmm1\n"
-          "XMM_POP xmm2\n"
-          "comisd xmm2, xmm1\n")
+
     write_if_operator(output, tree, node->left, nametable);
 
     PRINT(" IF_LABEL_%d\n", if_label_counter++);
@@ -262,6 +260,9 @@ err_code_t write_if(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_l
 
 err_code_t write_if_operator(FILE* output, my_tree_t* tree, node_t* node, nametable_t nametable)
 {
+    PRINT("XMM_POP xmm1\n"
+          "XMM_POP xmm2\n"
+          "comisd xmm2, xmm1\n")
     switch ((int) node->data)
     {
         case MORE:       PRINT("jbe"); break;
@@ -288,11 +289,11 @@ err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recur
 
     write_if_operator(output, tree, node->left, nametable);
 
-    PRINT(" END_WHILE_%d:\n", while_label_counter++);
+    PRINT(" END_WHILE_%d\n", while_label_counter++);
 
     write_to_assembler(output, tree, SCOPE_EXPRESSION, recurs_level + 1, nametable);
 
-    PRINT("jump WHILE_LABEL_%d:\n", buffer_counter);
+    PRINT("jmp WHILE_LABEL_%d\n", buffer_counter);
     PRINT("END_WHILE_%d:\n\n", buffer_counter);
 
     return OK;
@@ -301,7 +302,8 @@ err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recur
 err_code_t write_return(FILE* output, my_tree_t* tree, node_t* node, nametable_t nametable)
 {
     write_expression(output, tree, node->left, nametable);
-    PRINT("pop ax; save return value to ax\n"); // return value
+    PRINT("XMM_POP xmm0 ; save return value to xmm0\n"); // return value
+    PRINT("leave\n");
     PRINT_KW(RETURN);
     PRINT("\n");
 
@@ -310,45 +312,53 @@ err_code_t write_return(FILE* output, my_tree_t* tree, node_t* node, nametable_t
 
 err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node, nametable_t nametable)
 {
-    PRINT("push bx; save a copy\n"); // copy
 
-    write_parametrs(output, tree, FUNC_PARM_NODE, 0, false, nametable);
-
+    // PRINT("dump\n");
     char* func_name = FUNC_NAME_BY_NODE(node);
     size_t func_id  = get_element_index(nametable, func_name);
     size_t func_above_id = get_current_func(node->parent, nametable);
 
     size_t local_vars = get_amount_of_local_vars_in_func(func_id, nametable);
+    write_parametrs(output, tree, FUNC_PARM_NODE, 0, false, nametable);
+
     if (func_above_id != MAX_ID_COUNT)
     {
-        PRINT("push bx + %zu\n", get_amount_of_local_vars_in_func(func_above_id, nametable));
-        PRINT("pop  bx \n"); // bx += n of params
+        PRINT("add rbp, %zu\n", get_amount_of_local_vars_in_func(func_above_id, nametable) * 8);
+        // PRINT("pop  rbp \n"); // rbp += n of params TODO: rewrite with "add"
     }
     if (local_vars != 0)
     {
         write_parametrs(output, tree, FUNC_PARM_NODE,
                         get_amount_of_parametrs(func_id, nametable) - 1, true, nametable);
     }
-    PRINT("dump\n");
 
     PRINT_KW_WO_NL(FUNC_CALL);
     write_var(output, tree, FUNC_NAME_NODE, VAR_NAME, nametable);
-    PRINT(":\n");
+    PRINT("\n");
 
-    PRINT("pop bx; push copy back\n"); // return copy
-    PRINT("push ax; returned value\n");
+    // PRINT("pop rbp; push copy back\n"); // return copy
+    PRINT("XMM_PUSH xmm0; returned value\n");
 
     return OK;
 }
 
 err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_level, nametable_t nametable)
 {
-    PRINT("jump ");                                     // jump func_END:
+    PRINT("jmp ");                                     // jump func_END:
     write_var(output, tree, FUNC_NAME_NODE, VAR_NAME, nametable);
-    PRINT("_END:\n");
+    PRINT("_END\n");
 
     write_var(output, tree, FUNC_NAME_NODE, VAR_NAME, nametable);
     PRINT(":\n");
+
+    char* func_name = FUNC_NAME_BY_NODE(node);
+    size_t func_id  = get_element_index(nametable, func_name);
+    size_t func_above_id = get_current_func(node->parent, nametable);
+
+    size_t local_vars = get_amount_of_local_vars_in_func(func_id, nametable);
+    PRINT("push rbp             ; save a copy rbp\n"); // copy
+    PRINT("mov rbp, rsp\n"
+          "sub rsp, %d\n", local_vars * 8)
 
     write_to_assembler(output, tree, SCOPE_EXPRESSION, recurs_level + 1, nametable);
 
@@ -361,7 +371,8 @@ err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t r
 err_code_t write_parametrs(FILE* output, my_tree_t* tree, node_t* node, int recurs_level, bool is_memory, nametable_t nametable)
 {
     if (node->left  != NULL && is_memory == false) write_expression(output, tree, node->left, nametable);
-    if (node->left  != NULL && is_memory == true ) PRINT("pop [bx + %d]\n", recurs_level);
+    if (node->left  != NULL && is_memory == true ) {//PRINT("pop qword [rbp - %d]\n", recurs_level * 8);
+                                                    }
     if (node->right != NULL) write_parametrs(output, tree, node->right, recurs_level - 1, is_memory, nametable);
 
     return OK;

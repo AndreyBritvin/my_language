@@ -1,19 +1,77 @@
-push 0
+BITS 64
 
-pop bx  
+section .text
+
+global main
+
+extern out
+
+extern hlt
+
+%macro XMM_POP 1
+
+movsd %1, [rsp]
+
+add rsp, 8
+
+%endmacro
+
+%macro XMM_PUSH 1
+
+sub rsp, 8
+
+movsd [rsp], %1
+
+%endmacro
+
+
+
+
+
+main:
+
+push rbp
+
+mov rbp, rsp
+
+sub rsp, 8
 
 jump feed_END:
 
 feed:
 
-push [bx + 0]              
-push 0
+push rbp
+movsd xmm1, [rbp - 8]             
+XMM_PUSH xmm1
 
-ja IF_LABEL_0:
+pop [bx + 0]
 
-push 1
+movsd xmm1, [rbp - 8]             
+XMM_PUSH xmm1
 
-pop ax
+mov rax, __float64__(0.000000)
+
+movq xmm1, rax
+
+XMM_PUSH xmm1
+
+XMM_POP xmm1
+
+XMM_POP xmm2
+
+comisd xmm2, xmm1
+
+ja IF_LABEL_0
+
+mov rax, __float64__(1.000000)
+
+movq xmm1, rax
+
+XMM_PUSH xmm1
+
+XMM_POP xmm0 
+leave
+
 ret
 
 
@@ -22,14 +80,32 @@ IF_LABEL_0:
 
 
 
-push [bx + 0]              
-push 1
+movsd xmm1, [rbp - 8]             
+XMM_PUSH xmm1
 
-jne IF_LABEL_2:
+mov rax, __float64__(1.000000)
 
-push 1
+movq xmm1, rax
 
-pop ax
+XMM_PUSH xmm1
+
+XMM_POP xmm1
+
+XMM_POP xmm2
+
+comisd xmm2, xmm1
+
+jne IF_LABEL_2
+
+mov rax, __float64__(1.000000)
+
+movq xmm1, rax
+
+XMM_PUSH xmm1
+
+XMM_POP xmm0 
+leave
+
 ret
 
 
@@ -38,28 +114,23 @@ IF_LABEL_2:
 
 
 
-push [bx + 0]              
-push bx
-push [bx + 0]              
-push 1
-
-sub
-
-push bx + 1
-
-pop  bx 
-
-pop [bx + 0]
-
-dump
+movsd xmm1, [rbp - 8]             
+XMM_PUSH xmm1
 
 call feed:
 
-pop bx
-push ax
-mul
+XMM_PUSH xmm0
+XMM_POP xmm1
 
-pop ax
+XMM_POP xmm2
+
+mulsd xmm1, xmm2
+
+XMM_PUSH xmm1
+
+XMM_POP xmm0 
+leave
+
 ret
 
 
@@ -68,21 +139,33 @@ feed_END:
 
 
 
-push bx
-push 8
-
-pop [bx + 0]
-
-dump
-
 call feed:
 
-pop bx
-push ax
-out
+XMM_PUSH xmm0
+XMM_POP xmm0
+
+mov rax, rsp
+
+and rax, 0xF
+
+cmp rax, 8
+
+jne .already_aligned_0
+
+sub rsp, 8
+
+.already_aligned_0:
+
+call out
 
 
 
 
-hlt
+call hlt
+
+mov rsp, rbp
+
+pop rbp
+
+ret
 
