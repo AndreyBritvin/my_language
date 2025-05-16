@@ -3,7 +3,7 @@ OPERATION(SUB, "eat",                               "-", "subsd")
 OPERATION(MUL, "growth",                            "*", "mulsd")
 OPERATION(DIV, "overeat",                           "/", "divsd")
 
-OPERATION(EXP, "uncontrolable_growth",              "^", "power")
+OPERATION(EXP, "uncontrolable_growth",              "^", "sqrtsd")
 OPERATION(LOG, "ln", "ln")
 
 OPERATION(SIN, "sin", "sin", "sin")

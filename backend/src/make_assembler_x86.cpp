@@ -44,6 +44,7 @@ err_code_t generate_assembler(my_tree_t* tree, const char* filename, nametable_t
           "main:\n"
           "push rbp\n"
           "mov rbp, rsp\n"
+          "mov rbx, rbp\n" // save this for "main" global vars
           "sub rsp, %zu\n", (get_num_of_global_vars(nt) + 1) * 8);
 
     write_to_assembler(output, tree, tree->root, 0, nt);
@@ -143,8 +144,8 @@ err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node, nametab
         {
             write_expression(output, tree, node->left, nametable);
             write_expression(output, tree, node->right, nametable);
-            PRINT("XMM_POP xmm1\n"
-                  "XMM_POP xmm2\n");
+            PRINT("XMM_POP xmm2\n"
+                  "XMM_POP xmm1\n");
             PRINT("%s xmm1, xmm2\n", all_ops[(int) node->data].assembler_text);
             PRINT("XMM_PUSH xmm1\n");
 
@@ -175,10 +176,12 @@ err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node, nametab
 err_code_t write_var(FILE* output, my_tree_t* tree, node_t* node, var_writing is_push, nametable_t nametable)
 {
     char* id_name = *(char**)&node->data;
-    char* bx_offset = "rbp - ";
+    char* bx_offset = "rbx - ";
+
     size_t elem_num = get_element_index(nametable, id_name);
 
     if (nametable[elem_num].dependence != MAX_ID_COUNT) bx_offset = "rbp - ";
+    if (nametable[elem_num].type       == PARAM_TYPE  ) bx_offset = "rbp + 8 + ";
 
     size_t id_full_index = (nametable[elem_num].full_index + 1) * 8;
     if (is_push == VAR_PUSH)
@@ -323,7 +326,7 @@ err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node, nametabl
 
     if (func_above_id != MAX_ID_COUNT)
     {
-        PRINT("add rbp, %zu\n", get_amount_of_local_vars_in_func(func_above_id, nametable) * 8);
+        // PRINT("add rbp, %zu\n", get_amount_of_local_vars_in_func(func_above_id, nametable) * 8);
         // PRINT("pop  rbp \n"); // rbp += n of params TODO: rewrite with "add"
     }
     if (local_vars != 0)
