@@ -17,7 +17,7 @@ main:
 push rbp
 mov rbp, rsp
 mov rbx, rbp
-sub rsp, 32
+sub rsp, 24
 mov rax, __float64__(1.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
@@ -29,37 +29,37 @@ XMM_POP xmm1
 subsd xmm1, xmm2
 XMM_PUSH xmm1
 XMM_POP xmm1
-movsd [rbx - 8], xmm1             ; no_food
+movsd [rbx - 24], xmm1             ; no_food
 ;put in this ^ value: . eat . 
 
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm1
 movsd [rbx - 16], xmm1             ; left_wing
 ;put in this ^ value: no_food 
 
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm1
-movsd [rbx - 24], xmm1             ; right_wing
+movsd [rbx - 8], xmm1             ; right_wing
 ;put in this ^ value: no_food 
 
 jmp fly_line_END
 fly_line:
 push rbp             ; save a copy rbp
 mov rbp, rsp
-sub rsp, 24
+sub rsp, 0
 movsd xmm1, [rbp + 8 + 16]             ; field
 XMM_PUSH xmm1
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 jne IF_LABEL_0
-movsd xmm1, [rbp + 8 + 24]             ; grass
+movsd xmm1, [rbp + 8 + 8]             ; grass
 XMM_PUSH xmm1
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm1
 XMM_POP xmm2
@@ -81,15 +81,15 @@ ret
 
 IF_LABEL_1:
 
-movsd xmm1, [rbp + 8 + 24]             ; grass
+movsd xmm1, [rbp + 8 + 8]             ; grass
 XMM_PUSH xmm1
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 je IF_LABEL_3
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm0 ; save return value to xmm0
 leave
@@ -99,9 +99,9 @@ IF_LABEL_3:
 
 IF_LABEL_0:
 
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
-movsd xmm1, [rbp + 8 + 24]             ; grass
+movsd xmm1, [rbp + 8 + 8]             ; grass
 XMM_PUSH xmm1
 XMM_POP xmm2
 XMM_POP xmm1
@@ -120,7 +120,7 @@ movsd [rbx - 16], xmm1             ; left_wing
 movsd xmm1, [rbx - 16]             ; left_wing
 XMM_PUSH xmm1
 XMM_POP xmm1
-movsd [rbx - 24], xmm1             ; right_wing
+movsd [rbx - 8], xmm1             ; right_wing
 ;put in this ^ value: left_wing 
 
 mov rax, __float64__(1.000000)
@@ -136,7 +136,7 @@ jmp fly_square_END
 fly_square:
 push rbp             ; save a copy rbp
 mov rbp, rsp
-sub rsp, 32
+sub rsp, 8
 movsd xmm1, [rbp + 8 + 16]             ; beak
 XMM_PUSH xmm1
 movsd xmm1, [rbp + 8 + 16]             ; beak
@@ -148,13 +148,13 @@ XMM_PUSH xmm1
 mov rax, __float64__(4.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
-movsd xmm1, [rbp + 8 + 8]             ; seed_area
+movsd xmm1, [rbp + 8 + 24]             ; seed_area
 XMM_PUSH xmm1
 XMM_POP xmm2
 XMM_POP xmm1
 mulsd xmm1, xmm2
 XMM_PUSH xmm1
-movsd xmm1, [rbp + 8 + 24]             ; feather
+movsd xmm1, [rbp + 8 + 8]             ; feather
 XMM_PUSH xmm1
 XMM_POP xmm2
 XMM_POP xmm1
@@ -165,10 +165,10 @@ XMM_POP xmm1
 subsd xmm1, xmm2
 XMM_PUSH xmm1
 XMM_POP xmm1
-movsd [rbp - 32], xmm1             ; parrot_discrimination
+movsd [rbp - 8 -0], xmm1             ; parrot_discrimination
 ;put in this ^ value: beak growth beak eat .... growth seed_area growth feather 
 
-movsd xmm1, [rbp - 32]             ; parrot_discrimination
+movsd xmm1, [rbp - 8 -0]             ; parrot_discrimination
 XMM_PUSH xmm1
 XMM_POP xmm0
 mov rax, rsp
@@ -180,15 +180,15 @@ sub rsp, 8
 call out
 ;print parrot_discrimination 
 
-movsd xmm1, [rbp - 32]             ; parrot_discrimination
+movsd xmm1, [rbp - 8 -0]             ; parrot_discrimination
 XMM_PUSH xmm1
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 jae IF_LABEL_6
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm0
 mov rax, rsp
@@ -200,7 +200,7 @@ sub rsp, 8
 call out
 ;print no_food 
 
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm0
 mov rax, rsp
@@ -212,7 +212,7 @@ sub rsp, 8
 call out
 ;print no_food 
 
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm0
 mov rax, rsp
@@ -224,7 +224,7 @@ sub rsp, 8
 call out
 ;print no_food 
 
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm0
 mov rax, rsp
@@ -236,7 +236,7 @@ sub rsp, 8
 call out
 ;print no_food 
 
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm0 ; save return value to xmm0
 leave
@@ -244,15 +244,15 @@ ret
 
 IF_LABEL_6:
 
-movsd xmm1, [rbp - 32]             ; parrot_discrimination
+movsd xmm1, [rbp - 8 -0]             ; parrot_discrimination
 XMM_PUSH xmm1
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 jne IF_LABEL_8
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 movsd xmm1, [rbp + 8 + 16]             ; beak
 XMM_PUSH xmm1
@@ -267,7 +267,7 @@ XMM_POP xmm2
 XMM_POP xmm1
 divsd xmm1, xmm2
 XMM_PUSH xmm1
-movsd xmm1, [rbp + 8 + 8]             ; seed_area
+movsd xmm1, [rbp + 8 + 24]             ; seed_area
 XMM_PUSH xmm1
 XMM_POP xmm2
 XMM_POP xmm1
@@ -280,7 +280,7 @@ movsd [rbx - 16], xmm1             ; left_wing
 movsd xmm1, [rbx - 16]             ; left_wing
 XMM_PUSH xmm1
 XMM_POP xmm1
-movsd [rbx - 24], xmm1             ; right_wing
+movsd [rbx - 8], xmm1             ; right_wing
 ;put in this ^ value: left_wing 
 
 mov rax, __float64__(1.000000)
@@ -292,15 +292,15 @@ ret
 
 IF_LABEL_8:
 
-movsd xmm1, [rbp - 32]             ; parrot_discrimination
+movsd xmm1, [rbp - 8 -0]             ; parrot_discrimination
 XMM_PUSH xmm1
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 jbe IF_LABEL_10
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 movsd xmm1, [rbp + 8 + 16]             ; beak
 XMM_PUSH xmm1
@@ -308,7 +308,7 @@ XMM_POP xmm2
 XMM_POP xmm1
 subsd xmm1, xmm2
 XMM_PUSH xmm1
-movsd xmm1, [rbp - 32]             ; parrot_discrimination
+movsd xmm1, [rbp - 8 -0]             ; parrot_discrimination
 XMM_PUSH xmm1
 mov rax, __float64__(1.000000)
 movq xmm1, rax
@@ -322,7 +322,7 @@ divsd xmm1, xmm2
 XMM_PUSH xmm1
 XMM_POP xmm2
 XMM_POP xmm1
-sqrtsd xmm1, xmm2
+sqrtsd xmm1, xmm1
 XMM_PUSH xmm1
 XMM_POP xmm2
 XMM_POP xmm1
@@ -335,7 +335,7 @@ XMM_POP xmm2
 XMM_POP xmm1
 divsd xmm1, xmm2
 XMM_PUSH xmm1
-movsd xmm1, [rbp + 8 + 8]             ; seed_area
+movsd xmm1, [rbp + 8 + 24]             ; seed_area
 XMM_PUSH xmm1
 XMM_POP xmm2
 XMM_POP xmm1
@@ -345,7 +345,7 @@ XMM_POP xmm1
 movsd [rbx - 16], xmm1             ; left_wing
 ;put in this ^ value: ((no_food eat beak regurgitation parrot_discrimination uncontrolable_growth (. overeat .. ))overeat .. )overeat seed_area 
 
-movsd xmm1, [rbx - 8]             ; no_food
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 movsd xmm1, [rbp + 8 + 16]             ; beak
 XMM_PUSH xmm1
@@ -353,7 +353,7 @@ XMM_POP xmm2
 XMM_POP xmm1
 subsd xmm1, xmm2
 XMM_PUSH xmm1
-movsd xmm1, [rbp - 32]             ; parrot_discrimination
+movsd xmm1, [rbp - 8 -0]             ; parrot_discrimination
 XMM_PUSH xmm1
 mov rax, __float64__(1.000000)
 movq xmm1, rax
@@ -367,7 +367,7 @@ divsd xmm1, xmm2
 XMM_PUSH xmm1
 XMM_POP xmm2
 XMM_POP xmm1
-sqrtsd xmm1, xmm2
+sqrtsd xmm1, xmm1
 XMM_PUSH xmm1
 XMM_POP xmm2
 XMM_POP xmm1
@@ -380,14 +380,14 @@ XMM_POP xmm2
 XMM_POP xmm1
 divsd xmm1, xmm2
 XMM_PUSH xmm1
-movsd xmm1, [rbp + 8 + 8]             ; seed_area
+movsd xmm1, [rbp + 8 + 24]             ; seed_area
 XMM_PUSH xmm1
 XMM_POP xmm2
 XMM_POP xmm1
 divsd xmm1, xmm2
 XMM_PUSH xmm1
 XMM_POP xmm1
-movsd [rbx - 24], xmm1             ; right_wing
+movsd [rbx - 8], xmm1             ; right_wing
 ;put in this ^ value: ((no_food eat beak eat parrot_discrimination uncontrolable_growth (. overeat .. ))overeat .. )overeat seed_area 
 
 mov rax, __float64__(2.000000)
@@ -419,8 +419,8 @@ jmp prepare_for_flight_END
 prepare_for_flight:
 push rbp             ; save a copy rbp
 mov rbp, rsp
-sub rsp, 24
-movsd xmm1, [rbp + 8 + 8]             ; bowl
+sub rsp, 0
+movsd xmm1, [rbp + 8 + 24]             ; bowl
 XMM_PUSH xmm1
 mov rax, __float64__(0.000000)
 movq xmm1, rax
@@ -429,11 +429,11 @@ XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 jne IF_LABEL_12
-movsd xmm1, [rbp + 8 + 8]             ; bowl
+movsd xmm1, [rbp + 8 + 24]             ; bowl
 XMM_PUSH xmm1
 movsd xmm1, [rbp + 8 + 16]             ; secret
 XMM_PUSH xmm1
-movsd xmm1, [rbp + 8 + 24]             ; ZOB
+movsd xmm1, [rbp + 8 + 8]             ; ZOB
 XMM_PUSH xmm1
 call fly_line
 XMM_PUSH xmm0; returned value
@@ -443,7 +443,7 @@ ret
 
 IF_LABEL_12:
 
-movsd xmm1, [rbp + 8 + 8]             ; bowl
+movsd xmm1, [rbp + 8 + 24]             ; bowl
 XMM_PUSH xmm1
 mov rax, __float64__(0.000000)
 movq xmm1, rax
@@ -452,11 +452,11 @@ XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 je IF_LABEL_14
-movsd xmm1, [rbp + 8 + 8]             ; bowl
+movsd xmm1, [rbp + 8 + 24]             ; bowl
 XMM_PUSH xmm1
 movsd xmm1, [rbp + 8 + 16]             ; secret
 XMM_PUSH xmm1
-movsd xmm1, [rbp + 8 + 24]             ; ZOB
+movsd xmm1, [rbp + 8 + 8]             ; ZOB
 XMM_PUSH xmm1
 call fly_square
 XMM_PUSH xmm0; returned value
@@ -529,7 +529,7 @@ sub rsp, 8
 call out
 ;print left_wing 
 
-movsd xmm1, [rbx - 24]             ; right_wing
+movsd xmm1, [rbx - 8]             ; right_wing
 XMM_PUSH xmm1
 XMM_POP xmm0
 mov rax, rsp

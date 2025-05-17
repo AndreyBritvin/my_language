@@ -17,15 +17,15 @@ main:
 push rbp
 mov rbp, rsp
 mov rbx, rbp
-sub rsp, 8
+sub rsp, 0
 jmp feed_END
 feed:
 push rbp             ; save a copy rbp
 mov rbp, rsp
-sub rsp, 8
+sub rsp, 0
 movsd xmm1, [rbp + 8 + 8]             ; seed
 XMM_PUSH xmm1
-mov rax, __float64__(0.000000)
+mov rax, __float64__(1.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
 XMM_POP xmm1
@@ -43,24 +43,6 @@ IF_LABEL_0:
 
 movsd xmm1, [rbp + 8 + 8]             ; seed
 XMM_PUSH xmm1
-mov rax, __float64__(1.000000)
-movq xmm1, rax
-XMM_PUSH xmm1
-XMM_POP xmm1
-XMM_POP xmm2
-comisd xmm2, xmm1
-jne IF_LABEL_2
-mov rax, __float64__(1.000000)
-movq xmm1, rax
-XMM_PUSH xmm1
-XMM_POP xmm0 ; save return value to xmm0
-leave
-ret
-
-IF_LABEL_2:
-
-movsd xmm1, [rbp + 8 + 8]             ; seed
-XMM_PUSH xmm1
 movsd xmm1, [rbp + 8 + 8]             ; seed
 XMM_PUSH xmm1
 mov rax, __float64__(1.000000)
@@ -71,6 +53,7 @@ XMM_POP xmm1
 subsd xmm1, xmm2
 XMM_PUSH xmm1
 call feed
+add rsp, 8
 XMM_PUSH xmm0; returned value
 XMM_POP xmm2
 XMM_POP xmm1
@@ -82,10 +65,11 @@ ret
 
 feed_END:
 
-mov rax, __float64__(8.000000)
+mov rax, __float64__(2.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
 call feed
+add rsp, 8
 XMM_PUSH xmm0; returned value
 XMM_POP xmm0
 mov rax, rsp
@@ -95,7 +79,7 @@ jne .already_aligned_0
 sub rsp, 8
 .already_aligned_0:
 call out
-;print feed(........) 
+;print feed(..) 
 
 call hlt
 mov rsp, rbp

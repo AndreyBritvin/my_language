@@ -17,144 +17,115 @@
     17 00000000 55                      push rbp
     18 00000001 4889E5                  mov rbp, rsp
     19 00000004 4889EB                  mov rbx, rbp
-    20 00000007 4883EC08                sub rsp, 8
-    21 0000000B E950010000              jmp feed_END
+    20 00000007 4883EC00                sub rsp, 0
+    21 0000000B E9F8000000              jmp feed_END
     22                                  feed:
     23 00000010 55                      push rbp             ; save a copy rbp
     24 00000011 4889E5                  mov rbp, rsp
-    25 00000014 4883EC08                sub rsp, 8
+    25 00000014 4883EC00                sub rsp, 0
     26 00000018 F20F104D10              movsd xmm1, [rbp + 8 + 8]             ; seed
     27                                  XMM_PUSH xmm1
     11 0000001D 4883EC08            <1> sub rsp, 8
     12 00000021 F20F110C24          <1> movsd [rsp], %1
-    28 00000026 B800000000              mov rax, __float64__(0.000000)
-    29 0000002B 66480F6EC8              movq xmm1, rax
+    28 00000026 48B8000000000000F0-     mov rax, __float64__(1.000000)
+    28 0000002F 3F                 
+    29 00000030 66480F6EC8              movq xmm1, rax
     30                                  XMM_PUSH xmm1
-    11 00000030 4883EC08            <1> sub rsp, 8
-    12 00000034 F20F110C24          <1> movsd [rsp], %1
+    11 00000035 4883EC08            <1> sub rsp, 8
+    12 00000039 F20F110C24          <1> movsd [rsp], %1
     31                                  XMM_POP xmm1
-     7 00000039 F20F100C24          <1> movsd %1, [rsp]
-     8 0000003E 4883C408            <1> add rsp, 8
+     7 0000003E F20F100C24          <1> movsd %1, [rsp]
+     8 00000043 4883C408            <1> add rsp, 8
     32                                  XMM_POP xmm2
-     7 00000042 F20F101424          <1> movsd %1, [rsp]
-     8 00000047 4883C408            <1> add rsp, 8
-    33 0000004B 660F2FD1                comisd xmm2, xmm1
-    34 0000004F 7723                    ja IF_LABEL_0
-    35 00000051 48B8000000000000F0-     mov rax, __float64__(1.000000)
-    35 0000005A 3F                 
-    36 0000005B 66480F6EC8              movq xmm1, rax
+     7 00000047 F20F101424          <1> movsd %1, [rsp]
+     8 0000004C 4883C408            <1> add rsp, 8
+    33 00000050 660F2FD1                comisd xmm2, xmm1
+    34 00000054 7723                    ja IF_LABEL_0
+    35 00000056 48B8000000000000F0-     mov rax, __float64__(1.000000)
+    35 0000005F 3F                 
+    36 00000060 66480F6EC8              movq xmm1, rax
     37                                  XMM_PUSH xmm1
-    11 00000060 4883EC08            <1> sub rsp, 8
-    12 00000064 F20F110C24          <1> movsd [rsp], %1
+    11 00000065 4883EC08            <1> sub rsp, 8
+    12 00000069 F20F110C24          <1> movsd [rsp], %1
     38                                  XMM_POP xmm0 ; save return value to xmm0
-     7 00000069 F20F100424          <1> movsd %1, [rsp]
-     8 0000006E 4883C408            <1> add rsp, 8
-    39 00000072 C9                      leave
-    40 00000073 C3                      ret
+     7 0000006E F20F100424          <1> movsd %1, [rsp]
+     8 00000073 4883C408            <1> add rsp, 8
+    39 00000077 C9                      leave
+    40 00000078 C3                      ret
     41                                  
     42                                  IF_LABEL_0:
     43                                  
-    44 00000074 F20F104D10              movsd xmm1, [rbp + 8 + 8]             ; seed
+    44 00000079 F20F104D10              movsd xmm1, [rbp + 8 + 8]             ; seed
     45                                  XMM_PUSH xmm1
-    11 00000079 4883EC08            <1> sub rsp, 8
-    12 0000007D F20F110C24          <1> movsd [rsp], %1
-    46 00000082 48B8000000000000F0-     mov rax, __float64__(1.000000)
-    46 0000008B 3F                 
-    47 0000008C 66480F6EC8              movq xmm1, rax
-    48                                  XMM_PUSH xmm1
-    11 00000091 4883EC08            <1> sub rsp, 8
-    12 00000095 F20F110C24          <1> movsd [rsp], %1
-    49                                  XMM_POP xmm1
-     7 0000009A F20F100C24          <1> movsd %1, [rsp]
-     8 0000009F 4883C408            <1> add rsp, 8
-    50                                  XMM_POP xmm2
-     7 000000A3 F20F101424          <1> movsd %1, [rsp]
-     8 000000A8 4883C408            <1> add rsp, 8
-    51 000000AC 660F2FD1                comisd xmm2, xmm1
-    52 000000B0 7523                    jne IF_LABEL_2
-    53 000000B2 48B8000000000000F0-     mov rax, __float64__(1.000000)
-    53 000000BB 3F                 
-    54 000000BC 66480F6EC8              movq xmm1, rax
-    55                                  XMM_PUSH xmm1
-    11 000000C1 4883EC08            <1> sub rsp, 8
-    12 000000C5 F20F110C24          <1> movsd [rsp], %1
-    56                                  XMM_POP xmm0 ; save return value to xmm0
-     7 000000CA F20F100424          <1> movsd %1, [rsp]
-     8 000000CF 4883C408            <1> add rsp, 8
-    57 000000D3 C9                      leave
-    58 000000D4 C3                      ret
-    59                                  
-    60                                  IF_LABEL_2:
-    61                                  
-    62 000000D5 F20F104D10              movsd xmm1, [rbp + 8 + 8]             ; seed
-    63                                  XMM_PUSH xmm1
-    11 000000DA 4883EC08            <1> sub rsp, 8
-    12 000000DE F20F110C24          <1> movsd [rsp], %1
-    64 000000E3 F20F104D10              movsd xmm1, [rbp + 8 + 8]             ; seed
-    65                                  XMM_PUSH xmm1
-    11 000000E8 4883EC08            <1> sub rsp, 8
-    12 000000EC F20F110C24          <1> movsd [rsp], %1
-    66 000000F1 48B8000000000000F0-     mov rax, __float64__(1.000000)
-    66 000000FA 3F                 
-    67 000000FB 66480F6EC8              movq xmm1, rax
-    68                                  XMM_PUSH xmm1
-    11 00000100 4883EC08            <1> sub rsp, 8
-    12 00000104 F20F110C24          <1> movsd [rsp], %1
-    69                                  XMM_POP xmm2
-     7 00000109 F20F101424          <1> movsd %1, [rsp]
-     8 0000010E 4883C408            <1> add rsp, 8
-    70                                  XMM_POP xmm1
-     7 00000112 F20F100C24          <1> movsd %1, [rsp]
-     8 00000117 4883C408            <1> add rsp, 8
-    71 0000011B F20F5CCA                subsd xmm1, xmm2
-    72                                  XMM_PUSH xmm1
-    11 0000011F 4883EC08            <1> sub rsp, 8
-    12 00000123 F20F110C24          <1> movsd [rsp], %1
-    73 00000128 E8E3FEFFFF              call feed
-    74                                  XMM_PUSH xmm0; returned value
-    11 0000012D 4883EC08            <1> sub rsp, 8
-    12 00000131 F20F110424          <1> movsd [rsp], %1
-    75                                  XMM_POP xmm2
-     7 00000136 F20F101424          <1> movsd %1, [rsp]
-     8 0000013B 4883C408            <1> add rsp, 8
-    76                                  XMM_POP xmm1
-     7 0000013F F20F100C24          <1> movsd %1, [rsp]
-     8 00000144 4883C408            <1> add rsp, 8
-    77 00000148 F20F59CA                mulsd xmm1, xmm2
-    78                                  XMM_PUSH xmm1
-    11 0000014C 4883EC08            <1> sub rsp, 8
-    12 00000150 F20F110C24          <1> movsd [rsp], %1
-    79                                  XMM_POP xmm0 ; save return value to xmm0
-     7 00000155 F20F100424          <1> movsd %1, [rsp]
-     8 0000015A 4883C408            <1> add rsp, 8
-    80 0000015E C9                      leave
-    81 0000015F C3                      ret
-    82                                  
-    83                                  feed_END:
-    84                                  
-    85 00000160 48B800000000000020-     mov rax, __float64__(8.000000)
-    85 00000169 40                 
-    86 0000016A 66480F6EC8              movq xmm1, rax
-    87                                  XMM_PUSH xmm1
-    11 0000016F 4883EC08            <1> sub rsp, 8
-    12 00000173 F20F110C24          <1> movsd [rsp], %1
-    88 00000178 E893FEFFFF              call feed
-    89                                  XMM_PUSH xmm0; returned value
-    11 0000017D 4883EC08            <1> sub rsp, 8
-    12 00000181 F20F110424          <1> movsd [rsp], %1
-    90                                  XMM_POP xmm0
-     7 00000186 F20F100424          <1> movsd %1, [rsp]
-     8 0000018B 4883C408            <1> add rsp, 8
-    91 0000018F 4889E0                  mov rax, rsp
-    92 00000192 4883E00F                and rax, 0xF
-    93 00000196 4883F808                cmp rax, 8
-    94 0000019A 7504                    jne .already_aligned_0
-    95 0000019C 4883EC08                sub rsp, 8
-    96                                  .already_aligned_0:
-    97 000001A0 E8(00000000)            call out
-    98                                  ;print feed(........) 
-    99                                  
-   100 000001A5 E8(00000000)            call hlt
-   101 000001AA 4889EC                  mov rsp, rbp
-   102 000001AD 5D                      pop rbp
-   103 000001AE C3                      ret
+    11 0000007E 4883EC08            <1> sub rsp, 8
+    12 00000082 F20F110C24          <1> movsd [rsp], %1
+    46 00000087 F20F104D10              movsd xmm1, [rbp + 8 + 8]             ; seed
+    47                                  XMM_PUSH xmm1
+    11 0000008C 4883EC08            <1> sub rsp, 8
+    12 00000090 F20F110C24          <1> movsd [rsp], %1
+    48 00000095 48B8000000000000F0-     mov rax, __float64__(1.000000)
+    48 0000009E 3F                 
+    49 0000009F 66480F6EC8              movq xmm1, rax
+    50                                  XMM_PUSH xmm1
+    11 000000A4 4883EC08            <1> sub rsp, 8
+    12 000000A8 F20F110C24          <1> movsd [rsp], %1
+    51                                  XMM_POP xmm2
+     7 000000AD F20F101424          <1> movsd %1, [rsp]
+     8 000000B2 4883C408            <1> add rsp, 8
+    52                                  XMM_POP xmm1
+     7 000000B6 F20F100C24          <1> movsd %1, [rsp]
+     8 000000BB 4883C408            <1> add rsp, 8
+    53 000000BF F20F5CCA                subsd xmm1, xmm2
+    54                                  XMM_PUSH xmm1
+    11 000000C3 4883EC08            <1> sub rsp, 8
+    12 000000C7 F20F110C24          <1> movsd [rsp], %1
+    55 000000CC E83FFFFFFF              call feed
+    56 000000D1 4883C408                add rsp, 8
+    57                                  XMM_PUSH xmm0; returned value
+    11 000000D5 4883EC08            <1> sub rsp, 8
+    12 000000D9 F20F110424          <1> movsd [rsp], %1
+    58                                  XMM_POP xmm2
+     7 000000DE F20F101424          <1> movsd %1, [rsp]
+     8 000000E3 4883C408            <1> add rsp, 8
+    59                                  XMM_POP xmm1
+     7 000000E7 F20F100C24          <1> movsd %1, [rsp]
+     8 000000EC 4883C408            <1> add rsp, 8
+    60 000000F0 F20F59CA                mulsd xmm1, xmm2
+    61                                  XMM_PUSH xmm1
+    11 000000F4 4883EC08            <1> sub rsp, 8
+    12 000000F8 F20F110C24          <1> movsd [rsp], %1
+    62                                  XMM_POP xmm0 ; save return value to xmm0
+     7 000000FD F20F100424          <1> movsd %1, [rsp]
+     8 00000102 4883C408            <1> add rsp, 8
+    63 00000106 C9                      leave
+    64 00000107 C3                      ret
+    65                                  
+    66                                  feed_END:
+    67                                  
+    68 00000108 48B800000000000000-     mov rax, __float64__(2.000000)
+    68 00000111 40                 
+    69 00000112 66480F6EC8              movq xmm1, rax
+    70                                  XMM_PUSH xmm1
+    11 00000117 4883EC08            <1> sub rsp, 8
+    12 0000011B F20F110C24          <1> movsd [rsp], %1
+    71 00000120 E8EBFEFFFF              call feed
+    72 00000125 4883C408                add rsp, 8
+    73                                  XMM_PUSH xmm0; returned value
+    11 00000129 4883EC08            <1> sub rsp, 8
+    12 0000012D F20F110424          <1> movsd [rsp], %1
+    74                                  XMM_POP xmm0
+     7 00000132 F20F100424          <1> movsd %1, [rsp]
+     8 00000137 4883C408            <1> add rsp, 8
+    75 0000013B 4889E0                  mov rax, rsp
+    76 0000013E 4883E00F                and rax, 0xF
+    77 00000142 4883F808                cmp rax, 8
+    78 00000146 7504                    jne .already_aligned_0
+    79 00000148 4883EC08                sub rsp, 8
+    80                                  .already_aligned_0:
+    81 0000014C E8(00000000)            call out
+    82                                  ;print feed(..) 
+    83                                  
+    84 00000151 E8(00000000)            call hlt
+    85 00000156 4889EC                  mov rsp, rbp
+    86 00000159 5D                      pop rbp
+    87 0000015A C3                      ret

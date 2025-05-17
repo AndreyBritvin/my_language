@@ -45,7 +45,7 @@ err_code_t generate_assembler(my_tree_t* tree, const char* filename, nametable_t
           "push rbp\n"
           "mov rbp, rsp\n"
           "mov rbx, rbp\n" // save this for "main" global vars
-          "sub rsp, %zu\n", (get_num_of_global_vars(nt) + 1) * 8);
+          "sub rsp, %zu\n", (get_num_of_global_vars(nt)) * 8);
 
     write_to_assembler(output, tree, tree->root, 0, nt);
 
@@ -146,7 +146,14 @@ err_code_t write_expression(FILE* output, my_tree_t* tree, node_t* node, nametab
             write_expression(output, tree, node->right, nametable);
             PRINT("XMM_POP xmm2\n"
                   "XMM_POP xmm1\n");
-            PRINT("%s xmm1, xmm2\n", all_ops[(int) node->data].assembler_text);
+            if ((int) node->data == EXP)
+            {
+                PRINT("%s xmm1, xmm1\n", all_ops[(int) node->data].assembler_text);
+            }
+            else
+            {
+                PRINT("%s xmm1, xmm2\n", all_ops[(int) node->data].assembler_text);
+            }
             PRINT("XMM_PUSH xmm1\n");
 
             return OK;
@@ -179,11 +186,17 @@ err_code_t write_var(FILE* output, my_tree_t* tree, node_t* node, var_writing is
     char* bx_offset = "rbx - ";
 
     size_t elem_num = get_element_index(nametable, id_name);
-
-    if (nametable[elem_num].dependence != MAX_ID_COUNT) bx_offset = "rbp - ";
-    if (nametable[elem_num].type       == PARAM_TYPE  ) bx_offset = "rbp + 8 + ";
-
     size_t id_full_index = (nametable[elem_num].full_index + 1) * 8;
+
+    if (nametable[elem_num].dependence != MAX_ID_COUNT)  bx_offset = "rbp - 8 -";
+    if (nametable[elem_num].type       == PARAM_TYPE  ) {bx_offset = "rbp + 8 + ";
+    }
+    if(get_current_func(node, nametable) != MAX_ID_COUNT)
+    id_full_index = get_amount_of_parametrs(get_element_index(nametable, nametable[get_current_func(node, nametable)].name), nametable) * 8 - id_full_index + 8;
+
+    if(get_current_func(node, nametable) == MAX_ID_COUNT)
+    id_full_index = get_num_of_global_vars(nametable) * 8 - id_full_index + 8;
+
     if (is_push == VAR_PUSH)
     {
         PRINT("movsd xmm1, [%s%d]             %s; %s\n", bx_offset, id_full_index,
@@ -340,6 +353,7 @@ err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node, nametabl
     PRINT("\n");
 
     // PRINT("pop rbp; push copy back\n"); // return copy
+    PRINT("add rsp, %d\n", get_amount_of_parametrs(func_id, nametable) * 8);
     PRINT("XMM_PUSH xmm0; returned value\n");
 
     return OK;
@@ -358,7 +372,8 @@ err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t r
     size_t func_id  = get_element_index(nametable, func_name);
     size_t func_above_id = get_current_func(node->parent, nametable);
 
-    size_t local_vars = get_amount_of_local_vars_in_func(func_id, nametable);
+    size_t local_vars = get_amount_of_local_vars_in_func(func_id, nametable)
+                      - get_amount_of_parametrs         (func_id, nametable);
     PRINT("push rbp             ; save a copy rbp\n"); // copy
     PRINT("mov rbp, rsp\n"
           "sub rsp, %d\n", local_vars * 8)

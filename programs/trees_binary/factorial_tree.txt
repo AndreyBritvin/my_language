@@ -11,7 +11,7 @@
             {OP:"if"
                 {OP:"less_equal"
                     {ID:"seed"}
-                    {NUM:"0"}
+                    {NUM:"1"}
                 }
                 {OP:";"
                     {OP:"return"
@@ -20,29 +20,16 @@
                 }
             }
             {OP:";"
-                {OP:"if"
-                    {OP:"=="
+                {OP:"return"
+                    {OP:"*"
                         {ID:"seed"}
-                        {NUM:"1"}
-                    }
-                    {OP:";"
-                        {OP:"return"
-                            {NUM:"1"}
-                        }
-                    }
-                }
-                {OP:";"
-                    {OP:"return"
-                        {OP:"*"
-                            {ID:"seed"}
-                            {OP:"call"
-                                {OP:"spec"
-                                    {ID:"feed"}
-                                    {OP:","
-                                        {OP:"-"
-                                            {ID:"seed"}
-                                            {NUM:"1"}
-                                        }
+                        {OP:"call"
+                            {OP:"spec"
+                                {ID:"feed"}
+                                {OP:","
+                                    {OP:"-"
+                                        {ID:"seed"}
+                                        {NUM:"1"}
                                     }
                                 }
                             }
@@ -58,7 +45,7 @@
                 {OP:"spec"
                     {ID:"feed"}
                     {OP:","
-                        {NUM:"8"}
+                        {NUM:"2"}
                     }
                 }
             }
