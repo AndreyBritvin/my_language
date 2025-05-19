@@ -1,4 +1,4 @@
-PROG_NAME=factorial
+PROG_NAME=kvadratka
 #TODO: make vars with paths
 all:
 	make front
@@ -37,10 +37,10 @@ rm_cm:
 	./remove_comments/comm_removal.out programs/assembler_programs/$(PROG_NAME)_asm_com.txt programs/assembler_programs/$(PROG_NAME)_asm.txt
 
 nasm:
-	gcc -c programs/double_out.c -o stdout.o -no-pie
+	gcc -c programs/double_out.c -o stdout.o
 	nasm -f elf64 -o stdlib.o    -l listing.lst programs/assembler_programs/stdlib.asm
 	nasm -f elf64 -o nasm_prog.o -l listing.lst programs/assembler_programs/$(PROG_NAME)_asm_com.txt
-	gcc nasm_prog.o stdlib.o stdout.o -o nasm_prog.elf -g -no-pie
+	gcc nasm_prog.o stdlib.o stdout.o -o nasm_prog.elf -g
 
 clean:
 	rm frontend/frontend.out

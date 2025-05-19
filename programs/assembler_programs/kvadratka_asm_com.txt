@@ -45,26 +45,37 @@ movsd [rbx - 8], xmm1             ; right_wing
 ;put in this ^ value: no_food 
 
 jmp fly_line_END
+
+; -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Function declaration "fly_line"
 fly_line:
 push rbp             ; save a copy rbp
 mov rbp, rsp
 sub rsp, 0
+
+;------------BEGIN PREPARE TO IF 0-------------
 movsd xmm1, [rbp + 8 + 16]             ; field
 XMM_PUSH xmm1
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
+
+;-----------------BEGIN IF 0-----------------
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 jne IF_LABEL_0
+
+;------------BEGIN PREPARE TO IF 1-------------
 movsd xmm1, [rbp + 8 + 8]             ; grass
 XMM_PUSH xmm1
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
+
+;-----------------BEGIN IF 1-----------------
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 jne IF_LABEL_1
+;                    FUNCTION EPILOGUE - return value
 mov rax, __float64__(4.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
@@ -80,15 +91,21 @@ leave
 ret
 
 IF_LABEL_1:
+;-------------------END IF 1------------------
 
+
+;------------BEGIN PREPARE TO IF 3-------------
 movsd xmm1, [rbp + 8 + 8]             ; grass
 XMM_PUSH xmm1
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
+
+;-----------------BEGIN IF 3-----------------
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 je IF_LABEL_3
+;                    FUNCTION EPILOGUE - return value
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm0 ; save return value to xmm0
@@ -96,8 +113,10 @@ leave
 ret
 
 IF_LABEL_3:
+;-------------------END IF 3------------------
 
 IF_LABEL_0:
+;-------------------END IF 0------------------
 
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
@@ -123,6 +142,7 @@ XMM_POP xmm1
 movsd [rbx - 8], xmm1             ; right_wing
 ;put in this ^ value: left_wing 
 
+;                    FUNCTION EPILOGUE - return value
 mov rax, __float64__(1.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
@@ -132,7 +152,11 @@ ret
 
 fly_line_END:
 
+
+; -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Function "fly_line" END
 jmp fly_square_END
+
+; -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Function declaration "fly_square"
 fly_square:
 push rbp             ; save a copy rbp
 mov rbp, rsp
@@ -168,74 +192,99 @@ XMM_POP xmm1
 movsd [rbp - 8 -0], xmm1             ; parrot_discrimination
 ;put in this ^ value: beak growth beak eat .... growth seed_area growth feather 
 
+; PREPARING FOR PRINT============
 movsd xmm1, [rbp - 8 -0]             ; parrot_discrimination
 XMM_PUSH xmm1
 XMM_POP xmm0
+;                              Aligning stack
 mov rax, rsp
 and rax, 0xF
 cmp rax, 8
 jne .already_aligned_0
 sub rsp, 8
 .already_aligned_0:
+;                              End of aligning
 call out
 ;print parrot_discrimination 
+; END PRINT======================
 
+
+;------------BEGIN PREPARE TO IF 6-------------
 movsd xmm1, [rbp - 8 -0]             ; parrot_discrimination
 XMM_PUSH xmm1
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
+
+;-----------------BEGIN IF 6-----------------
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 jae IF_LABEL_6
+; PREPARING FOR PRINT============
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm0
+;                              Aligning stack
 mov rax, rsp
 and rax, 0xF
 cmp rax, 8
 jne .already_aligned_1
 sub rsp, 8
 .already_aligned_1:
+;                              End of aligning
 call out
 ;print no_food 
+; END PRINT======================
 
+; PREPARING FOR PRINT============
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm0
+;                              Aligning stack
 mov rax, rsp
 and rax, 0xF
 cmp rax, 8
 jne .already_aligned_2
 sub rsp, 8
 .already_aligned_2:
+;                              End of aligning
 call out
 ;print no_food 
+; END PRINT======================
 
+; PREPARING FOR PRINT============
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm0
+;                              Aligning stack
 mov rax, rsp
 and rax, 0xF
 cmp rax, 8
 jne .already_aligned_3
 sub rsp, 8
 .already_aligned_3:
+;                              End of aligning
 call out
 ;print no_food 
+; END PRINT======================
 
+; PREPARING FOR PRINT============
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm0
+;                              Aligning stack
 mov rax, rsp
 and rax, 0xF
 cmp rax, 8
 jne .already_aligned_4
 sub rsp, 8
 .already_aligned_4:
+;                              End of aligning
 call out
 ;print no_food 
+; END PRINT======================
 
+;                    FUNCTION EPILOGUE - return value
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 XMM_POP xmm0 ; save return value to xmm0
@@ -243,11 +292,16 @@ leave
 ret
 
 IF_LABEL_6:
+;-------------------END IF 6------------------
 
+
+;------------BEGIN PREPARE TO IF 8-------------
 movsd xmm1, [rbp - 8 -0]             ; parrot_discrimination
 XMM_PUSH xmm1
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
+
+;-----------------BEGIN IF 8-----------------
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
@@ -283,6 +337,7 @@ XMM_POP xmm1
 movsd [rbx - 8], xmm1             ; right_wing
 ;put in this ^ value: left_wing 
 
+;                    FUNCTION EPILOGUE - return value
 mov rax, __float64__(1.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
@@ -291,11 +346,16 @@ leave
 ret
 
 IF_LABEL_8:
+;-------------------END IF 8------------------
 
+
+;------------BEGIN PREPARE TO IF 10-------------
 movsd xmm1, [rbp - 8 -0]             ; parrot_discrimination
 XMM_PUSH xmm1
 movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
+
+;-----------------BEGIN IF 10-----------------
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
@@ -390,6 +450,7 @@ XMM_POP xmm1
 movsd [rbx - 8], xmm1             ; right_wing
 ;put in this ^ value: ((no_food eat beak eat parrot_discrimination uncontrolable_growth (. overeat .. ))overeat .. )overeat seed_area 
 
+;                    FUNCTION EPILOGUE - return value
 mov rax, __float64__(2.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
@@ -398,7 +459,9 @@ leave
 ret
 
 IF_LABEL_10:
+;-------------------END IF 10------------------
 
+;                    FUNCTION EPILOGUE - return value
 mov rax, __float64__(3.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
@@ -415,20 +478,29 @@ ret
 
 fly_square_END:
 
+
+; -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Function "fly_square" END
 jmp prepare_for_flight_END
+
+; -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Function declaration "prepare_for_flight"
 prepare_for_flight:
 push rbp             ; save a copy rbp
 mov rbp, rsp
 sub rsp, 0
+
+;------------BEGIN PREPARE TO IF 12-------------
 movsd xmm1, [rbp + 8 + 24]             ; bowl
 XMM_PUSH xmm1
 mov rax, __float64__(0.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
+
+;-----------------BEGIN IF 12-----------------
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 jne IF_LABEL_12
+;                    FUNCTION EPILOGUE - return value
 movsd xmm1, [rbp + 8 + 24]             ; bowl
 XMM_PUSH xmm1
 movsd xmm1, [rbp + 8 + 16]             ; secret
@@ -436,22 +508,31 @@ XMM_PUSH xmm1
 movsd xmm1, [rbp + 8 + 8]             ; ZOB
 XMM_PUSH xmm1
 call fly_line
+;                                    Restore stack by amount of parametrs
+add rsp, 24
 XMM_PUSH xmm0; returned value
+;                                    Stack restored
 XMM_POP xmm0 ; save return value to xmm0
 leave
 ret
 
 IF_LABEL_12:
+;-------------------END IF 12------------------
 
+
+;------------BEGIN PREPARE TO IF 14-------------
 movsd xmm1, [rbp + 8 + 24]             ; bowl
 XMM_PUSH xmm1
 mov rax, __float64__(0.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
+
+;-----------------BEGIN IF 14-----------------
 XMM_POP xmm1
 XMM_POP xmm2
 comisd xmm2, xmm1
 je IF_LABEL_14
+;                    FUNCTION EPILOGUE - return value
 movsd xmm1, [rbp + 8 + 24]             ; bowl
 XMM_PUSH xmm1
 movsd xmm1, [rbp + 8 + 16]             ; secret
@@ -459,13 +540,18 @@ XMM_PUSH xmm1
 movsd xmm1, [rbp + 8 + 8]             ; ZOB
 XMM_PUSH xmm1
 call fly_square
+;                                    Restore stack by amount of parametrs
+add rsp, 24
 XMM_PUSH xmm0; returned value
+;                                    Stack restored
 XMM_POP xmm0 ; save return value to xmm0
 leave
 ret
 
 IF_LABEL_14:
+;-------------------END IF 14------------------
 
+;                    FUNCTION EPILOGUE - return value
 mov rax, __float64__(4.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
@@ -482,64 +568,66 @@ ret
 
 prepare_for_flight_END:
 
+
+; -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Function "prepare_for_flight" END
+; PREPARING FOR PRINT============
 mov rax, __float64__(1.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
-mov rax, __float64__(1.000000)
-movq xmm1, rax
-XMM_PUSH xmm1
-XMM_POP xmm2
-XMM_POP xmm1
-subsd xmm1, xmm2
-XMM_PUSH xmm1
-mov rax, __float64__(5.000000)
-movq xmm1, rax
-XMM_PUSH xmm1
-XMM_POP xmm2
-XMM_POP xmm1
-subsd xmm1, xmm2
+movsd xmm1, [rbx - 24]             ; no_food
 XMM_PUSH xmm1
 mov rax, __float64__(1.000000)
-movq xmm1, rax
-XMM_PUSH xmm1
-mov rax, __float64__(2.000000)
 movq xmm1, rax
 XMM_PUSH xmm1
 call prepare_for_flight
+;                                    Restore stack by amount of parametrs
+add rsp, 24
 XMM_PUSH xmm0; returned value
+;                                    Stack restored
 XMM_POP xmm0
+;                              Aligning stack
 mov rax, rsp
 and rax, 0xF
 cmp rax, 8
 jne .already_aligned_5
 sub rsp, 8
 .already_aligned_5:
+;                              End of aligning
 call out
-;print prepare_for_flight(. eat . eat ....., ., ..) 
+;print prepare_for_flight(., no_food, .) 
+; END PRINT======================
 
+; PREPARING FOR PRINT============
 movsd xmm1, [rbx - 16]             ; left_wing
 XMM_PUSH xmm1
 XMM_POP xmm0
+;                              Aligning stack
 mov rax, rsp
 and rax, 0xF
 cmp rax, 8
 jne .already_aligned_6
 sub rsp, 8
 .already_aligned_6:
+;                              End of aligning
 call out
 ;print left_wing 
+; END PRINT======================
 
+; PREPARING FOR PRINT============
 movsd xmm1, [rbx - 8]             ; right_wing
 XMM_PUSH xmm1
 XMM_POP xmm0
+;                              Aligning stack
 mov rax, rsp
 and rax, 0xF
 cmp rax, 8
 jne .already_aligned_7
 sub rsp, 8
 .already_aligned_7:
+;                              End of aligning
 call out
 ;print right_wing 
+; END PRINT======================
 
 call hlt
 mov rsp, rbp

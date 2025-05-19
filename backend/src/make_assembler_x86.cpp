@@ -230,12 +230,14 @@ err_code_t write_equal(FILE* output, my_tree_t* tree, node_t* node, nametable_t 
 err_code_t align_rsp(FILE* output)
 {
     static int number_of_aligned = 0;
+    PRINT(";                              Aligning stack\n");
     PRINT("mov rax, rsp\n"
           "and rax, 0xF\n"
           "cmp rax, 8\n"
           "jne .already_aligned_%d\n"
           "sub rsp, 8\n"
           ".already_aligned_%d:\n", number_of_aligned, number_of_aligned);
+    PRINT(";                              End of aligning\n");
 
     number_of_aligned++;
 
@@ -244,11 +246,13 @@ err_code_t align_rsp(FILE* output)
 
 err_code_t write_print(FILE* output, my_tree_t* tree, node_t* node, nametable_t nametable)
 {
+    PRINT("; PREPARING FOR PRINT============\n")
     write_expression(output, tree, PRINT_ARG, nametable);
     PRINT("XMM_POP xmm0\n");
     align_rsp(output);
     PRINT_KW(PRINT_STATE)
     COMMENT(PRINT_ARG, "print ");
+    PRINT("; END PRINT======================\n")
     PRINT("\n");
 
     return OK;
@@ -258,16 +262,20 @@ err_code_t write_if(FILE* output, my_tree_t* tree, node_t* node, size_t recurs_l
 {
     static int if_label_counter = 0;
     int buffer_index = if_label_counter;
+    PRINT("\n;------------BEGIN PREPARE TO IF %d-------------\n", buffer_index);
+
     write_var(output, tree, COMP_LEFT_ARG, VAR_PUSH, nametable); // left part should be before
     write_expression(output, tree, COMP_RIGHT_ARG, nametable);
 
+    PRINT("\n;-----------------BEGIN IF %d-----------------\n", buffer_index);
     write_if_operator(output, tree, node->left, nametable);
 
     PRINT(" IF_LABEL_%d\n", if_label_counter++);
 
     write_to_assembler(output, tree, SCOPE_EXPRESSION, recurs_level + 1, nametable);
 
-    PRINT("IF_LABEL_%d:\n\n", buffer_index);
+    PRINT("IF_LABEL_%d:\n", buffer_index);
+    PRINT(";-------------------END IF %d------------------\n\n", buffer_index);
 
     if_label_counter++;
 
@@ -278,7 +286,7 @@ err_code_t write_if_operator(FILE* output, my_tree_t* tree, node_t* node, nameta
 {
     PRINT("XMM_POP xmm1\n"
           "XMM_POP xmm2\n"
-          "comisd xmm2, xmm1\n")
+          "comisd xmm2, xmm1\n") // TODO: check is_nan?
     switch ((int) node->data)
     {
         case MORE:       PRINT("jbe"); break;
@@ -299,10 +307,12 @@ err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recur
     int buffer_counter = while_label_counter;
 
     PRINT("WHILE_LABEL_%d:\n", while_label_counter);
+    PRINT("\n;------------BEGIN PREPARE TO WHILE %d-------------\n", buffer_counter);
 
     write_var       (output, tree, COMP_LEFT_ARG , VAR_PUSH, nametable); // left part should be before
     write_expression(output, tree, COMP_RIGHT_ARG,           nametable);
 
+    PRINT("\n;-----------------BEGIN WHILE %d-----------------\n", while_label_counter);
     write_if_operator(output, tree, node->left, nametable);
 
     PRINT(" END_WHILE_%d\n", while_label_counter++);
@@ -311,12 +321,14 @@ err_code_t write_while(FILE* output, my_tree_t* tree, node_t* node, size_t recur
 
     PRINT("jmp WHILE_LABEL_%d\n", buffer_counter);
     PRINT("END_WHILE_%d:\n\n", buffer_counter);
+    PRINT(";-------------------END WHILE %d------------------\n\n", buffer_counter);
 
     return OK;
 }
 
 err_code_t write_return(FILE* output, my_tree_t* tree, node_t* node, nametable_t nametable)
 {
+    PRINT(";                    FUNCTION EPILOGUE - return value\n");
     write_expression(output, tree, node->left, nametable);
     PRINT("XMM_POP xmm0 ; save return value to xmm0\n"); // return value
     PRINT("leave\n");
@@ -353,8 +365,10 @@ err_code_t write_func_call(FILE* output, my_tree_t* tree, node_t* node, nametabl
     PRINT("\n");
 
     // PRINT("pop rbp; push copy back\n"); // return copy
+    PRINT(";                                    Restore stack by amount of parametrs\n");
     PRINT("add rsp, %d\n", get_amount_of_parametrs(func_id, nametable) * 8);
     PRINT("XMM_PUSH xmm0; returned value\n");
+    PRINT(";                                    Stack restored\n")
 
     return OK;
 }
@@ -364,6 +378,9 @@ err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t r
     PRINT("jmp ");                                     // jump func_END:
     write_var(output, tree, FUNC_NAME_NODE, VAR_NAME, nametable);
     PRINT("_END\n");
+
+    PRINT("\n; -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Function declaration \"");
+    write_var(output, tree, FUNC_NAME_NODE, VAR_NAME, nametable); PRINT("\"\n");
 
     write_var(output, tree, FUNC_NAME_NODE, VAR_NAME, nametable);
     PRINT(":\n");
@@ -379,9 +396,12 @@ err_code_t write_func_decl(FILE* output, my_tree_t* tree, node_t* node, size_t r
           "sub rsp, %d\n", local_vars * 8)
 
     write_to_assembler(output, tree, SCOPE_EXPRESSION, recurs_level + 1, nametable);
-
     write_var(output, tree, FUNC_NAME_NODE, VAR_NAME, nametable); // func_END:
     PRINT("_END:\n\n");
+
+    PRINT("\n; -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Function \"");
+    write_var(output, tree, FUNC_NAME_NODE, VAR_NAME, nametable); PRINT("\" END\n");
+
 
     return OK;
 }

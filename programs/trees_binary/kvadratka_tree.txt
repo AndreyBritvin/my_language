@@ -347,17 +347,11 @@
                                     {OP:"spec"
                                         {ID:"prepare_for_flight"}
                                         {OP:","
-                                            {OP:"-"
-                                                {OP:"-"
-                                                    {NUM:"1"}
-                                                    {NUM:"1"}
-                                                }
-                                                {NUM:"5"}
-                                            }
+                                            {NUM:"1"}
                                             {OP:","
-                                                {NUM:"1"}
+                                                {ID:"no_food"}
                                                 {OP:","
-                                                    {NUM:"2"}
+                                                    {NUM:"1"}
                                                 }
                                             }
                                         }
